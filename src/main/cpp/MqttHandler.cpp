@@ -11,53 +11,18 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-std::optional<MqttHandler> MqttHandler::create(const std::string& address, const std::string& port, const std::string& topic) {
-    MqttHandler out = MqttHandler();
-    if (out.init(address, port, topic)) {
-        return out;
-    } else {
-        return {};
-    }
-}
-
-bool MqttHandler::update() {
-    mqtt_sync(&m_client);
-    if (m_client.error != MQTT_OK) {
-        m_error_flag = true;
-        return false;
-    }
-    return true;
-}
-
-bool MqttHandler::has_error() const {
-    return m_error_flag;
-}
-
-bool MqttHandler::publish(const std::string& msg, const std::string& topic) {
-    const char *ctopic = (const char *) topic.c_str();
-    void *cmsg = (void *) msg.c_str();
-
-    if (mqtt_publish(&m_client, ctopic, cmsg, msg.length(), MQTT_PUBLISH_RETAIN) != MQTT_OK) {
-        return false;
-    }
-    return true;
-}
-
-bool MqttHandler::object_present() const {
-    return m_present;
-}
-
-float MqttHandler::distance() const {
-    return m_distance;
-}
-
-float MqttHandler::angle() const {
-    return m_angle;
-}
 
 MqttHandler::MqttHandler() {}
 
-bool MqttHandler::init(const std::string& addr, const std::string& port, const std::string& topic) {
+MqttHandler::MqttHandler(const std::string& addr, u16 port, const std::string& topic) {
+    init(addr, port, topic);
+}
+
+bool MqttHandler::init(const std::string& addr, u16 port, const std::string& topic) {
+    if (m_ready) {
+        return true;
+    }
+    
     m_sockfd = open_nb_socket(addr, port);
     if (m_sockfd == -1) {
         return false;
@@ -73,21 +38,73 @@ bool MqttHandler::init(const std::string& addr, const std::string& port, const s
     if (m_client.error != MQTT_OK) {
         return false;
     }
+    m_ready = true;
     return true;
 }
 
-int MqttHandler::open_nb_socket(const std::string& addr, const std::string& port/*, int timeout_ms*/) {
+std::optional<MqttHandler> MqttHandler::create(const std::string& address, u16 port, const std::string& topic) {
+    MqttHandler out = MqttHandler();
+    if (out.init(address, port, topic)) {
+        return out;
+    } else {
+        return {};
+    }
+}
+
+bool MqttHandler::update() {
+    if (!m_ready) {
+        return false;
+    }
+    
+    mqtt_sync(&m_client);
+    if (m_client.error != MQTT_OK) {
+        return false;
+    } else {
+    }
+    return true;
+}
+
+bool MqttHandler::publish(const std::string& msg, const std::string& topic) {
+    if (!m_ready) {
+        return false;
+    }
+    
+    const char *ctopic = (const char *) topic.c_str();
+    void *cmsg = (void *) msg.c_str();
+
+    if (mqtt_publish(&m_client, ctopic, cmsg, msg.length(), MQTT_PUBLISH_RETAIN) != MQTT_OK) {
+        return false;
+    }
+    return true;
+}
+
+bool MqttHandler::ready() const {
+    return m_ready;
+}
+
+bool MqttHandler::object_present() const {
+    return m_present;
+}
+
+float MqttHandler::distance() const {
+    return m_distance;
+}
+
+float MqttHandler::angle() const {
+    return m_angle;
+}
+
+int MqttHandler::open_nb_socket(const std::string& addr, u16 port/*, int timeout_ms*/) {
     int sockfd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0); // IPv4, byte stream, non-blocking socket
     if (sockfd == -1) {
         return -1;
     }
 
     const char *caddr = addr.c_str();
-    const char *cport = port.c_str();
 
     struct sockaddr_in addrs;
     addrs.sin_family = AF_INET;
-    addrs.sin_port = htons(atoi(cport)); // Convert to right endianness
+    addrs.sin_port = htons(port); // Convert to right endianness
     addrs.sin_addr.s_addr = inet_addr(caddr);
 
     int ret = connect(sockfd, (struct sockaddr *) &addrs, sizeof(addrs));
