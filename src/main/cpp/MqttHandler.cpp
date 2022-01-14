@@ -14,6 +14,13 @@
 
 MqttHandler::MqttHandler() {}
 
+// TODO: figure out if the mqtt client needs to be deinitialized in some way
+MqttHandler::~MqttHandler() {
+    if (m_sockfd != -1) {
+        close(m_sockfd);
+    }
+}
+
 MqttHandler::MqttHandler(const std::string& addr, u16 port, const std::string& topic) {
     init(addr, port, topic);
 }

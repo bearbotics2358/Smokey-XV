@@ -11,6 +11,7 @@ class MqttHandler {
     public:
         // Creates an mqtt handler, but it will not be ready, init must be called later
         MqttHandler();
+        ~MqttHandler();
         // may fail, in which case ready will be false
         MqttHandler(const std::string& addr, const u16 port, const std::string& topic);
 
@@ -18,10 +19,13 @@ class MqttHandler {
         // does nothing if already ready
         bool init(const std::string& addr, const u16 port, const std::string& topic);
 
+        // returns none on failure
         static std::optional<MqttHandler> create(const std::string& address, u16 port, const std::string& topic);
         
+        // call to recieve new mqtt messages
         bool update();
 
+        // send an mqtt message
         bool publish(const std::string& msg, const std::string& topic);
 
         // is handler ready to send messages
@@ -36,7 +40,7 @@ class MqttHandler {
         static void reconnect_callback(struct mqtt_client *client, void **state);
 
         struct mqtt_client m_client;
-        int m_sockfd;
+        int m_sockfd { -1 };
 
         // is handler ready to send messages
         bool m_ready { false };
@@ -49,6 +53,7 @@ class MqttHandler {
         std::string m_addres;
         u16 m_port;
         std::string m_topic;
+
         u8 m_sendbuf[SEND_BUF_LEN];
         u8 m_recvbuf[RECV_BUF_LEN];
 };
