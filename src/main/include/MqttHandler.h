@@ -7,16 +7,6 @@
 #include "mqtt.h"
 #include "Prefs.h"
 
-struct ReconnectData {
-    std::string addres;
-    std::string port;
-    std::string topic;
-    u8 *sendbuf;
-    usize sendbuf_size;
-    u8 *recvbuf;
-    usize recvbuf_size;
-};
-
 class MqttHandler {
     public:
         static std::optional<MqttHandler> create(const std::string& address, const std::string& port, const std::string& topic);

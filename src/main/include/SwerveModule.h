@@ -39,8 +39,8 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         rev::CANSparkMax driveMotor;
         rev::CANSparkMax steerMotor;
 
-        rev::CANEncoder driveEnc; // Built-in NEO Encoders
-        rev::CANEncoder steerEncNEO; 
+        rev::SparkMaxRelativeEncoder driveEnc; // Built-in NEO Encoders
+        rev::SparkMaxRelativeEncoder steerEncNEO; 
 
         frc::AnalogInput rawSteerEnc;
         frc::AnalogEncoder steerEnc; // placeholder, may change wiring

@@ -75,8 +75,10 @@ ssize_t mqtt_pal_recvall(mqtt_pal_socket_handle fd, void* buf, size_t bufsz, int
 
 ssize_t mqtt_pal_sendall(mqtt_pal_socket_handle fd, const void* buf, size_t len, int flags) {
     size_t sent = 0;
+    // get rid of warning for arithmatic on void *
+    const uint8_t *new_buf = (const uint8_t *) buf;
     while(sent < len) {
-        ssize_t tmp = send(fd, buf + sent, len - sent, flags);
+        ssize_t tmp = send(fd, new_buf + sent, len - sent, flags);
         if (tmp < 1) {
             return MQTT_ERROR_SOCKET_ERROR;
         }
