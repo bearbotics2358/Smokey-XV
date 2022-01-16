@@ -4,7 +4,7 @@
 #include <optional>
 
 #include "types.h"
-#include "mqtt.h"
+#include "mqtt/mqtt.h"
 #include "Prefs.h"
 
 class MqttHandler {
