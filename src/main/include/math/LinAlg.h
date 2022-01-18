@@ -183,11 +183,14 @@ class Matrix {
         // matrix multiplication
         template<usize other_cols>
         constexpr Matrix<T, r, other_cols>& operator*=(const Matrix<T, c, other_cols>& other) {
+            // default value of the default constructor, so we can reset the tmp value in the loop
+            // apparantly is doesn't reset between loop iterations
+            T def;
             // temporary array
             T row_tmp[cols()];
             for (usize row = 0; row < rows(); row ++) {
                 for (usize col = 0; col < other_cols; col ++) {
-                    T tmp;
+                    T tmp = def;
                     for (usize i = 0; i < cols(); i ++) {
                         // TODO: maybe avoid use of at
                         tmp += at(i, row) * other.at(col, i);
@@ -205,13 +208,16 @@ class Matrix {
 
         template<usize other_cols>
         constexpr Matrix<T, r, other_cols> operator*(const Matrix<T, c, other_cols>& other) const {
+            // default value of the default constructor, so we can reset the tmp value in the loop
+            // apparantly is doesn't reset between loop iterations
+            T def;
             Matrix<T, r, other_cols> out;
             for (usize row = 0; row < rows(); row ++) {
                 for (usize col = 0; col < other_cols; col ++) {
-                    T tmp;
+                    T tmp = def;
                     // TODO: maybe don't use at if performance is needed
                     for (usize i = 0; i < cols(); i ++) {
-                        tmp += at(i, row) * at(col, i);
+                        tmp += at(i, row) * other.at(col, i);
                     }
                     out.at(col, row) = tmp;
                 }
@@ -221,7 +227,7 @@ class Matrix {
 
     private:
         constexpr static usize get_index(usize x, usize y) {
-            return x * cols() + y;
+            return y * cols() + x;
         }
 
         usize index_inner(usize index) const {
