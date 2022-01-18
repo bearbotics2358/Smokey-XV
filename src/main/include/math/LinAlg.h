@@ -1,5 +1,8 @@
 #pragma once
 
+#include <utility>
+#include <stdexcept>
+
 #include "types.h"
 
 // put these macros to at the start of a method to restrict that method to a certain type of matrix
@@ -23,17 +26,17 @@ static_assert(rows() >= (low) && rows() <= (high) && cols() == 1, "Matrix is not
 #define ACCESOR_METHODS(name, index, low, high) \
 T& name() & {                                   \
     ASSERT_VEC_RANGE(low, high)                 \
-    static_assert(index < size());              \
+    static_assert(index < size(), "error");     \
     return data[index];                         \
 }                                               \
 const T& name() const& {                        \
     ASSERT_VEC_RANGE(low, high)                 \
-    static_assert(index < size());              \
-    return data[index];                        \
+    static_assert(index < size(), "error");     \
+    return data[index];                         \
 }                                               \
 T name() && {                                   \
     ASSERT_VEC_RANGE(low, high)                 \
-    static_assert(index < size());              \
+    static_assert(index < size(), "error");     \
     return data[index];                         \
 }
 
@@ -67,27 +70,27 @@ class Matrix {
 
         // indexing methods
         T& operator[](usize index) & {
-            return *index_inner(index);
+            return data[index_inner(index)];
         }
 
         const T& operator[](usize index) const& {
-            return *index_inner(index);
+            return data[index_inner(index)];
         }
 
         T operator[](usize index) && {
-            return *index_inner(index);
+            return data[index_inner(index)];
         }
 
         T& at(usize x, usize y) & {
-            return *at_inner(x, y);
+            return data[at_inner(x, y)];
         }
 
         const T& at(usize x, usize y) const& {
-            return *at_inner(x, y);
+            return data[at_inner(x, y)];
         }
 
         T at(usize x, usize y) && {
-            return *at_inner(x, y);
+            return data[at_inner(x, y)];
         }
 
         ACCESOR_METHODS(x, 0, 1, 4)
@@ -221,18 +224,18 @@ class Matrix {
             return x * cols() + y;
         }
 
-        T *index_inner(usize index) {
+        usize index_inner(usize index) const {
             if (index >= size()) {
                 throw std::out_of_range("Mat out of range");
             }
-            return data + index;
+            return index;
         }
 
-        T *at_inner(usize x, usize y) {
+        usize at_inner(usize x, usize y) const {
             if (x >= cols() || y >= rows()) {
                 throw std::out_of_range("Mat out of range");
             }
-            return data + get_index(x, y);
+            return get_index(x, y);
         }
 
         T data[size()];
