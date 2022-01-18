@@ -3,6 +3,7 @@
 #include "Prefs.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <stdio.h>
+#include "math/LinAlg.h"
 /*~~ hi :) ~~ */
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
@@ -39,6 +40,11 @@ a_JAutonomous(&a_Gyro, &a_buttonbox, &a_swerveyDrive, &a_CFS, &a_LimeyLight)
 
 void Robot::RobotInit() 
 {
+    Vec2 tmp2(2.0f, 2.0f);
+    Vec2 tmp3(2.0f, 2.0f);
+    Vec4 tmp(0.0f, 1.0f, 2.0f, 3.0f);
+    tmp3[1];
+    tmp.w();
     frc::SmartDashboard::init();
     a_Gyro.Init();
     // a_Gyro.Cal();

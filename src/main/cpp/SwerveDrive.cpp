@@ -1,6 +1,20 @@
-
 #include "SwerveDrive.h"
 
+#if false
+SwerveDrive::SwerveDrive(SwerveModule& fl_module, SwerveModule& fr_module, SwerveModule& bl_module, SwerveModule& br_module):
+m_fl(fl_module),
+m_fr(fr_module),
+m_bl(bl_module),
+m_br(br_module) {}
+
+SwerveDrive::~SwerveDrive() {}
+
+void update(const SwerveTransform& transform, float gyro_angle) {
+
+}
+#endif
+
+#if true
 SwerveDrive::SwerveDrive(SwerveModule *FL_Ptr, SwerveModule *FR_Ptr, SwerveModule *BL_Ptr, SwerveModule *BR_Ptr):
 FL_Module(FL_Ptr),
 FR_Module(FR_Ptr),
@@ -401,3 +415,4 @@ void SwerveDrive::turnToAngle(float gyro, float angle) {
 	}
 	 
  }
+#endif

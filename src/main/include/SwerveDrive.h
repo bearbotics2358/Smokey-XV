@@ -4,6 +4,25 @@
 #include "SwerveModule.h"
 #include "Prefs.h"
 
+#if false
+class SwerveTransform {
+};
+
+class SwerveDrive {
+    public:
+        SwerveDrive(SwerveModule& fl_module, SwerveModule& fr_module, SwerveModule& bl_module, SwerveModule& br_module);
+        ~SwerveDrive();
+
+        void update(const SwerveTransform& transform, float gyro_angle);
+    private:
+        SwerveModule& m_fl;
+        SwerveModule& m_fr;
+        SwerveModule& m_bl;
+        SwerveModule& m_br;
+};
+#endif
+
+#if true
 class SwerveDrive // Class to handle the kinematics of Swerve Drive
 {
     public:
@@ -21,8 +40,8 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
                 zIn =  z axis on joystick
                 gyroIn = sensor
                 fieldOriented = are you looking at the field head on or not? 
-
             */
+
 
         void driveDistance(float dist, float direction); // dist in inches and angle 0-360
         void resetDrive();
@@ -61,3 +80,4 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         frc::AnalogEncoder BL_Encoder; 
         frc::AnalogEncoder BR_Encoder; */
 };
+#endif

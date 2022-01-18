@@ -11,9 +11,6 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-
-MqttHandler::MqttHandler() {}
-
 // TODO: figure out if the mqtt client needs to be deinitialized in some way
 MqttHandler::~MqttHandler() {
     if (m_sockfd != -1) {

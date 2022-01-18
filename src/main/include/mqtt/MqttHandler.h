@@ -10,7 +10,7 @@
 class MqttHandler {
     public:
         // Creates an mqtt handler, but it will not be ready, init must be called later
-        MqttHandler();
+        MqttHandler() = default;
         ~MqttHandler();
         // may fail, in which case ready will be false
         MqttHandler(const std::string& addr, const u16 port, const std::string& topic);
