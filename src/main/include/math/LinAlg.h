@@ -3,6 +3,7 @@
 #include <utility>
 #include <stdexcept>
 #include <type_traits>
+#include <math.h>
 
 #include "types.h"
 
@@ -63,6 +64,13 @@ class Matrix {
             static_assert(sizeof...(args) == size(), "Incorrect number of arguments for Matrix");
         }
 
+        // creates a 2d counterclockwise rotation matrix given an angle in radians
+        MAT2_METHOD(static constexpr, Mtype) rotation(num angle) noexcept {
+            return Matrix(
+                cos(angle), -sin(angle),
+                sin(angle), cos(angle));
+        }
+
         constexpr static usize rows() {
             return r;
         }
@@ -103,16 +111,16 @@ class Matrix {
             return data[at_inner(x, y)];
         }
 
-        // unchecked_at does not check if the index is in range, so the user must do that
-        T& unchecked_at(usize x, usize y) & {
+        // at_unchecked does not check if the index is in range, so the user must do that
+        T& at_unchecked(usize x, usize y) & {
             return data[get_index(x, y)];
         }
 
-        const T& unchecked_at(usize x, usize y) const& {
+        const T& at_unchecked(usize x, usize y) const& {
             return data[get_index(x, y)];
         }
 
-        T unchecked_at(usize x, usize y) && {
+        T at_unchecked(usize x, usize y) && {
             return data[get_index(x, y)];
         }
 
