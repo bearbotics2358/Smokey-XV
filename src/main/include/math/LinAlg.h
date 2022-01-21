@@ -2,42 +2,49 @@
 
 #include <utility>
 #include <stdexcept>
+#include <type_traits>
 
 #include "types.h"
 
-// put these macros to at the start of a method to restrict that method to a certain type of matrix
-#define ASSERT_MAT(n) static_assert(rows() == (n) && cols() == (n), "Matrix is not a square matrix of the right dimension");
-#define ASSERT_VEC(n) static_assert(rows() == (n) && cols() == 1, "Matrix is not a vector of the right dimension");
+// needed because using the > or >= operator in templates confused the compiler to think it is the end of a template
+constexpr bool between(usize n, usize min, usize max) {
+    return n >= min && n <= max;
+}
 
-#define ASSERT_MAT2 ASSERT_MAT(2)
-#define ASSERT_MAT3 ASSERT_MAT(3)
-#define ASSERT_MAT4 ASSERT_MAT(4)
+// put this macro in front of a method that returns type type to define it only for a
+// matrix with a certain number of rows and columns, between the specified min and max (inclusive) for each
+// also put modifiers that would normally go in front of the method, for example static, inline etc, in the modifiers field
+// if the rows and cols do not match, the method will not be defined, so calling it will be an error
+// this is very odd looking because c++ templates are very odd
+#define MAT_METHOD(rows_min, rows_max, cols_min, cols_max, modifiers, type)        \
+template<usize rr__ = r, usize cc__ = c>    \
+modifiers typename std::enable_if_t<between(r, rows_min, rows_max) && between(rr__, rows_min, rows_max) && between(c, cols_min, cols_max) && between(cc__, cols_min, cols_max), type>
 
-#define ASSERT_VEC2 ASSERT_VEC(2)
-#define ASSERT_VEC3 ASSERT_VEC(3)
-#define ASSERT_VEC4 ASSERT_VEC(4)
+// these macros are just for certain sized matrixes and vectors, and do the same as the one above prety much
+#define MAT2_METHOD(modifiers, type) MAT_METHOD(2, 2, 2, 2, modifiers, type)
+#define MAT3_METHOD(modifiers, type) MAT_METHOD(3, 3, 3, 3, modifiers, type)
+#define MAT4_METHOD(modifiers, type) MAT_METHOD(4, 4, 4, 4, modifiers, type)
 
-// allows method to be defined on vector in a certain range
-#define ASSERT_VEC_RANGE(low, high)     \
-static_assert(rows() >= (low) && rows() <= (high) && cols() == 1, "Matrix is not a vector of the right dimension");
+#define VEC2_METHOD(modifiers, type) MAT_METHOD(2, 2, 1, 1, modifiers, type)
+#define VEC3_METHOD(modifiers, type) MAT_METHOD(3, 3, 1, 1, modifiers, type)
+#define VEC4_METHOD(modifiers, type) MAT_METHOD(4, 4, 1, 1, modifiers, type)
+
+#define VEC_RANGE_METHOD(min, max, modifiers, type) MAT_METHOD(min, max, 1, 1, modifiers, type)
 
 // define an eccesor mathod on a veector between low and high dimension,
 // with name name and accesing data at index index
-#define ACCESOR_METHODS(name, index, low, high) \
-T& name() & {                                   \
-    ASSERT_VEC_RANGE(low, high)                 \
-    static_assert(index < size(), "error");     \
-    return data[index];                         \
-}                                               \
-const T& name() const& {                        \
-    ASSERT_VEC_RANGE(low, high)                 \
-    static_assert(index < size(), "error");     \
-    return data[index];                         \
-}                                               \
-T name() && {                                   \
-    ASSERT_VEC_RANGE(low, high)                 \
-    static_assert(index < size(), "error");     \
-    return data[index];                         \
+#define ACCESOR_METHODS(name, index, low, high)         \
+VEC_RANGE_METHOD(low, high, , T&) name() & {            \
+    static_assert(index < size(), "error");             \
+    return data[index];                                 \
+}                                                       \
+VEC_RANGE_METHOD(low, high, , const T&) name() const& { \
+    static_assert(index < size(), "error");             \
+    return data[index];                                 \
+}                                                       \
+VEC_RANGE_METHOD(low, high, , T) name() && {            \
+    static_assert(index < size(), "error");             \
+    return data[index];                                 \
 }
 
 template<typename T, usize r, usize c>
@@ -69,6 +76,8 @@ class Matrix {
         }
 
         // indexing methods
+        // both of these throw index_out_of_range if it is out of range
+        // operator[] takes in 1 index and returns an element from the data array without accounting for rows or columns
         T& operator[](usize index) & {
             return data[index_inner(index)];
         }
@@ -81,6 +90,7 @@ class Matrix {
             return data[index_inner(index)];
         }
 
+        // at returns the element at the given x and y coordinates (x is column y is row)
         T& at(usize x, usize y) & {
             return data[at_inner(x, y)];
         }
@@ -91,6 +101,19 @@ class Matrix {
 
         T at(usize x, usize y) && {
             return data[at_inner(x, y)];
+        }
+
+        // unchecked_at does not check if the index is in range, so the user must do that
+        T& unchecked_at(usize x, usize y) & {
+            return data[get_index(x, y)];
+        }
+
+        const T& unchecked_at(usize x, usize y) const& {
+            return data[get_index(x, y)];
+        }
+
+        T unchecked_at(usize x, usize y) && {
+            return data[get_index(x, y)];
         }
 
         ACCESOR_METHODS(x, 0, 1, 4)
@@ -181,6 +204,8 @@ class Matrix {
         }
 
         // matrix multiplication
+        // this does not use simd or anything, so it is not very fast
+        // we shouldn't need super fast matrix multiplication though
         template<usize other_cols>
         constexpr Matrix<T, r, other_cols>& operator*=(const Matrix<T, c, other_cols>& other) {
             // default value of the default constructor, so we can reset the tmp value in the loop
@@ -193,14 +218,14 @@ class Matrix {
                     T tmp = def;
                     for (usize i = 0; i < cols(); i ++) {
                         // TODO: maybe avoid use of at
-                        tmp += at(i, row) * other.at(col, i);
+                        tmp += at_unchecked(i, row) * other.at_unchecked(col, i);
                     }
                     row_tmp[col] = tmp;
                 }
+
                 // copy temporary row to matrix
-                usize base_index = row * cols();
                 for (usize col = 0; col < cols(); col ++) {
-                    data[base_index + col] = row_tmp[col];
+                    at_unchecked(col, row) = row_tmp[col];
                 }
             }
             return *this;
@@ -217,9 +242,9 @@ class Matrix {
                     T tmp = def;
                     // TODO: maybe don't use at if performance is needed
                     for (usize i = 0; i < cols(); i ++) {
-                        tmp += at(i, row) * other.at(col, i);
+                        tmp += at_unchecked(i, row) * other.at_unchecked(col, i);
                     }
-                    out.at(col, row) = tmp;
+                    out.at_unchecked(col, row) = tmp;
                 }
             }
             return out;

@@ -44,7 +44,10 @@ void Robot::RobotInit()
     Vec2 tmp3(2.0f, 2.0f);
     Vec4 tmp(0.0f, 1.0f, 2.0f, 3.0f);
     tmp3[1];
+    tmp3.x();
+    tmp3.y();
     tmp.w();
+
     frc::SmartDashboard::init();
     a_Gyro.Init();
     // a_Gyro.Cal();
