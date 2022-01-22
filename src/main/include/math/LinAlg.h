@@ -17,9 +17,14 @@ constexpr bool between(usize n, usize min, usize max) {
 // also put modifiers that would normally go in front of the method, for example static, inline etc, in the modifiers field
 // if the rows and cols do not match, the method will not be defined, so calling it will be an error
 // this is very odd looking because c++ templates are very odd
-#define MAT_METHOD(rows_min, rows_max, cols_min, cols_max, modifiers, type)        \
-template<usize rr__ = r, usize cc__ = c>    \
+#define MAT_METHOD(rows_min, rows_max, cols_min, cols_max, modifiers, type) \
+template<usize rr__ = r, usize cc__ = c>                                    \
 modifiers typename std::enable_if_t<between(r, rows_min, rows_max) && between(rr__, rows_min, rows_max) && between(c, cols_min, cols_max) && between(cc__, cols_min, cols_max), type>
+
+// this enables a method for a vector of any size
+#define VEC_METHOD(modifiers, type) \
+template<usize cc__ = c>            \
+modifiers typename std::enable_if_t<between(c, 1, 1) && between(cc__, 1, 1), type>
 
 // these macros are just for certain sized matrixes and vectors, and do the same as the one above prety much
 #define MAT2_METHOD(modifiers, type) MAT_METHOD(2, 2, 2, 2, modifiers, type)
@@ -254,6 +259,22 @@ class Matrix {
                     }
                     out.at_unchecked(col, row) = tmp;
                 }
+            }
+            return out;
+        }
+
+        VEC_METHOD(constexpr, void) normalize() {
+            (*this) /= magnitude();
+        }
+
+        VEC_METHOD(constexpr, T) magnitude() const {
+            return sqrtf(magnitude_squared());
+        }
+
+        VEC_METHOD(constexpr, T) magnitude_squared() const {
+            T out;
+            for (usize i = 0; i < size(); i ++) {
+                out += data[i] * data[i];
             }
             return out;
         }

@@ -47,6 +47,7 @@ void Robot::RobotInit()
     tmp3.x();
     tmp3.y();
     tmp.w();
+    tmp.magnitude();
 
     frc::SmartDashboard::init();
     a_Gyro.Init();
