@@ -59,6 +59,7 @@ std::optional<float> CanHandler::getData(int which) const {
             }
         }
     }
+    return {};
 }
 
 void CanHandler::update() {
@@ -111,5 +112,5 @@ void CanHandler::update() {
     return can_in;
 }*/
 std::vector<Arduino> canLayout2022() {
-    
+
 }
