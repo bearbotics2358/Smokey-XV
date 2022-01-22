@@ -53,6 +53,8 @@ VEC_RANGE_METHOD(low, high, , T) name() && {            \
     return data[index];                                 \
 }
 
+// NOTE: this matrix does not use simd so it is not super fast or anything
+// TODO: maybe use x and y instead of rows ans columns everywhere because rows adn columns are unintuitive to think about sometimes
 template<typename T, usize r, usize c>
 class Matrix {
     public:
@@ -272,7 +274,7 @@ class Matrix {
         }
 
         VEC_METHOD(constexpr, T) magnitude_squared() const {
-            T out;
+            T out(0);
             for (usize i = 0; i < size(); i ++) {
                 out += data[i] * data[i];
             }

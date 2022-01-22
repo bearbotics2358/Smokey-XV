@@ -5,7 +5,21 @@
 #include "Prefs.h"
 
 #if false
-class SwerveTransform {
+struct SwerveTransform {
+    SwerveTransform(Vec2 direction, float rot_speed, bool field_oriented) :
+    direction(direction),
+    rot_speed(rot_speed),
+    field_oriented(field_oriented) {}
+
+    // direction for robot to move in
+    Vec2 direction;
+
+    // speed of rotation in radians
+    // if 0, the robot will attempt to maintain the current angle
+    float rot_speed;
+
+    // if true, movement will be transformed
+    bool field_oriented;
 };
 
 class SwerveDrive {
@@ -14,11 +28,14 @@ class SwerveDrive {
         ~SwerveDrive();
 
         void update(const SwerveTransform& transform, float gyro_angle);
-    private:
+    private:anglePIDanglePID
         SwerveModule& m_fl;
         SwerveModule& m_fr;
         SwerveModule& m_bl;
         SwerveModule& m_br;
+
+        // the angle to hold if the input rotation speed is 0
+        float m_hold_angle { 0 };
 };
 #endif
 
