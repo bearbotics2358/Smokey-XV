@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "types.h"
+#include "math/ConstMath.h"
 
 // needed because using the > or >= operator in templates confused the compiler to think it is the end of a template
 constexpr bool between(usize n, usize min, usize max) {
@@ -39,18 +40,18 @@ modifiers typename std::enable_if_t<between(c, 1, 1) && between(cc__, 1, 1), typ
 
 // define an eccesor mathod on a veector between low and high dimension,
 // with name name and accesing data at index index
-#define ACCESOR_METHODS(name, index, low, high)         \
-VEC_RANGE_METHOD(low, high, , T&) name() & {            \
-    static_assert(index < size(), "error");             \
-    return data[index];                                 \
-}                                                       \
-VEC_RANGE_METHOD(low, high, , const T&) name() const& { \
-    static_assert(index < size(), "error");             \
-    return data[index];                                 \
-}                                                       \
-VEC_RANGE_METHOD(low, high, , T) name() && {            \
-    static_assert(index < size(), "error");             \
-    return data[index];                                 \
+#define ACCESOR_METHODS(name, index, low, high)                     \
+VEC_RANGE_METHOD(low, high, constexpr, T&) name() & {               \
+    static_assert(index < size(), "error");                         \
+    return data[index];                                             \
+}                                                                   \
+VEC_RANGE_METHOD(low, high, constexpr, const T&) name() const& {    \
+    static_assert(index < size(), "error");                         \
+    return data[index];                                             \
+}                                                                   \
+VEC_RANGE_METHOD(low, high, constexpr, T) name() && {               \
+    static_assert(index < size(), "error");                         \
+    return data[index];                                             \
 }
 
 // NOTE: this matrix does not use simd so it is not super fast or anything
@@ -266,17 +267,34 @@ class Matrix {
         }
 
         // normalizes this vector
-        VEC_METHOD(constexpr, void) normalize() {
+        VEC_METHOD(, void) normalize() {
             (*this) /= magnitude();
         }
 
         // returns this vector normalized, but does not actually normalize this vector
-        VEC_METHOD(constexpr, Mtype) as_normalized() const {
+        VEC_METHOD(, Mtype) as_normalized() const {
             return (*this) / magnitude();
         }
 
-        VEC_METHOD(constexpr, T) magnitude() const {
-            return sqrtf(magnitude_squared());
+        VEC_METHOD(, T) magnitude() const {
+            return sqrt(magnitude_squared());
+        }
+
+        // constexpr versions of the three methods from above
+        // they use a different square root, so they might be slower at run time, which is why they are constexpr
+        // TODO: figure out if they are actually that much slower
+        // normalizes this vector
+        VEC_METHOD(constexpr, void) const_normalize() {
+            (*this) /= const_magnitude();
+        }
+
+        // returns this vector normalized, but does not actually normalize this vector
+        VEC_METHOD(constexpr, Mtype) const_as_normalized() const {
+            return (*this) / const_magnitude();
+        }
+
+        VEC_METHOD(constexpr, T) const_magnitude() const {
+            return constSqrt(magnitude_squared());
         }
 
         VEC_METHOD(constexpr, T) magnitude_squared() const {

@@ -1,5 +1,7 @@
 #include "SwerveDrive.h"
 
+#include "math/ConstMath.h"
+
 #ifdef NEW_SWERVE
 SwerveTransform::SwerveTransform(Vec2 direction, float rotSpeed):
 direction(direction),
@@ -15,20 +17,20 @@ m_anglePid(0.014, 0.0, 0.0) {}
 
 SwerveDrive::~SwerveDrive() {}
 
-void update(const SwerveTransform& transform) {
+void SwerveDrive::update(const SwerveTransform& transform) {
 	constexpr float halfLength = DRIVE_LENGTH / 2;
 	constexpr float halfWidth = DRIVE_WIDTH / 2;
-	constexpr float driveRadius = sqrt(halfLength * halfLength + halfWidth * halfWidth);
+	constexpr float driveRadius = constSqrt(halfLength * halfLength + halfWidth * halfWidth);
 
-	constexpr float frPosVec = Vec2(halfWidth, halfLength);
-	constexpr float flPosVec = Vec2(-halfWidth, halfLength);
-	constexpr float brPosVec = Vec2(halfWidth, -halfLength);
-	constexpr float blPosVec = Vec2(-halfWidth, -halfLength);
+	constexpr Vec2 frPosVec = Vec2(halfWidth, halfLength);
+	constexpr Vec2 flPosVec = Vec2(-halfWidth, halfLength);
+	constexpr Vec2 brPosVec = Vec2(halfWidth, -halfLength);
+	constexpr Vec2 blPosVec = Vec2(-halfWidth, -halfLength);
 
-	constexpr Vec2 frTurn = frPosVec.right_normal().normalized();
-	constexpr Vec2 flTurn = flPosVec.right_normal().normalized();
-	constexpr Vec2 brTurn = brPosVec.right_normal().normalized();
-	constexpr Vec2 blTurn = blPosVec.right_normal().normalized();
+	constexpr Vec2 frTurn = frPosVec.right_normal().const_as_normalized();
+	constexpr Vec2 flTurn = flPosVec.right_normal().const_as_normalized();
+	constexpr Vec2 brTurn = brPosVec.right_normal().const_as_normalized();
+	constexpr Vec2 blTurn = blPosVec.right_normal().const_as_normalized();
 
 	float angularVelocity = transform.rotSpeed * driveRadius;
 

@@ -37,8 +37,8 @@ class SwerveDrive {
         // pid controller to use when holding angle
         frc2::PIDController m_anglePid;
 
-        const float DRIVE_LENGTH = 29.75;
-        const float DRIVE_WIDTH = 29.75;
+        static const float DRIVE_LENGTH = 29.75;
+        static const float DRIVE_WIDTH = 29.75;
 };
 
 #else
