@@ -131,6 +131,14 @@ bool SwerveModule::adjustAngle(float targetAngle) {
     return changeMade; 
 }
 
+void SwerveModule::driveDirection(Vec2 direction) {
+    if (adjustAngle(direction.angle())) {
+        setDriveSpeed(-direction.magnitude());
+    } else {
+        setDriveSpeed(direction.magnitude());
+    }
+}
+
 /*
     steer module to given angle 
     - return boolean (do we need to change the speed or not?)

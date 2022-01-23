@@ -10,6 +10,7 @@
 #include "LimeyLight.h"
 #include "CFS.h"
 #include "Autonomous.h"
+#include "CanHandler.h"
 
 class Robot : public frc::TimedRobot 
 {
@@ -47,6 +48,7 @@ class Robot : public frc::TimedRobot
     LimeyLight a_LimeyLight; 
 
     //MqttHandler handler;
+    CanHandler a_canHandler;
     CFS a_CFS; 
 
     Autonomous a_JAutonomous;

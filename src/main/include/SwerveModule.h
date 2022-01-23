@@ -6,6 +6,7 @@
 #include <frc/AnalogInput.h>
 #include <frc/controller/PIDController.h>
 #include "Prefs.h"
+#include "math/LinAlg.h"
 #include <math.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -34,6 +35,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         void updateSteerPID(double pNew, double iNew, double dNew);
 
         bool adjustAngle(float targetAngle);
+
+        // drives in the direction of the vector
+        // the magnitude of the vector is passed into setDriveSpeed
+        void driveDirection(Vec2 direction);
 
     private:
         rev::CANSparkMax driveMotor;

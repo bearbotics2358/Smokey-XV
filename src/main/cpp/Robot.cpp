@@ -18,6 +18,7 @@ a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 a_LimeyLight(),
 // handler("169.254.179.144", "1185", "data"),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
+a_canHandler(CanHandler::layout2022()),
 a_CFS(SHOOT_1, SHOOT_2, FEED_1, FEED_2, COLLECT, PIVOT, CLIMBER, BROKEN_BEAM, REESES_BEAM),
 a_JAutonomous(&a_Gyro, &a_buttonbox, &a_swerveyDrive, &a_CFS, &a_LimeyLight)
 {
@@ -78,6 +79,12 @@ void Robot::RobotPeriodic()
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_swerveyDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+
+    a_canHandler.update();
+    frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
 }
 
 void Robot::DisabledInit()

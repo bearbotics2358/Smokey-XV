@@ -265,8 +265,14 @@ class Matrix {
             return out;
         }
 
+        // normalizes this vector
         VEC_METHOD(constexpr, void) normalize() {
             (*this) /= magnitude();
+        }
+
+        // returns this vector normalized, but does not actually normalize this vector
+        VEC_METHOD(constexpr, Mtype) as_normalized() const {
+            return (*this) / magnitude();
         }
 
         VEC_METHOD(constexpr, T) magnitude() const {
@@ -279,6 +285,21 @@ class Matrix {
                 out += data[i] * data[i];
             }
             return out;
+        }
+
+        // returns the angle from the positive x axis in radians in the range of (-pi, pi)
+        VEC2_METHOD(constexpr, num) angle() const {
+            return atan2(y(), x());
+        }
+
+        // returns the vetor normal to this vector and facing towards its right hand side
+        VEC2_METHOD(constexpr, Mtype) right_normal() const {
+            return Mtype(y(), -x());
+        }
+
+        // returns the vetor normal to this vector and facing towards its left hand side
+        VEC2_METHOD(constexpr, Mtype) left_normal() const {
+            return Mtype(-y(), x());
         }
 
     private:
