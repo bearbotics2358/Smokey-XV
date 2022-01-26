@@ -3,7 +3,7 @@
 
 // Declare constants such as CAN IDs here 
 
-#define NEW_SWERVE
+//#define NEW_SWERVE
 
 
 /*====== MOTOR CONTROLLER IDS ======*/
@@ -116,8 +116,11 @@ BR:
 
 /* ============= CanHandler ============= */
 
-#define LEFT_ARDUINO_CAN_ID 20
-#define RIGHT_ARDUINO_CAN_ID 21
+#define LEFT_ARDUINO_CAN_ID 1
+#define RIGHT_ARDUINO_CAN_ID 1
+
+#define LEFT_ARDUINO_API_ID 2
+#define RIGHT_ARDUINO_API_ID 3
 
 #define FL_SWERVE_DATA_ID 0
 #define BL_SWERVE_DATA_ID 1

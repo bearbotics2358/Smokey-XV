@@ -1,47 +1,52 @@
 #include "CanHandler.h"
 
 #include <string>
+#include <utility>
 #include <stdio.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Prefs.h"
 
-CanHandler::CanHandler(std::vector<Arduino>& in)
-: a_cans(),
-a_fields() {
-    for (usize i = 0; i < in.size (); i ++) {
-        if (i != 0 || in[i].can_id != in[i - 1].can_id) {
-            a_cans.push_back(frc::CAN(in[i].can_id));
-            a_fields.push_back(std::vector<Field>());
+CanHandler::CanHandler(const std::vector<Arduino>& in)
+: m_endpoints() {
+    for (const auto& arduino : in) {
+        std::vector<Field> fields;
 
-            int bitsum = 0;
+        int bitsum = 0;
 
-            for (usize j = 0; j < in[i].fields.size(); j ++) {
-                u8 desired_bits = in[i].fields[j].desired_bits;
+        for (const auto& field : arduino.fields) {
+            u8 desired_bits = field.desired_bits;
 
-                bitsum += desired_bits;
+            bitsum += desired_bits;
 
-                if (bitsum > 64 || desired_bits > 32) {
-                    break;
-                }
-
-                u32 bitnum = 0;
-                for (u8 k = 0; k < desired_bits; k ++) {
-                    bitnum |= 1 << k;
-                }
-
-                Field temp_d {
-                    in[i].fields[j].id,
-                    desired_bits,
-                    bitnum,
-                    in[i].fields[j].multiplier,
-                    0
-                };
-
-                a_fields[i].push_back(temp_d);
+            if (bitsum > 64 || desired_bits > 32) {
+                break;
             }
+
+            u32 bitnum = 0;
+            for (u8 k = 0; k < desired_bits; k ++) {
+                bitnum |= 1 << k;
+            }
+
+            Field temp_d {
+                field.id,
+                desired_bits,
+                bitnum,
+                field.multiplier,
+                0
+            };
+
+            fields.push_back(temp_d);
         }
+
+        auto endpoint = Endpoint {
+            frc::CAN(arduino.can_id),
+            arduino.api_id,
+            fields
+        };
+
+        m_endpoints.push_back(std::move(endpoint));
     }
 }
 
@@ -50,6 +55,7 @@ CanHandler CanHandler::layout2022() {
     Arduino ard;
 
     ard.can_id = LEFT_ARDUINO_CAN_ID;
+    ard.api_id = LEFT_ARDUINO_API_ID;
     ard.fields = std::vector<DataField>();
 
     ard.fields.push_back(
@@ -67,7 +73,8 @@ CanHandler CanHandler::layout2022() {
     layout.push_back(ard);
 
     //ard.can_id = RIGHT_ARDUINO_CAN_ID;
-    ard.can_id = 1;
+    ard.can_id = RIGHT_ARDUINO_CAN_ID;
+    ard.api_id = RIGHT_ARDUINO_API_ID;
     ard.fields = std::vector<DataField>();
 
     ard.fields.push_back(
@@ -88,8 +95,8 @@ CanHandler CanHandler::layout2022() {
 }
 
 std::optional<float> CanHandler::getData(int which) const {
-    for (auto field_vec : a_fields) {
-        for (auto field : field_vec) {
+    for (const auto& endpoint : m_endpoints) {
+        for (const auto& field : endpoint.data) {
             if (field.id == which) {
                 return field.data / field.multiplier;
             }
@@ -100,10 +107,10 @@ std::optional<float> CanHandler::getData(int which) const {
 
 void CanHandler::update() {
     frc::CANData data;
-    for (usize i = 0; i < a_cans.size(); i ++) {
-        if (a_cans[i].ReadPacketNew(3, &data)) {   
-            for (usize j = 0; j / 2 < a_fields[i].size(); j += 2) {
-                Field datas = a_fields[i][j];
+    for (auto& endpoint : m_endpoints) {
+        if (endpoint.can.ReadPacketNew(endpoint.api_id, &data)) {   
+            for (usize j = 0; j / 2 < endpoint.data.size(); j += 2) {
+                Field& datas = endpoint.data[j];
                 datas.data = (data.data[j] << 8) | data.data[j + 1];
             }
         }

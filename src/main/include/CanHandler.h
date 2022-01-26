@@ -14,6 +14,13 @@ struct DataField {
     float multiplier;
 };
 
+
+struct Arduino {
+    u8 can_id;
+    u8 api_id;
+    std::vector<DataField> fields;
+};
+
 // only used internally
 struct Field {
     int id;
@@ -23,19 +30,19 @@ struct Field {
     i32 data;
 };
 
-struct Arduino {
-    int can_id;
-    std::vector<DataField> fields;
+struct Endpoint {
+    frc::CAN can;
+    u8 api_id;
+    std::vector<Field> data;
 };
 
 class CanHandler {
     public:
-        CanHandler(std::vector<Arduino>& in);
+        CanHandler(const std::vector<Arduino>& in);
         static CanHandler layout2022();
 
         std::optional<float> getData(int field_id) const;
         void update();
     private:
-        std::vector<frc::CAN> a_cans;
-        std::vector<std::vector<Field>> a_fields;
+        std::vector<Endpoint> m_endpoints;
 };

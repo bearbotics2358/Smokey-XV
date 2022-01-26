@@ -10,6 +10,9 @@
 struct SwerveTransform {
     SwerveTransform(Vec2 direction, float rotSpeed);
 
+    static SwerveTransform translate(Vec2 direction, float gyroAngle, bool fieldOriented = true);
+    static SwerveTransform translateRotate(Vec2 direction, float rotSpeed, float gyroAngle, bool fieldOriented);
+
     // direction for robot to move in
     Vec2 direction;
 
@@ -25,6 +28,8 @@ class SwerveDrive {
 
         void update(const SwerveTransform& transform);
 
+        float getAvgDistance() const;
+
     private:
         SwerveModule& m_fl;
         SwerveModule& m_fr;
@@ -37,8 +42,8 @@ class SwerveDrive {
         // pid controller to use when holding angle
         frc2::PIDController m_anglePid;
 
-        static const float DRIVE_LENGTH = 29.75;
-        static const float DRIVE_WIDTH = 29.75;
+        static constexpr float DRIVE_LENGTH { 29.75 };
+        static constexpr float DRIVE_WIDTH { 29.75 };
 };
 
 #else

@@ -45,6 +45,11 @@ void SwerveDrive::update(const SwerveTransform& transform) {
 	m_bl.driveDirection(blVec);
 }
 
+float SwerveDrive::getAvgDistance() const {
+	float sum = fabs(m_fr.getDistance()) + fabs(m_fl.getDistance()) + fabs(m_br.getDistance()) + fabs(m_bl.getDistance());
+	return INCHES_PER_TICK * sum / 4.0;
+}
+
 #else
 
 SwerveDrive::SwerveDrive(SwerveModule *FL_Ptr, SwerveModule *FR_Ptr, SwerveModule *BL_Ptr, SwerveModule *BR_Ptr):
