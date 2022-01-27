@@ -69,7 +69,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
 
 
         void driveDistance(float dist, float direction); // dist in inches and angle 0-360
-        void resetDrive();
+        void SwerveDrive::resetDrive(float flAngle, float frAngle, float blAngle, float brAngle);
         float getAvgDistance(void); // baka-47
 
         void turnToAngle(float gyro, float angle); 

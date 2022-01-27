@@ -381,11 +381,11 @@ void SwerveDrive::driveDistance(float dist, float direction)
 
 }
 
-void SwerveDrive::resetDrive() {
-	FL_Module->resetDriveEncoder();
-	FR_Module->resetDriveEncoder();
-	BL_Module->resetDriveEncoder();
-	BR_Module->resetDriveEncoder();
+void SwerveDrive::resetDrive(float flAngle, float frAngle, float blAngle, float brAngle) {
+	FL_Module->resetDriveEncoder(flAngle);
+	FR_Module->resetDriveEncoder(frAngle);
+	BL_Module->resetDriveEncoder(blAngle);
+	BR_Module->resetDriveEncoder(brAngle);
 }
 
 float SwerveDrive::getAvgDistance(void)

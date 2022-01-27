@@ -16,7 +16,9 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         SwerveModule(int driveID, int steerID, int steerEncID); // CAN IDs, analog port for steer encoder
         
         float getDistance(void); // Returns position of the distance encoder
-        void resetDriveEncoder(void); 
+        void resetDriveEncoder(float offset); // set the offset in the turn encoder
+        // this would be the offset from 0 that the wheel is currently at
+        // obtained from arduinos
 
         float getAngleRaw(void); // position of steering encoder
         float getAngle(void); // scaled angle between 0 and 360

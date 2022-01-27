@@ -21,9 +21,9 @@ float SwerveModule::getDistance(void)
     return ret;
 }
 
-void SwerveModule::resetDriveEncoder(void)
+void SwerveModule::resetDriveEncoder(float offset)
 {
-    driveEnc.SetPosition(0);
+    driveEnc.SetPosition(offset);
 }
 
 float SwerveModule::getAngleRaw(void)

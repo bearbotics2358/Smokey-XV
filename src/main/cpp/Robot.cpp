@@ -4,6 +4,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <stdio.h>
 #include "math/LinAlg.h"
+#include <iostream>
 /*~~ hi :) ~~ */
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
@@ -85,11 +86,19 @@ void Robot::RobotPeriodic()
     frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
+    printf("fl angle: %f\n", *a_canHandler.getData(FL_SWERVE_DATA_ID));
+    printf("fr angle: %f\n", *a_canHandler.getData(FR_SWERVE_DATA_ID));
+    printf("bl angle: %f\n", *a_canHandler.getData(BL_SWERVE_DATA_ID));
+    printf("br angle: %f\n", *a_canHandler.getData(BR_SWERVE_DATA_ID));
+    /*std::cout << "Front left angle" << *a_canHandler.getData(FL_SWERVE_DATA_ID);
+    std::cout << "Front right angle" << *a_canHandler.getData(FR_SWERVE_DATA_ID);
+    std::cout << "Back left angle" << *a_canHandler.getData(BL_SWERVE_DATA_ID);
+    std::cout << "Back right angle" << *a_canHandler.getData(BR_SWERVE_DATA_ID); */
 }
 
 void Robot::DisabledInit()
 {
-    a_swerveyDrive.resetDrive();
+    resetSwerveDrive();
 }
 
 void Robot::DisabledPeriodic()
@@ -493,6 +502,20 @@ void Robot::TestPeriodic()
     */ 
 
 
+}
+
+bool Robot::resetSwerveDrive() {
+    auto flAngle = a_canHandler.getData(FL_SWERVE_DATA_ID);
+    auto frAngle = a_canHandler.getData(FR_SWERVE_DATA_ID);
+    auto blAngle = a_canHandler.getData(BL_SWERVE_DATA_ID);
+    auto brAngle = a_canHandler.getData(BR_SWERVE_DATA_ID);
+
+    if (flAngle.has_value() && frAngle.has_value() && blAngle.has_value() && brAngle.has_value()) {
+        a_swerveyDrive.resetDrive(*flAngle, *frAngle, *blAngle, *brAngle);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
