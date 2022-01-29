@@ -1,6 +1,5 @@
 #pragma once
 
-#include "mqtt/MqttHandler.h"
 #include <frc/TimedRobot.h> // "Timed Robot" template
 #include "SwerveModule.h" // Swerve modules
 #include <frc/Joystick.h> // Joystick 
