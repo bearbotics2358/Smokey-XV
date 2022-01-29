@@ -10,9 +10,9 @@
         if(a_Input.Get() == 1) {
             isBroken = true; 
         } else {
-            isBroken = false; 
+            isBroken = false;
         }
-        return isBroken; 
+        return isBroken;
     }
  
     /*

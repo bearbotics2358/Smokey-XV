@@ -2,9 +2,9 @@
 #include "SwerveModule.h"
 
 SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID):
-driveMotor(driveID, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
+driveMotor(driveID),
 steerMotor(steerID, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
-driveEnc(driveMotor.GetEncoder()),
+driveEnc(driveMotor),
 steerEncNEO(steerMotor.GetEncoder()),
 rawSteerEnc(steerEncID),
 steerEnc(rawSteerEnc),
@@ -16,13 +16,13 @@ steerPID(0, 0, 0)
 
 float SwerveModule::getDistance(void)
 {
-    float ret = driveEnc.GetPosition();
+    float ret = driveEnc.GetIntegratedSensorPosition();
     return ret;
 }
 
 void SwerveModule::resetDriveEncoder(void)
 {
-    driveEnc.SetPosition(0);
+    driveEnc.SetIntegratedSensorPosition(0);
 }
 
 float SwerveModule::getAngleRaw(void)
@@ -48,7 +48,7 @@ float SwerveModule::getAngle(void)
 void SwerveModule::goToPosition(float setpoint)
 {
     float speed = std::clamp(drivePID.Calculate(getDistance(), setpoint), -0.3, 0.3); // Calculates scaled output based off of encoder feedback. 
-    driveMotor.Set(speed);
+    driveMotor.Set(TalonFXControlMode::PercentOutput, speed); // speed is what percent power the motor is run at between [-1, 1]
 }
 
 void SwerveModule::steerToAng(float setpoint) // the twO
@@ -60,7 +60,7 @@ void SwerveModule::steerToAng(float setpoint) // the twO
 
 void SwerveModule::setDriveSpeed(float target)
 {
-    driveMotor.Set(target);
+    driveMotor.Set(TalonFXControlMode::PercentOutput, target);
 }
 
 void SwerveModule::setSteerSpeed(float target)
@@ -70,7 +70,7 @@ void SwerveModule::setSteerSpeed(float target)
 
 float SwerveModule::getDriveSpeed(void)
 {
-    float ret = driveEnc.GetVelocity();
+    float ret = driveEnc.GetIntegratedSensorVelocity();
     return ret;
 }
 
@@ -78,7 +78,7 @@ float SwerveModule::setDriveVelocity(float percent) // the onE
 {
     float currentSpeed = getDriveSpeed();
     float speed = std::clamp(drivePID.Calculate(currentSpeed, percent * DRIVE_VELOCITY), -0.3, 0.3);
-    driveMotor.Set(speed); 
+    driveMotor.Set(TalonFXControlMode::PercentOutput, speed); 
 
     return speed;
 }
@@ -124,7 +124,7 @@ bool SwerveModule::adjustAngle(float targetAngle) {
         tempTarget += 360;
     } else if(tempTarget > 360) {
         tempTarget -= 360;
-    } // zzzzzzzzzzzzzz
+    } 
 
     steerToAng(tempTarget);
 

@@ -2,6 +2,7 @@
 #pragma once
 
 #include <rev/CANSparkMax.h>
+#include <ctre/Phoenix.h>
 #include <frc/AnalogEncoder.h>
 #include <frc/AnalogInput.h>
 #include <frc/controller/PIDController.h>
@@ -15,7 +16,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         SwerveModule(int driveID, int steerID, int steerEncID); // CAN IDs, analog port for steer encoder
         
         float getDistance(void); // Returns position of the distance encoder
-        void resetDriveEncoder(void); 
+        void resetDriveEncoder(void);
 
         float getAngleRaw(void); // position of steering encoder
         float getAngle(void); // scaled angle between 0 and 360
@@ -36,10 +37,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         bool adjustAngle(float targetAngle);
 
     private:
-        rev::CANSparkMax driveMotor;
+        TalonFX driveMotor;
         rev::CANSparkMax steerMotor;
 
-        rev::SparkMaxRelativeEncoder driveEnc; // Built-in NEO Encoders
+        TalonFXSensorCollection driveEnc; // built in TalonFX sensors
         rev::SparkMaxRelativeEncoder steerEncNEO; 
 
         frc::AnalogInput rawSteerEnc;
