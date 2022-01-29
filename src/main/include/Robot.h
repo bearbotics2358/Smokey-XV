@@ -24,7 +24,9 @@ class Robot : public frc::TimedRobot
 
     void TestInit();
     void TestPeriodic();
+
   private: 
+  
     JrimmyGyro a_Gyro;
     SwerveModule a_FLModule;
     SwerveModule a_FRModule;
