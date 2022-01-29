@@ -4,50 +4,32 @@
 
 
 /*====== MOTOR CONTROLLER IDS ======*/
-#define FL_STEER_ID 1
-#define FL_DRIVE_ID 2
 
-#define FR_STEER_ID 11
-#define FR_DRIVE_ID 12
+    //Drive ID: odd
+    //Steer ID: even
 
-#define BL_STEER_ID 21
-#define BL_DRIVE_ID 22
+    #define FL_DRIVEID 1
+    #define FL_STEERID 2
 
-#define BR_STEER_ID 31
-#define BR_DRIVE_ID 32
+    #define FR_DRIVEID 3
+    #define FR_STEERID 4
 
+    #define BL_DRIVEID 5
+    #define BL_STEERID 6
 
-
-/*
-// Module CAN IDs FL, FR, BL, BR
-FL:
- Module 1 Turn - 1
- Module 1 Drive - 2
-FR:
- Module 2 Turn - 11
- Module 2 Drive - 12
-BL:
- Module 3 Turn - 21
- Module 3 Drive - 22
-BR:
- Module 4 Turn - 31
- Module 4 Drive - 32
-*/
+    #define BR_DRIVEID 7
+    #define BR_STEERID 8
 
 
 /* ========== Joystick Ports ========= */
-#define JOYSTICK_PORT 1
-#define JOYSTICK_DEADZONE 0.15
 
-#define BUTTON_BOX 3
-#define XBOX_CONTROLLER 5
+    #define JOYSTICK_PORT 1 
+    #define JOYSTICK_DEADZONE 0.15
+    #define BUTTON_BOX 3
+    #define XBOX_CONTROLLER 5
+    #define TICKS_STEERING 18.0 // roughly 18 "position" units per steering rotation
 
-#define TICKS_STEERING 18.0 // roughly 18 "position" units per steering rotation
-
-/* ====== ASCII ART ======= */
-//   <====[-<('-'<)
-
-#define LIGHT_RING_CONTROLLER_ADDRESS 0x4
+    #define LIGHT_RING_CONTROLLER_ADDRESS 0x4
 /* ============ GEAR RATIOS ======== */
 // drive motor -> wheel = 10:1 (10 drive rotations for one wheel rotation)
 // radius of wheel = 2 inches

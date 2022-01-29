@@ -6,10 +6,10 @@
 
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
-a_FLModule(FL_DRIVE_ID, FL_STEER_ID, 1), 
-a_FRModule(FR_DRIVE_ID, FR_STEER_ID, 2), 
-a_BLModule(BL_DRIVE_ID, BL_STEER_ID, 3),
-a_BRModule(BR_DRIVE_ID, BR_STEER_ID, 4),
+a_FLModule(FL_DRIVEID, FL_STEERID, 1), 
+a_FRModule(FR_DRIVEID, FR_STEERID, 2), 
+a_BLModule(BL_DRIVEID, BL_STEERID, 3),
+a_BRModule(BR_DRIVEID, BR_STEERID, 4),
 joystickOne(JOYSTICK_PORT),
 a_xBoxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
