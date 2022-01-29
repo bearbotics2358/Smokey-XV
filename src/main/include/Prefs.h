@@ -2,6 +2,11 @@
 
 // Declare constants such as CAN IDs here 
 
+/*======== SHOOTER CONSTANTS ========*/
+
+    #define SHOOTER_ID 50
+    #define SHOOTER_SPEED .5
+
 
 /*====== MOTOR CONTROLLER IDS ======*/
 

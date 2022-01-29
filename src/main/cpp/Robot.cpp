@@ -5,7 +5,7 @@
 // #include "math/LinAlg.h"
 
 Robot::Robot():
-a_Gyro(frc::I2C::kMXP), // 1
+a_Gyro(frc::I2C::kMXP), 
 a_FLModule(FL_DRIVEID, FL_STEERID, 1), 
 a_FRModule(FR_DRIVEID, FR_STEERID, 2), 
 a_BLModule(BL_DRIVEID, BL_STEERID, 3),
@@ -13,7 +13,8 @@ a_BRModule(BR_DRIVEID, BR_STEERID, 4),
 joystickOne(JOYSTICK_PORT),
 a_xBoxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
-a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule)
+a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
+a_Shooter(SHOOTER_ID)
 {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
@@ -88,84 +89,11 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() // main loop
 {
 
-    /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
+    /*=-=-=-=-=-=-=-=- Testing Shooter Controls -=-=-=-=-=-=-=-=*/
 
-    float x = -1 * joystickOne.GetRawAxis(0);
-    float y = -1 * joystickOne.GetRawAxis(1);
-    float z = -1 * joystickOne.GetRawAxis(2);
-    float gyro = a_Gyro.GetAngle(0);
-
-    if(fabs(x) < 0.10)
-    {
-        x = 0;
-    }
-    if(fabs(y) < 0.10)
-    {
-        y = 0;
-    }
-    if(fabs(z) < 0.10)
-    {
-        z = 0;
-    }
-    
-    if(gyro < 0)
-    {
-        gyro = fmod(gyro, -360);
-        gyro += 360;
-    }
-    else
-    {
-        gyro = fmod(gyro, 360);
-    }
-    
-    bool fieldOreo = true; // field oriented? - yes
-
-    frc::SmartDashboard::PutNumber("Chase: ", z);
-    bool inDeadzone = (((sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE)) ? true : false); // Checks joystick deadzones
-
-    if(joystickOne.GetRawButton(5))
-    {
-        a_Gyro.Cal();
-        a_Gyro.Zero();
-    }
-
-    
-  if(joystickOne.GetRawButton(3))
-    {
-        if(!inDeadzone) 
-        {
-            if(joystickOne.GetRawButton(1)) 
-            {
-                a_swerveyDrive.swerveUpdate(x, y, 0.5 * z, gyro, false);
-            } 
-            else 
-            {
-                a_swerveyDrive.crabDriveUpdate(x, y, gyro);
-            }
+        if(a_xBoxController.GetRawButton(2)) {
+            a_Shooter.SetSpeed(SHOOTER_SPEED);
         } 
-        else 
-        {
-            a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, false);
-        }
-    }
-    else
-    {
-        if(!inDeadzone) 
-        {
-            if(joystickOne.GetRawButton(1)) 
-            {
-                a_swerveyDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
-            } 
-            else 
-            {
-                a_swerveyDrive.crabDriveUpdate(x, y, gyro);
-            }
-        } 
-        else 
-        {
-            a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
-        }
-    }
        
 }
 
@@ -177,79 +105,7 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic() 
 {
-
-
-
-    float x = -1 * joystickOne.GetRawAxis(0);
-    float y = -1 * joystickOne.GetRawAxis(1);
-    float z = -1 * joystickOne.GetRawAxis(2);
-    float gyro = a_Gyro.GetAngle(0);
-
-    if(fabs(x) < 0.10)
-    {
-        x = 0;
-    }
-    if(fabs(y) < 0.10)
-    {
-        y = 0;
-    }
-    if(fabs(z) < 0.10)
-    {
-        z = 0;
-    }
-    
-    if(gyro < 0)
-    {
-        gyro = fmod(gyro, -360);
-        gyro += 360;
-    }
-    else
-    {
-        gyro = fmod(gyro, 360);
-    }
-    
-    bool fieldOreo = true; // field oriented? - yes
-
-    frc::SmartDashboard::PutNumber("Chase: ", z);
-    bool inDeadzone = (((sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE)) ? true : false); // Checks joystick deadzones
-
-
-
-
-    if(joystickOne.GetRawButton(3)) {
-        a_swerveyDrive.turnToAngle(gyro, 180.0);
-    } else if(!inDeadzone) {
-        if(joystickOne.GetRawButton(1)) 
-        {
-            if(joystickOne.GetRawButton(2)) 
-            {
-               // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
-            } 
-            else
-            {
-                a_swerveyDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
-            }
-        } 
-        else 
-        
-        {
-           a_swerveyDrive.crabDriveUpdate(x, y, gyro);
-        }
-    } 
-    else 
-    {
-        if(joystickOne.GetRawButton(2)) 
-        {
-           // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
-        } 
-        else
-        {
-            a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
-        }
-    }
-
-    frc::SmartDashboard::PutNumber("Gyro: ", gyro);
-
+ 
 }
 
 
