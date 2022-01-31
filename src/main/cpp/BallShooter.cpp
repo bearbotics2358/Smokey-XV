@@ -12,9 +12,4 @@
 
     }
 
-    void BallShooter::ShooterStop() {
-
-        a_Shooter.Set(ControlMode::PercentOutput, 0);
-
-    }
 

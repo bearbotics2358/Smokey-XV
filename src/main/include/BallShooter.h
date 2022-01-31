@@ -13,8 +13,7 @@ class BallShooter
         BallShooter(int id); 
 
         void SetSpeed(double speed); 
-        void ShooterStop();
-
+    
     private: 
         
         TalonFX a_Shooter; 

@@ -36,12 +36,11 @@ class Robot : public frc::TimedRobot
     SwerveModule a_BLModule;
     SwerveModule a_BRModule;
      
-    frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
-    frc::Joystick a_xBoxController; 
-    frc::Joystick a_buttonbox;
+    frc::Joystick a_Joystick;
+    frc::Joystick a_XboxController; 
 
     // Swerve Drive object
-    SwerveDrive a_swerveyDrive;
+    SwerveDrive a_SwerveDrive;
 
     BallShooter a_Shooter; 
 
