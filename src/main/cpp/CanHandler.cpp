@@ -51,45 +51,40 @@ CanHandler::CanHandler(const std::vector<Arduino>& in)
 }
 
 CanHandler CanHandler::layout2022() {
-    std::vector<Arduino> layout;
-    Arduino ard;
-
-    ard.can_id = LEFT_ARDUINO_CAN_ID;
-    ard.api_id = LEFT_ARDUINO_API_ID;
-    ard.fields = std::vector<DataField>();
-
-    ard.fields.push_back(
-        DataField {
-            FL_SWERVE_DATA_ID, 16, 10.0f
+    std::vector<Arduino> layout {
+        Arduino {
+            .can_id = LEFT_ARDUINO_CAN_ID,
+            .api_id = LEFT_ARDUINO_API_ID,
+            .fields = std::vector<DataField> {
+                DataField {
+                    .id = FL_SWERVE_DATA_ID,
+                    .desired_bits = 16,
+                    .multiplier = 10.0f
+                },
+                DataField {
+                    .id = BL_SWERVE_DATA_ID,
+                    .desired_bits = 16,
+                    .multiplier = 10.0f
+                }
+            }
+        },
+        Arduino {
+            .can_id = RIGHT_ARDUINO_CAN_ID,
+            .api_id = RIGHT_ARDUINO_API_ID,
+            .fields = std::vector<DataField> {
+                DataField {
+                    .id = FR_SWERVE_DATA_ID,
+                    .desired_bits = 16,
+                    .multiplier = 10.0f
+                },
+                DataField {
+                    .id = BR_SWERVE_DATA_ID,
+                    .desired_bits = 16,
+                    .multiplier = 10.0f
+                }
+            }
         }
-    );
-
-    ard.fields.push_back(
-        DataField {
-            BL_SWERVE_DATA_ID, 16, 10.0f
-        }
-    );
-
-    layout.push_back(ard);
-
-    //ard.can_id = RIGHT_ARDUINO_CAN_ID;
-    ard.can_id = RIGHT_ARDUINO_CAN_ID;
-    ard.api_id = RIGHT_ARDUINO_API_ID;
-    ard.fields = std::vector<DataField>();
-
-    ard.fields.push_back(
-        DataField {
-            FR_SWERVE_DATA_ID, 16, 10.0f
-        }
-    );
-
-    ard.fields.push_back(
-        DataField {
-            BR_SWERVE_DATA_ID, 16, 10.0f
-        }
-    );
-
-    layout.push_back(ard);
+    };
 
     return CanHandler(layout);
 }
