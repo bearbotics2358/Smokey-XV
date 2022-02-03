@@ -42,6 +42,6 @@ class Robot : public frc::TimedRobot
     // Swerve Drive object
     SwerveDrive a_SwerveDrive;
 
-    BallShooter a_Shooter; 
+    BallShooter a_Shooter;
 
 };

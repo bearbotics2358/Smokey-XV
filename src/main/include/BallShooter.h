@@ -10,13 +10,14 @@ class BallShooter
 
     public:
 
-        BallShooter(int id); 
+        BallShooter(int leftId, int rightId); 
 
         void SetSpeed(double speed); 
     
     private: 
         
-        TalonFX a_Shooter; 
+        TalonFX a_ShooterControllerLeft;
+        TalonFX a_ShooterControllerRight;
 
 };		
 

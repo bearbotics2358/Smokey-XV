@@ -13,7 +13,7 @@ a_BRModule(BR_DRIVEID, BR_STEERID, 4),
 a_Joystick(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
-a_Shooter(SHOOTER_ID)
+a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID)
 {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
@@ -94,7 +94,7 @@ void Robot::TeleopPeriodic() // main loop
 
         if(a_XboxController.GetRawButton(2)) {
             a_Shooter.SetSpeed(SHOOTER_SPEED);
-        } 
+        }
        
        /*
         if(a_xBoxController.GetRawAxis(1)) {
