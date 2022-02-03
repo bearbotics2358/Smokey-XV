@@ -1,20 +1,57 @@
 #include "SwerveDrive.h"
 
-#if false
-SwerveDrive::SwerveDrive(SwerveModule& fl_module, SwerveModule& fr_module, SwerveModule& bl_module, SwerveModule& br_module):
-m_fl(fl_module),
-m_fr(fr_module),
-m_bl(bl_module),
-m_br(br_module) {}
+#include "math/ConstMath.h"
+
+#ifdef NEW_SWERVE
+SwerveTransform::SwerveTransform(Vec2 direction, float rotSpeed):
+direction(direction),
+rotSpeed(rotSpeed) {}
+
+
+SwerveDrive::SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule):
+m_fl(flModule),
+m_fr(frModule),
+m_bl(blModule),
+m_br(brModule),
+m_anglePid(0.014, 0.0, 0.0) {}
 
 SwerveDrive::~SwerveDrive() {}
 
-void update(const SwerveTransform& transform, float gyro_angle) {
+void SwerveDrive::update(const SwerveTransform& transform) {
+	constexpr float halfLength = DRIVE_LENGTH / 2;
+	constexpr float halfWidth = DRIVE_WIDTH / 2;
+	constexpr float driveRadius = constSqrt(halfLength * halfLength + halfWidth * halfWidth);
 
+	constexpr Vec2 frPosVec = Vec2(halfWidth, halfLength);
+	constexpr Vec2 flPosVec = Vec2(-halfWidth, halfLength);
+	constexpr Vec2 brPosVec = Vec2(halfWidth, -halfLength);
+	constexpr Vec2 blPosVec = Vec2(-halfWidth, -halfLength);
+
+	constexpr Vec2 frTurn = frPosVec.right_normal().const_as_normalized();
+	constexpr Vec2 flTurn = flPosVec.right_normal().const_as_normalized();
+	constexpr Vec2 brTurn = brPosVec.right_normal().const_as_normalized();
+	constexpr Vec2 blTurn = blPosVec.right_normal().const_as_normalized();
+
+	float angularVelocity = transform.rotSpeed * driveRadius;
+
+	Vec2 frVec = frTurn * angularVelocity + transform.direction;
+	Vec2 flVec = flTurn * angularVelocity + transform.direction;
+	Vec2 brVec = brTurn * angularVelocity + transform.direction;
+	Vec2 blVec = blTurn * angularVelocity + transform.direction;
+
+	m_fr.driveDirection(frVec);
+	m_fl.driveDirection(flVec);
+	m_br.driveDirection(brVec);
+	m_bl.driveDirection(blVec);
 }
-#endif
 
-#if true
+float SwerveDrive::getAvgDistance() const {
+	float sum = fabs(m_fr.getDistance()) + fabs(m_fl.getDistance()) + fabs(m_br.getDistance()) + fabs(m_bl.getDistance());
+	return INCHES_PER_TICK * sum / 4.0;
+}
+
+#else
+
 SwerveDrive::SwerveDrive(SwerveModule *FL_Ptr, SwerveModule *FR_Ptr, SwerveModule *BL_Ptr, SwerveModule *BR_Ptr):
 FL_Module(FL_Ptr),
 FR_Module(FR_Ptr),
@@ -344,11 +381,16 @@ void SwerveDrive::driveDistance(float dist, float direction)
 
 }
 
-void SwerveDrive::resetDrive() {
+void SwerveDrive::resetDrive(float flAngle, float frAngle, float blAngle, float brAngle) {
 	FL_Module->resetDriveEncoder();
 	FR_Module->resetDriveEncoder();
 	BL_Module->resetDriveEncoder();
 	BR_Module->resetDriveEncoder();
+
+	FL_Module->resetSteerEncoder(flAngle);
+	FR_Module->resetSteerEncoder(frAngle);
+	BL_Module->resetSteerEncoder(blAngle);
+	BR_Module->resetSteerEncoder(brAngle);
 }
 
 float SwerveDrive::getAvgDistance(void)

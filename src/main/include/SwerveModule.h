@@ -7,6 +7,7 @@
 #include <frc/AnalogInput.h>
 #include <frc/controller/PIDController.h>
 #include "Prefs.h"
+#include "math/LinAlg.h"
 #include <math.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -17,6 +18,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         
         float getDistance(void); // Returns position of the distance encoder
         void resetDriveEncoder(void);
+
+        void resetSteerEncoder(float offset); // set the offset in the turn encoder
+        // this would be the offset from 0 that the wheel is currently at
+        // obtained from arduinos
 
         float getAngleRaw(void); // position of steering encoder
         float getAngle(void); // scaled angle between 0 and 360
@@ -35,6 +40,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         void updateSteerPID(double pNew, double iNew, double dNew);
 
         bool adjustAngle(float targetAngle);
+
+        // drives in the direction of the vector
+        // the magnitude of the vector is passed into setDriveSpeed
+        void driveDirection(Vec2 direction);
 
     private:
         TalonFX driveMotor;

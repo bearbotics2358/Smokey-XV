@@ -4,6 +4,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <stdio.h>
 #include "math/LinAlg.h"
+#include <iostream>
 /*~~ hi :) ~~ */
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
@@ -15,11 +16,9 @@ joystickOne(JOYSTICK_PORT),
 a_xBoxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
 a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
-a_LimeyLight(),
 // handler("169.254.179.144", "1185", "data"),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
-a_CFS(SHOOT_1, SHOOT_2, FEED_1, FEED_2, COLLECT, PIVOT, CLIMBER, BROKEN_BEAM, REESES_BEAM),
-a_JAutonomous(&a_Gyro, &a_buttonbox, &a_swerveyDrive, &a_CFS, &a_LimeyLight)
+a_canHandler(CanHandler::layout2022())
 {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
@@ -53,54 +52,46 @@ void Robot::RobotInit()
     a_Gyro.Init();
     // a_Gyro.Cal();
     a_Gyro.Zero();
-
-    a_LimeyLight.ledOff();
-    a_LimeyLight.cameraMode(0);
 }
 
 void Robot::RobotPeriodic()
 {
     a_Gyro.Update(); 
     // handler.update();
-    frc::SmartDashboard::PutNumber("Wheel Speed L: ", a_CFS.GetWheelSpeedL());
-    frc::SmartDashboard::PutNumber("Wheel Speed R: ", a_CFS.GetWheelSpeedR());
-
-    frc::SmartDashboard::PutBoolean("Bottom Beam Break: ", a_CFS.GetBottomBeam());
-    frc::SmartDashboard::PutBoolean("Top Beam Break: ", a_CFS.GetTopBeam());
-    
-    // frc::SmartDashboard::PutNumber("Pivot Voltage: ", a_CFS.GetPivotPosition());
-    frc::SmartDashboard::PutNumber("Pivot Angle: ", a_CFS.GetArmAngle());
-    frc::SmartDashboard::PutBoolean("Limelight Target?", a_LimeyLight.isTarget());
-    frc::SmartDashboard::PutNumber("Distance Limelight: ", a_LimeyLight.getDist());
-
-    // frc::SmartDashboard::PutNumber("Feeder Top: ", a_CFS.GetFeedSpeedTop());
-    // frc::SmartDashboard::PutNumber("Feeder Bot: ", a_CFS.GetFeedSpeedBot());
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_swerveyDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+
+    a_canHandler.update();
+    frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
+    printf("fl angle: %f\n", *a_canHandler.getData(FL_SWERVE_DATA_ID));
+    printf("fr angle: %f\n", *a_canHandler.getData(FR_SWERVE_DATA_ID));
+    printf("bl angle: %f\n", *a_canHandler.getData(BL_SWERVE_DATA_ID));
+    printf("br angle: %f\n", *a_canHandler.getData(BR_SWERVE_DATA_ID));
+    /*std::cout << "Front left angle" << *a_canHandler.getData(FL_SWERVE_DATA_ID);
+    std::cout << "Front right angle" << *a_canHandler.getData(FR_SWERVE_DATA_ID);
+    std::cout << "Back left angle" << *a_canHandler.getData(BL_SWERVE_DATA_ID);
+    std::cout << "Back right angle" << *a_canHandler.getData(BR_SWERVE_DATA_ID); */
 }
 
 void Robot::DisabledInit()
 {
-    a_swerveyDrive.resetDrive();
+    resetSwerveDrive();
 }
 
 void Robot::DisabledPeriodic()
 {
-    a_LimeyLight.ledOff();
-    a_LimeyLight.cameraMode(0);
 }
 
 void Robot::AutonomousInit() 
 {
-    a_JAutonomous.Init();
-    a_JAutonomous.DecidePath(5); // path number we are using
-    a_JAutonomous.StartPathMaster();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-    a_JAutonomous.PeriodicPathMaster();
 }
 
 void Robot::TeleopInit() 
@@ -154,22 +145,15 @@ void Robot::TeleopPeriodic() // main loop
 
     if(joystickOne.GetRawButton(4))
     {
-        a_LimeyLight.ledOn();
+        // vision led on
     }
     else
     {
-        a_LimeyLight.ledOff();
+        // vision led off
     }
-    if(joystickOne.GetRawButton(4) && a_LimeyLight.isTarget()) // can see a target and toggled on
+    if(joystickOne.GetRawButton(4)) // && has target (todo once written)
     {
-        if(!inDeadzone) 
-        {
-            a_swerveyDrive.swerveUpdate(x, y, a_LimeyLight.calcZAxis(), gyro, true);
-        }
-        else
-        {
-            a_swerveyDrive.swerveUpdate(0, 0, a_LimeyLight.calcZAxis(), gyro, true);
-        }   
+        // track target with vision 
     }
     else if(joystickOne.GetRawButton(3))
     {
@@ -207,133 +191,6 @@ void Robot::TeleopPeriodic() // main loop
             a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
         }
     }
-
-
-    /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=- Limelight Stuffs -=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-        
-    if(joystickOne.GetRawButton(7)) {
-        a_LimeyLight.ledOn(); 
-        frc::SmartDashboard::PutNumber("Limelight: ", 1); 
-        // *gasp* turns led on
-    } else if(joystickOne.GetRawButton(9)) {
-        a_LimeyLight.ledOff();
-        frc::SmartDashboard::PutNumber("Limelight: ", 0);
-        // *even bigger gasp* turns led off 
-    }
-    
-    if(joystickOne.GetRawButton(10)) {
-        a_LimeyLight.cameraMode(0);
-        //  turn on vision
-    } else if(joystickOne.GetRawButton(12)) {
-        a_LimeyLight.cameraMode(1); 
-        // turn on remote viewing 
-    }
-
-    /*
-        cameraMode 0: Vision processing
-        cameraMode 1: Remote viewing 
-        :)
-    */  
-       
-    a_LimeyLight.printValues();
-
-    /* -=-=-=-=-=-=-=-=-=- Collectashoot Controls -=-=-=-=-=-=-=-=-=-=- */
-
-    if(a_xBoxController.GetRawButton(2)) 
-    {
-       float fastVel = 462;
-        a_CFS.ShootVelocity(fastVel); 
-
-        float avg = (fabs(a_CFS.GetWheelSpeedL()) + fabs(a_CFS.GetWheelSpeedR())) / 2.0;
-        if(avg >= 0.98 * fastVel)
-        {
-            a_CFS.FeedVelocity(1000);
-        }
-        else
-        {
-            a_CFS.FeedVelocity(0); 
-        }
-    }
-    else if(a_xBoxController.GetRawButton(3))
-    {
-        float slowVel = 386; // ideal velocity to go up against the goal
-        a_CFS.ShootVelocity(slowVel); 
-        
-        float avg = (fabs(a_CFS.GetWheelSpeedL()) + fabs(a_CFS.GetWheelSpeedR())) / 2.0;
-        if(avg >= 0.90 * slowVel)
-        {
-            a_CFS.FeedVelocity(1000);
-        }
-        else
-        {
-            a_CFS.FeedVelocity(0); 
-        }
-    }
-    else if(a_xBoxController.GetRawButton(1))
-    {
-        a_CFS.AutoCollect();
-    }
-    else
-    {   
-        if(fabs(a_xBoxController.GetRawAxis(3)) > 0.1)
-        {
-            a_CFS.Collect(a_xBoxController.GetRawAxis(3));
-        }
-        else if(fabs(a_xBoxController.GetRawAxis(2)) > 0.1)
-        {
-            a_CFS.Collect(-1* a_xBoxController.GetRawAxis(2));
-        }
-        else
-        {
-            a_CFS.Collect(0);
-        }
-
-        a_CFS.ShootVelocity(0);
-        float temp = !a_xBoxController.GetRawButton(4) ? a_xBoxController.GetRawAxis(1) : 0; // if not climbing, run
-        a_CFS.Feed(temp);
-    }
-
-    /* -=-=-=-=-=-=-=-=-=- Arm Controls -=-=-=-=-=-=-=-=-=-=- */
-
-    if(a_xBoxController.GetRawButton(5))
-    {
-        float ang = 77.3;
-        if(fabs(a_CFS.GetArmAngle() - ang) >= 0.4)
-        {
-            a_CFS.setArmAngle(ang);
-        }
-        else
-        {
-            a_CFS.ArmMove(0);
-        }
-    }
-    else if(a_xBoxController.GetRawButton(4))
-    {
-        a_CFS.setArmAngle(35);
-    }
-    else
-    {
-        a_CFS.ArmMove(0.2 * a_xBoxController.GetRawAxis(5));
-    }
-
-    /* -=-=-=-=-=-=-=-=-=- Climber Controls -=-=-=-=-=-=-=-=-=-=- */
-
-    if(a_xBoxController.GetRawButton(6) && fabs(a_xBoxController.GetRawAxis(1)) > 0.1) // only climb if y is hit
-    {
-        if(a_CFS.GetArmAngle() > 60)
-        {
-            a_CFS.ClimbQuestionMark(a_xBoxController.GetRawAxis(1));
-        }
-        else
-        {
-            a_CFS.ClimbQuestionMark(0);
-        } 
-    }
-    else
-    {
-        a_CFS.ClimbQuestionMark(0);
-    }    
-
 }
 
 void Robot::TestInit() 
@@ -390,7 +247,7 @@ void Robot::TestPeriodic()
         {
             if(joystickOne.GetRawButton(2)) 
             {
-                a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
+                // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
             } 
             else
             {
@@ -407,7 +264,7 @@ void Robot::TestPeriodic()
     {
         if(joystickOne.GetRawButton(2)) 
         {
-            a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
+            // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
         } 
         else
         {
@@ -416,33 +273,6 @@ void Robot::TestPeriodic()
     }
 
     frc::SmartDashboard::PutNumber("Gyro: ", gyro);
-
-    if(a_xBoxController.GetRawButton(4) && fabs(a_xBoxController.GetRawAxis(1)) < 0.1)
-    {
-        a_CFS.ClimbQuestionMark(a_xBoxController.GetRawAxis(1));
-    }
-    else
-    {
-        a_CFS.ClimbQuestionMark(0);
-    }
-    
-
-    if(a_xBoxController.GetRawButton(5))
-    {
-        if(fabs(a_CFS.GetArmAngle() - 75.0) > 1)
-        {
-            a_CFS.setArmAngle(75);
-        }
-        else
-        {
-            a_CFS.ArmMove(0);
-        }
-
-    }
-    else
-    {
-        a_CFS.ArmMove(0);
-    }
 
 
     /* 
@@ -486,6 +316,20 @@ void Robot::TestPeriodic()
     */ 
 
 
+}
+
+bool Robot::resetSwerveDrive() {
+    auto flAngle = a_canHandler.getData(FL_SWERVE_DATA_ID);
+    auto frAngle = a_canHandler.getData(FR_SWERVE_DATA_ID);
+    auto blAngle = a_canHandler.getData(BL_SWERVE_DATA_ID);
+    auto brAngle = a_canHandler.getData(BR_SWERVE_DATA_ID);
+
+    if (flAngle.has_value() && frAngle.has_value() && blAngle.has_value() && brAngle.has_value()) {
+        a_swerveyDrive.resetDrive(*flAngle, *frAngle, *blAngle, *brAngle);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

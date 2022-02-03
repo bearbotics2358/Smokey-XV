@@ -1,5 +1,6 @@
 
 #include "SwerveModule.h"
+#include <math.h>
 
 SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID):
 driveMotor(driveID),
@@ -23,6 +24,11 @@ float SwerveModule::getDistance(void)
 void SwerveModule::resetDriveEncoder(void)
 {
     driveEnc.SetIntegratedSensorPosition(0);
+}
+
+void SwerveModule::resetSteerEncoder(float offset)
+{
+    steerEncNEO.SetPosition(offset);
 }
 
 float SwerveModule::getAngleRaw(void)
@@ -129,6 +135,14 @@ bool SwerveModule::adjustAngle(float targetAngle) {
     steerToAng(tempTarget);
 
     return changeMade; 
+}
+
+void SwerveModule::driveDirection(Vec2 direction) {
+    if (adjustAngle(direction.angle())) {
+        setDriveSpeed(-direction.magnitude());
+    } else {
+        setDriveSpeed(direction.magnitude());
+    }
 }
 
 /*

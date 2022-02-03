@@ -1,45 +1,53 @@
-
 #pragma once
 
+#include <frc/controller/PIDController.h>
+
 #include "SwerveModule.h"
+#include "math/LinAlg.h"
 #include "Prefs.h"
 
-#if false
+#ifdef NEW_SWERVE
 struct SwerveTransform {
-    SwerveTransform(Vec2 direction, float rot_speed, bool field_oriented) :
-    direction(direction),
-    rot_speed(rot_speed),
-    field_oriented(field_oriented) {}
+    SwerveTransform(Vec2 direction, float rotSpeed);
+
+    static SwerveTransform translate(Vec2 direction, float gyroAngle, bool fieldOriented = true);
+    static SwerveTransform translateRotate(Vec2 direction, float rotSpeed, float gyroAngle, bool fieldOriented);
 
     // direction for robot to move in
     Vec2 direction;
 
     // speed of rotation in radians
-    // if 0, the robot will attempt to maintain the current angle
-    float rot_speed;
-
-    // if true, movement will be transformed
-    bool field_oriented;
+    // if this is 0, the robot will try and hold its current angle
+    float rotSpeed;
 };
 
 class SwerveDrive {
     public:
-        SwerveDrive(SwerveModule& fl_module, SwerveModule& fr_module, SwerveModule& bl_module, SwerveModule& br_module);
+        SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule);
         ~SwerveDrive();
 
-        void update(const SwerveTransform& transform, float gyro_angle);
-    private:anglePIDanglePID
+        void update(const SwerveTransform& transform);
+
+        float getAvgDistance() const;
+
+    private:
         SwerveModule& m_fl;
         SwerveModule& m_fr;
         SwerveModule& m_bl;
         SwerveModule& m_br;
 
-        // the angle to hold if the input rotation speed is 0
-        float m_hold_angle { 0 };
-};
-#endif
+        // angle to hold if rotSpeed is 0
+        float m_holdAngle { 0 };
 
-#if true
+        // pid controller to use when holding angle
+        frc2::PIDController m_anglePid;
+
+        static constexpr float DRIVE_LENGTH { 29.75 };
+        static constexpr float DRIVE_WIDTH { 29.75 };
+};
+
+#else
+
 class SwerveDrive // Class to handle the kinematics of Swerve Drive
 {
     public:
@@ -61,7 +69,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
 
 
         void driveDistance(float dist, float direction); // dist in inches and angle 0-360
-        void resetDrive();
+        void resetDrive(float flAngle, float frAngle, float blAngle, float brAngle);
         float getAvgDistance(void); // baka-47
 
         void turnToAngle(float gyro, float angle); 

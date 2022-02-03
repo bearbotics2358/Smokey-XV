@@ -7,9 +7,7 @@
 #include <frc/Joystick.h> // Joystick 
 #include "SwerveDrive.h" // Swerve kinematics
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
-#include "LimeyLight.h"
-#include "CFS.h"
-#include "Autonomous.h"
+#include "CanHandler.h"
 
 class Robot : public frc::TimedRobot 
 {
@@ -30,6 +28,11 @@ class Robot : public frc::TimedRobot
     void TestInit();
     void TestPeriodic();
   private: 
+    // reads values from aduinos and resets swerve drive
+    // returns true on success, false on failure
+    // TODO: add button that does this
+    bool resetSwerveDrive();
+
     JrimmyGyro a_Gyro;
     SwerveModule a_FLModule;
     SwerveModule a_FRModule;
@@ -41,14 +44,8 @@ class Robot : public frc::TimedRobot
     frc::Joystick a_buttonbox;
 
     // Swerve Drive object
-    SwerveDrive a_swerveyDrive;
-
-    // Lime Light Object
-    LimeyLight a_LimeyLight; 
+    SwerveDrive a_swerveyDrive; 
 
     //MqttHandler handler;
-    CFS a_CFS; 
-
-    Autonomous a_JAutonomous;
-
+    CanHandler a_canHandler;
 };
