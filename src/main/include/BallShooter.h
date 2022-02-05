@@ -20,5 +20,8 @@ class BallShooter
         TalonFX a_shooterLeft;
         TalonFX a_shooterRight;
 
+        double alpha { 0.9 };
+        double previousInput { 0.0 };
+
 };		
 
