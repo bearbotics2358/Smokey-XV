@@ -8,7 +8,7 @@ class BallShooter
 
     public:
 
-        BallShooter(int idLeft, int idRight); 
+        BallShooter(int leftId, int rightId); 
 
         // sets speed in rpm
         void setSpeed(double rpm);
