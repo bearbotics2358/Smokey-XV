@@ -13,7 +13,14 @@ a_BRModule(BR_DRIVEID, BR_STEERID, 4),
 a_Joystick(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
-a_Shooter(SHOOTER_ID)
+a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
+a_mainTab(frc::Shuffleboard::GetTab("Main Tab")),
+a_setRpm(a_mainTab.Add("Desired RPM", 0.0)
+    .WithWidget(frc::BuiltInWidgets::kNumberSlider)
+    .GetEntry()),
+a_currentRpm(a_mainTab.Add("Current RPM", 0.0)
+    .WithWidget(frc::BuiltInWidgets::kTextView)
+    .GetEntry())
 {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
@@ -46,7 +53,7 @@ void Robot::RobotInit()
     tmp.w();
     tmp.magnitude();
   */ 
-    frc::SmartDashboard::init();
+    //frc::SmartDashboard::init();
     a_Gyro.Init();
     // a_Gyro.Cal();
     a_Gyro.Zero();
@@ -58,8 +65,8 @@ void Robot::RobotPeriodic()
     a_Gyro.Update(); 
     // handler.update();
 
-    frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
-    frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+    //frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
+    //frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
 }
 
 void Robot::DisabledInit()
@@ -92,10 +99,13 @@ void Robot::TeleopPeriodic() // main loop
 
     /*=-=-=-=-=-=-=-=- Testing Shooter Controls -=-=-=-=-=-=-=-=*/
 
-        if(a_XboxController.GetRawButton(2)) {
-            a_Shooter.SetSpeed(SHOOTER_SPEED);
-        } 
+        /*if(a_XboxController.GetRawButton(2)) {
+            a_Shooter.setSpeed(SHOOTER_SPEED);
+        }*/
        
+       a_Shooter.setSpeed(a_setRpm.GetDouble(0.0));
+       a_currentRpm.SetDouble(a_Shooter.getSpeed());
+
        /*
         if(a_xBoxController.GetRawAxis(1)) {
             a_Shooter.SetSpeed(a_XboxController.GetRawAxis(1));

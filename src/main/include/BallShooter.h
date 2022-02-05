@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Prefs.h"
-
 #include <rev/CANSparkMax.h>
 #include <ctre/Phoenix.h>
 
@@ -10,13 +8,17 @@ class BallShooter
 
     public:
 
-        BallShooter(int id); 
+        BallShooter(int idLeft, int idRight); 
 
-        void SetSpeed(double speed); 
+        // sets speed in rpm
+        void setSpeed(double rpm);
+        // gets speed in rpms
+        double getSpeed();
     
-    private: 
-        
-        TalonFX a_Shooter; 
+    private:
+
+        TalonFX a_shooterLeft;
+        TalonFX a_shooterRight;
 
 };		
 

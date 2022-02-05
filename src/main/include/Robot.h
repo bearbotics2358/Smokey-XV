@@ -8,6 +8,11 @@
 
 #include <frc/Joystick.h> // Joystick 
 #include <frc/TimedRobot.h> // "Timed Robot" template
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/shuffleboard/ShuffleboardTab.h>
+#include <frc/shuffleboard/SimpleWidget.h>
+#include <frc/shuffleboard/BuiltInWidgets.h>
+#include <networktables/NetworkTableEntry.h>
 
 class Robot : public frc::TimedRobot 
 {
@@ -43,5 +48,9 @@ class Robot : public frc::TimedRobot
     SwerveDrive a_SwerveDrive;
 
     BallShooter a_Shooter; 
+
+    frc::ShuffleboardTab& a_mainTab;
+    nt::NetworkTableEntry a_setRpm;
+    nt::NetworkTableEntry a_currentRpm;
 
 };

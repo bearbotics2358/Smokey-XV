@@ -4,9 +4,13 @@
 
 /*======== SHOOTER CONSTANTS ========*/
 
-    #define SHOOTER_ID 50
+    #define LEFT_SHOOTER_ID 50
+    #define RIGHT_SHOOTER_ID 51
     #define SHOOTER_SPEED .5
 
+/*========= MOTOR CONSTANTS =========*/
+
+#define FALCON_UNITS_PER_REV 2048
 
 /*====== MOTOR CONTROLLER IDS ======*/
 
