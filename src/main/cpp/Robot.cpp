@@ -1,26 +1,47 @@
 #include "Robot.h"
 #include "Prefs.h"
+#include <memory>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <stdio.h>
+#include <wpi/StringMap.h>
 // #include "math/LinAlg.h"
 
 Robot::Robot():
+#if 0
 a_Gyro(frc::I2C::kMXP), 
 a_FLModule(FL_DRIVEID, FL_STEERID, 1), 
 a_FRModule(FR_DRIVEID, FR_STEERID, 2), 
 a_BLModule(BL_DRIVEID, BL_STEERID, 3),
 a_BRModule(BR_DRIVEID, BR_STEERID, 4),
 a_Joystick(JOYSTICK_PORT),
-a_XboxController(XBOX_CONTROLLER),
 a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
-a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
-a_mainTab(frc::Shuffleboard::GetTab("Main Tab")),
+#endif
+a_XboxController(XBOX_CONTROLLER),
+a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID)
+/*a_mainTab(frc::Shuffleboard::GetTab("Main Tab")),
 a_setRpm(a_mainTab.Add("Desired RPM", 0.0)
     .WithWidget(frc::BuiltInWidgets::kNumberSlider)
     .GetEntry()),
-a_currentRpm(a_mainTab.Add("Current RPM", 0.0)
+a_currentRpm(
+    a_mainTab.Add("Current RPM", 0.0)
     .WithWidget(frc::BuiltInWidgets::kTextView)
+    .WithProperties(
+        wpi::StringMap<std::shared_ptr<nt::Value>>({
+            {"Min", nt::Value::MakeDouble(-5000.0)},
+            {"Max", nt::Value::MakeDouble(5000)}
+        })
+    )
+    .GetEntry()),
+a_alpha(a_mainTab.Add("Alpha", 0.5)
+    .WithWidget(frc::BuiltInWidgets::kNumberSlider)
+    .WithProperties(
+        wpi::StringMap<std::shared_ptr<nt::Value>>({
+            {"Min", nt::Value::MakeDouble(0.0)},
+            {"Max", nt::Value::MakeDouble(1.0)}
+        })
+    )
     .GetEntry())
+*/
 {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
@@ -53,25 +74,34 @@ void Robot::RobotInit()
     tmp.w();
     tmp.magnitude();
   */ 
-    //frc::SmartDashboard::init();
+    frc::SmartDashboard::init();
+    #if 0
     a_Gyro.Init();
     // a_Gyro.Cal();
     a_Gyro.Zero();
+    #endif
 
 }
 
 void Robot::RobotPeriodic()
 {
-    a_Gyro.Update(); 
+    #if 0
+    a_Gyro.Update();
+    #endif 
     // handler.update();
 
     //frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     //frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+    frc::SmartDashboard::PutNumber("Desired RPM", shooterDesiredSpeed);
+    frc::SmartDashboard::PutNumber("Current RPM", a_Shooter.getSpeed());
 }
 
 void Robot::DisabledInit()
 {
+    #if 0
     a_SwerveDrive.resetDrive();
+    #endif
+    shooterDesiredSpeed = 0.0;
 }
 
 void Robot::DisabledPeriodic()
@@ -99,12 +129,17 @@ void Robot::TeleopPeriodic() // main loop
 
     /*=-=-=-=-=-=-=-=- Testing Shooter Controls -=-=-=-=-=-=-=-=*/
 
-        /*if(a_XboxController.GetRawButton(2)) {
-            a_Shooter.setSpeed(SHOOTER_SPEED);
-        }*/
-       
-       a_Shooter.setSpeed(a_setRpm.GetDouble(0.0));
-       a_currentRpm.SetDouble(a_Shooter.getSpeed());
+        if(a_XboxController.GetRawButton(1)) {
+            shooterDesiredSpeed += 1.0;
+        }
+        if(a_XboxController.GetRawButton(2)) {
+            shooterDesiredSpeed -= 1.0;
+        }
+
+       //a_Shooter.setAlpha(a_alpha.GetDouble(0.5));
+       //a_Shooter.setSpeed(a_setRpm.GetDouble(0.0));
+       a_Shooter.setSpeed(shooterDesiredSpeed);
+       //a_currentRpm.SetDouble(a_Shooter.getSpeed());
 
        /*
         if(a_xBoxController.GetRawAxis(1)) {

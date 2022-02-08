@@ -34,7 +34,7 @@ class Robot : public frc::TimedRobot
     void TestPeriodic();
 
   private: 
-  
+    #if 0
     JrimmyGyro a_Gyro;
     SwerveModule a_FLModule;
     SwerveModule a_FRModule;
@@ -42,15 +42,19 @@ class Robot : public frc::TimedRobot
     SwerveModule a_BRModule;
      
     frc::Joystick a_Joystick;
-    frc::Joystick a_XboxController; 
 
     // Swerve Drive object
     SwerveDrive a_SwerveDrive;
+    #endif
+
+    frc::Joystick a_XboxController; 
 
     BallShooter a_Shooter;
 
-    frc::ShuffleboardTab& a_mainTab;
+    /*frc::ShuffleboardTab& a_mainTab;
     nt::NetworkTableEntry a_setRpm;
     nt::NetworkTableEntry a_currentRpm;
+    nt::NetworkTableEntry a_alpha;*/
 
+    double shooterDesiredSpeed { 0.0 };
 };

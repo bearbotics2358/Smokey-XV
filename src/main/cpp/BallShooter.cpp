@@ -4,10 +4,19 @@
 #include "Prefs.h"
 
 BallShooter::BallShooter(int leftId, int rightId): 
-a_shooterLeft(rightId),
-a_shooterRight(leftId)
+a_shooterLeft(leftId),
+a_shooterRight(rightId)
 {
-        
+    // by default this selects the ingetrated sensor
+    ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
+ 
+    // these settings are present in the documentation example, and since they relate to safety of motor, they are probably a good idea to include
+    config.supplyCurrLimit.triggerThresholdCurrent = 40; // the peak supply current, in amps
+    config.supplyCurrLimit.triggerThresholdTime = 1.5; // the time at the peak supply current before the limit triggers, in sec
+    config.supplyCurrLimit.currentLimit = 30; // the current to maintain if the peak supply limit is triggered
+
+    a_shooterLeft.ConfigAllSettings(config);
+    a_shooterRight.ConfigAllSettings(config);
 }
 
 void BallShooter::setSpeed(double rpm) {
@@ -15,7 +24,7 @@ void BallShooter::setSpeed(double rpm) {
     // smooths out desired rpm
     double input = (1 - alpha) * previousInput + alpha * rpm;
     previousInput = input;
-        
+
     // with TalonFX::Set in VelocityMode, it wants a value which says
     // how many units to turn per 100 ms (0.1 sec)
     // there are 2048 of these units in 1 rotation
@@ -29,10 +38,8 @@ void BallShooter::setSpeed(double rpm) {
 double BallShooter::getSpeed() {
     // NOTE: avergaing probably isn't necessary
     double leftValue = a_shooterLeft.GetSelectedSensorVelocity();
-    double rightValue = a_shooterLeft.GetSelectedSensorVelocity();
-    /*double avg = (leftValue + rightValue) / 2.0;*/
-    // TEMP
-    double avg = std::max(leftValue, rightValue);
+    double rightValue = a_shooterRight.GetSelectedSensorVelocity();
+    double avg = (leftValue + rightValue) / 2.0;
     return (avg * 600.0) / FALCON_UNITS_PER_REV;
 }
 
