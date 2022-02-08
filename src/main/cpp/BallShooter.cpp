@@ -15,6 +15,8 @@ a_shooterRight(rightId)
     config.supplyCurrLimit.triggerThresholdTime = 1.5; // the time at the peak supply current before the limit triggers, in sec
     config.supplyCurrLimit.currentLimit = 30; // the current to maintain if the peak supply limit is triggered
 
+    config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
+
     a_shooterLeft.ConfigAllSettings(config);
     a_shooterRight.ConfigAllSettings(config);
 }
@@ -29,6 +31,7 @@ void BallShooter::setSpeed(double rpm) {
     // how many units to turn per 100 ms (0.1 sec)
     // there are 2048 of these units in 1 rotation
     // these units may or may not be encoder ticks, I didn't look to see
+    // FIXME: this is wrong
     double value = (input * FALCON_UNITS_PER_REV) / 600.0;
 
     a_shooterLeft.Set(ControlMode::Velocity, value);
