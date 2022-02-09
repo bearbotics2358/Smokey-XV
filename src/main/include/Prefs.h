@@ -10,14 +10,14 @@
 #define FL_STEER_ID 1
 #define FL_DRIVE_ID 2
 
-#define FR_STEER_ID 11
-#define FR_DRIVE_ID 12
+#define FR_STEER_ID 3
+#define FR_DRIVE_ID 4
 
-#define BL_STEER_ID 21
-#define BL_DRIVE_ID 22
+#define BL_STEER_ID 5
+#define BL_DRIVE_ID 6
 
-#define BR_STEER_ID 31
-#define BR_DRIVE_ID 32
+#define BR_STEER_ID 7
+#define BR_DRIVE_ID 8
 
 
 
