@@ -17,6 +17,9 @@ a_shooterRight(rightId)
 
     config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
 
+    // FIXME: pid tune
+    config.slot0.kP = 0.4;
+
     a_shooterLeft.ConfigAllSettings(config);
     a_shooterRight.ConfigAllSettings(config);
 }
@@ -42,8 +45,6 @@ double BallShooter::getSpeed() {
     // NOTE: avergaing probably isn't necessary
     double leftValue = a_shooterLeft.GetSelectedSensorVelocity();
     double rightValue = a_shooterRight.GetSelectedSensorVelocity();
-    double avg = (leftValue + rightValue) / 2.0;
+    double avg = (leftValue - rightValue) / 2.0;
     return (avg * 600.0) / FALCON_UNITS_PER_REV;
 }
-
-

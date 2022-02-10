@@ -26,5 +26,4 @@ class BallShooter
         double alpha { 0.5 };
         double previousInput { 0.0 };
 
-};		
-
+};

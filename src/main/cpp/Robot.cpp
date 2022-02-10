@@ -101,7 +101,7 @@ void Robot::DisabledInit()
     #if 0
     a_SwerveDrive.resetDrive();
     #endif
-    shooterDesiredSpeed = 0.0;
+    shooterDesiredSpeed = 500.0;
 }
 
 void Robot::DisabledPeriodic()
@@ -130,10 +130,10 @@ void Robot::TeleopPeriodic() // main loop
     /*=-=-=-=-=-=-=-=- Testing Shooter Controls -=-=-=-=-=-=-=-=*/
 
         if(a_XboxController.GetRawButton(1)) {
-            shooterDesiredSpeed += 1.0;
+            shooterDesiredSpeed += 10.0;
         }
         if(a_XboxController.GetRawButton(2)) {
-            shooterDesiredSpeed -= 1.0;
+            shooterDesiredSpeed -= 10.0;
         }
 
        //a_Shooter.setAlpha(a_alpha.GetDouble(0.5));
