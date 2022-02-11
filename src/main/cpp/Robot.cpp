@@ -20,9 +20,7 @@ a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 a_canHandler(CanHandler::layout2022())
 {
-    /*if (!handler.ready()) {
-        // do something if handler failed to connect
-    }*/
+
 
     a_FLModule.updateDrivePID(0.001, 0, 0);
     a_FLModule.updateSteerPID(2.0, 0, 0.02);
@@ -67,14 +65,10 @@ void Robot::RobotPeriodic()
     frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
-    printf("fl angle: %f\n", *a_canHandler.getData(FL_SWERVE_DATA_ID));
-    printf("fr angle: %f\n", *a_canHandler.getData(FR_SWERVE_DATA_ID));
-    printf("bl angle: %f\n", *a_canHandler.getData(BL_SWERVE_DATA_ID));
-    printf("br angle: %f\n", *a_canHandler.getData(BR_SWERVE_DATA_ID));
-    /*std::cout << "Front left angle" << *a_canHandler.getData(FL_SWERVE_DATA_ID);
-    std::cout << "Front right angle" << *a_canHandler.getData(FR_SWERVE_DATA_ID);
-    std::cout << "Back left angle" << *a_canHandler.getData(BL_SWERVE_DATA_ID);
-    std::cout << "Back right angle" << *a_canHandler.getData(BR_SWERVE_DATA_ID); */
+    //printf("fl angle: %f\n", *a_canHandler.getData(FL_SWERVE_DATA_ID));
+    //printf("fr angle: %f\n", *a_canHandler.getData(FR_SWERVE_DATA_ID));
+    //printf("bl angle: %f\n", *a_canHandler.getData(BL_SWERVE_DATA_ID));
+    //printf("br angle: %f\n", *a_canHandler.getData(BR_SWERVE_DATA_ID));
 }
 
 void Robot::DisabledInit()
