@@ -11,7 +11,22 @@ rawSteerEnc(steerEncID),
 steerEnc(rawSteerEnc),
 drivePID(0.01, 0, 0),
 steerPID(0, 0, 0)
-{ 
+{
+    // by default this selects the ingetrated sensor
+    ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
+
+    // these settings are present in the documentation example, and since they relate to safety of motor, they are probably a good idea to include
+    config.supplyCurrLimit.triggerThresholdCurrent = 40; // the peak supply current, in amps
+    config.supplyCurrLimit.triggerThresholdTime = 1.5; // the time at the peak supply current before the limit triggers, in sec
+    config.supplyCurrLimit.currentLimit = 30; // the current to maintain if the peak supply limit is triggered
+
+    config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
+
+    // FIXME: pid tune
+    config.slot0.kP = 0.4;
+
+    driveMotor.ConfigAllSettings(config);
+
     steerPID.EnableContinuousInput(0.0, 360.0);
 }
 
