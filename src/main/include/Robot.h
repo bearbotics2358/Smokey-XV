@@ -8,6 +8,7 @@
 #include "SwerveDrive.h" // Swerve kinematics
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "CanHandler.h"
+#include "vision/photon.h"
 
 class Robot : public frc::TimedRobot 
 {
@@ -48,4 +49,7 @@ class Robot : public frc::TimedRobot
 
     //MqttHandler handler;
     CanHandler a_canHandler;
+
+    TargetTracker a_shooterVision;
+    TargetTracker a_ballTracker;
 };

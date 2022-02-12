@@ -1,7 +1,7 @@
 
 #include "SwerveModule.h"
 #include <math.h>
-#include <misc.h>
+#include "misc.h"
 
 SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID):
 driveMotor(driveID),

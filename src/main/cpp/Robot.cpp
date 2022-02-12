@@ -18,7 +18,9 @@ a_buttonbox(BUTTON_BOX),
 a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 // handler("169.254.179.144", "1185", "data"),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
-a_canHandler(CanHandler::layout2022())
+a_canHandler(CanHandler::layout2022()),
+a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
+a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0))
 {
 
 
@@ -86,6 +88,8 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic() 
 {
+    a_shooterVision.update();
+    a_ballTracker.update();
 }
 
 void Robot::TeleopInit() 
@@ -95,6 +99,8 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() // main loop
 {
+    a_shooterVision.update();
+    a_ballTracker.update();
 
     /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
 

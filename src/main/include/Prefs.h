@@ -150,4 +150,5 @@ BR:
 #define SIN_2ANGLE 0.819152044
 
 // mdns name of camera
-#define CAMERA_NAME "photonvision"
+#define SHOOTER_CAMERA_NAME "photonvision"
+#define BALL_CAMERA_NAME "temp"
