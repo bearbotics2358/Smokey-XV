@@ -20,9 +20,7 @@ a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 a_canHandler(CanHandler::layout2022())
 {
-    /*if (!handler.ready()) {
-        // do something if handler failed to connect
-    }*/
+
 
     a_FLModule.updateDrivePID(0.001, 0, 0);
     a_FLModule.updateSteerPID(2.0, 0, 0.02);
