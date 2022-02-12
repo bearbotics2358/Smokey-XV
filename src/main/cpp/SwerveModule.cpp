@@ -1,6 +1,7 @@
 
 #include "SwerveModule.h"
 #include <math.h>
+#include <misc.h>
 
 SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID):
 driveMotor(driveID),
@@ -9,7 +10,6 @@ driveEnc(driveMotor),
 steerEncNEO(steerMotor.GetEncoder()),
 rawSteerEnc(steerEncID),
 steerEnc(rawSteerEnc),
-drivePID(0.01, 0, 0),
 steerPID(0, 0, 0)
 {
     // by default this selects the ingetrated sensor
@@ -22,7 +22,7 @@ steerPID(0, 0, 0)
 
     config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
 
-    // FIXME: pid tune
+    // this allows the motor to actually turn, pid values are set later
     config.slot0.kP = 1.0;
 
     driveMotor.ConfigAllSettings(config);
@@ -68,8 +68,8 @@ float SwerveModule::getAngle(void)
 
 void SwerveModule::goToPosition(float setpoint)
 {
-    float speed = std::clamp(drivePID.Calculate(getDistance(), setpoint), -0.3, 0.3); // Calculates scaled output based off of encoder feedback. 
-    driveMotor.Set(TalonFXControlMode::PercentOutput, speed); // speed is what percent power the motor is run at between [-1, 1]
+    float ticks = SwerveModule::inchesToMotorTicks(setpoint);
+    driveMotor.Set(TalonFXControlMode::Position, ticks);
 }
 
 void SwerveModule::steerToAng(float setpoint) // the twO
@@ -91,24 +91,24 @@ void SwerveModule::setSteerSpeed(float target)
 
 float SwerveModule::getDriveSpeed(void)
 {
-    float ret = driveEnc.GetIntegratedSensorVelocity();
-    return ret;
+    return driveEnc.GetIntegratedSensorVelocity();
 }
 
 float SwerveModule::setDriveVelocity(float percent) // the onE
 {
-    float currentSpeed = getDriveSpeed();
-    float speed = std::clamp(drivePID.Calculate(currentSpeed, percent * DRIVE_VELOCITY), -0.3, 0.3);
-    driveMotor.Set(TalonFXControlMode::PercentOutput, speed); 
+    float speed = percent * DRIVE_VELOCITY;
+    float rpm = SwerveModule::wheelSpeedToRpm(speed);
+
+    driveMotor.Set(TalonFXControlMode::Velocity, misc::rpmToTalonVel(rpm)); 
 
     return speed;
 }
 
 void SwerveModule::updateDrivePID(double pNew, double iNew, double dNew)
 {   
-    drivePID.SetP(pNew);
-    drivePID.SetI(iNew);
-    drivePID.SetD(dNew);
+    driveMotor.Config_kP(0, pNew);
+    driveMotor.Config_kI(0, iNew);
+    driveMotor.Config_kD(0, dNew);
 }
 
 void SwerveModule::updateSteerPID(double pNew, double iNew, double dNew)
@@ -158,6 +158,24 @@ void SwerveModule::driveDirection(Vec2 direction) {
     } else {
         setDriveSpeed(direction.magnitude());
     }
+}
+
+double SwerveModule::wheelSpeedToRpm(double speed) {
+    // radians per second
+    double angularVelocity = speed / (0.5 * WHEEL_DIAMETER);
+    // convert to rpm
+    double rpm = (60.0 * angularVelocity) / (2 * M_PI);
+    // convert from wheel rpm to motor rpm
+    return rpm * SWERVE_DRIVE_MOTOR_GEAR_RATIO;
+}
+
+double SwerveModule::inchesToMotorTicks(double inches) {
+    // angular position in radians
+    double angularPosition = inches / (0.5 * WHEEL_DIAMETER);
+    // convert to encoder ticks
+    double ticks = (FALCON_UNITS_PER_REV * angularPosition) / (2 * M_PI);
+    // scale by gear ratio
+    return ticks * SWERVE_DRIVE_MOTOR_GEAR_RATIO;
 }
 
 /*

@@ -46,6 +46,9 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         void driveDirection(Vec2 direction);
 
     private:
+        static double wheelSpeedToRpm(double speed);
+        static double inchesToMotorTicks(double inches);
+
         TalonFX driveMotor;
         rev::CANSparkMax steerMotor;
 
@@ -55,7 +58,6 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         frc::AnalogInput rawSteerEnc;
         frc::AnalogEncoder steerEnc; // placeholder, may change wiring
 
-        frc2::PIDController drivePID;
         frc2::PIDController steerPID;
 
         

@@ -20,6 +20,10 @@
 #define BR_STEER_ID 8
 
 
+// falcon encoder ticks per 1 revolution
+#define FALCON_UNITS_PER_REV 2048
+
+
 
 
 /*
@@ -61,6 +65,12 @@ BR:
 // circumfrence = 4 Pi inches
 // 10 ticks = 4 Pi inches
 #define INCHES_PER_TICK (2.0 / 5) * M_PI // inches
+
+// TODO: figure out what this actually is
+// ratio is drive motor rotations / wheel rotations
+#define SWERVE_DRIVE_MOTOR_GEAR_RATIO (18.0 / 1.0)
+
+#define WHEEL_DIAMETER 4.0
 
 /* ============= AUTO VALUES 4 Jason yoyoyo =========== */
 #define TO_TRENCH_FROM_LINE 65 // inches
