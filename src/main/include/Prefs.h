@@ -7,17 +7,18 @@
 
 
 /*====== MOTOR CONTROLLER IDS ======*/
-#define FL_STEER_ID 2
 #define FL_DRIVE_ID 1
+#define FL_STEER_ID 2
 
-#define FR_STEER_ID 4
 #define FR_DRIVE_ID 3
+#define FR_STEER_ID 4
 
-#define BL_STEER_ID 6
 #define BL_DRIVE_ID 5
+#define BL_STEER_ID 6
 
-#define BR_STEER_ID 8
 #define BR_DRIVE_ID 7
+#define BR_STEER_ID 8
+
 
 
 
