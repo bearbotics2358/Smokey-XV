@@ -137,3 +137,6 @@ BR:
 #define TH2_COS2_ANGLE 31.47152872
 // sin (2 * shooter angle)
 #define SIN_2ANGLE 0.819152044
+
+// mdns name of camera
+#define CAMERA_NAME "photonvision"

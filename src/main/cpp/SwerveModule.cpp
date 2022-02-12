@@ -23,7 +23,7 @@ steerPID(0, 0, 0)
     config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
 
     // FIXME: pid tune
-    config.slot0.kP = 0.4;
+    config.slot0.kP = 1.0;
 
     driveMotor.ConfigAllSettings(config);
 
