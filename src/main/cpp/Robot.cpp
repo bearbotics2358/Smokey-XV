@@ -17,7 +17,8 @@ a_Joystick(JOYSTICK_PORT),
 a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 #endif
 a_XboxController(XBOX_CONTROLLER),
-a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID)
+a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
+a_Collector(COLLECTOR_MOTOR_ID, SOLENOID_ID)
 /*a_mainTab(frc::Shuffleboard::GetTab("Main Tab")),
 a_setRpm(a_mainTab.Add("Desired RPM", 0.0)
     .WithWidget(frc::BuiltInWidgets::kNumberSlider)
@@ -92,8 +93,8 @@ void Robot::RobotPeriodic()
 
     //frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     //frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
-    frc::SmartDashboard::PutNumber("Desired RPM", shooterDesiredSpeed);
-    frc::SmartDashboard::PutNumber("Current RPM", a_Shooter.getSpeed());
+    frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
+    frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
 }
 
 void Robot::DisabledInit()
@@ -146,6 +147,15 @@ void Robot::TeleopPeriodic() // main loop
             a_Shooter.SetSpeed(a_XboxController.GetRawAxis(1));
         }
        */
+
+    /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
+
+        if(a_XboxController.GetRawButton(3)){
+            a_Collector.toggleSolenoid();
+        }
+        if(a_XboxController.GetRawButton(4)){
+            a_Collector.setMotorSpeed(120);
+        }
 }
 
 void Robot::TestInit() 

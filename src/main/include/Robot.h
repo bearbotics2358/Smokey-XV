@@ -5,6 +5,7 @@
 #include "SwerveDrive.h" // Swerve kinematics
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "BallShooter.h" 
+#include "Collector.h"
 
 #include <frc/Joystick.h> // Joystick 
 #include <frc/TimedRobot.h> // "Timed Robot" template
@@ -50,6 +51,7 @@ class Robot : public frc::TimedRobot
     frc::Joystick a_XboxController; 
 
     BallShooter a_Shooter;
+    Collector a_Collector;
 
     /*frc::ShuffleboardTab& a_mainTab;
     nt::NetworkTableEntry a_setRpm;

@@ -8,6 +8,11 @@
     #define RIGHT_SHOOTER_ID 27
     #define SHOOTER_SPEED .5
 
+/*======== SHOOTER CONSTANTS ========*/
+
+#define COLLECTOR_MOTOR_ID 9
+#define SOLENOID_ID 10
+
 /*========= MOTOR CONSTANTS =========*/
 
 #define FALCON_UNITS_PER_REV 2048
