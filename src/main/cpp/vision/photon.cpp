@@ -1,5 +1,7 @@
 #include "vision/photon.h"
 
+#include <photonlib/PhotonUtils.h>
+
 TargetTracker::Mode::Mode(InnerMode mode, int pipelineIndex):
 m_innerMode(mode),
 m_pipelineIndex(pipelineIndex)
@@ -54,7 +56,12 @@ void TargetTracker::update() {
     if (m_mode.isTarget()) {
         // TODO:
     } else {
-        // TODO:
+        // TODO: filter out sufficiently bad balls, but this might be done in pi code
+        m_balls.clear();
+        auto targets = result.GetTargets();
+        for (auto target : targets) {
+            //units::meter_t distance = photonlib::PhotonUtils::CalculateDistanceToTarget()
+        }
     }
 }
 
