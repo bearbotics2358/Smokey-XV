@@ -16,13 +16,16 @@ joystickOne(JOYSTICK_PORT),
 a_xBoxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
 a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
+a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 // handler("169.254.179.144", "1185", "data"),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
 a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0))
 {
-
+    /*if (!handler.ready()) {
+        // do something if handler failed to connect
+    }*/
 
     a_FLModule.updateDrivePID(0.001, 0, 0);
     a_FLModule.updateSteerPID(2.0, 0, 0.02);
@@ -39,15 +42,6 @@ a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0))
 
 void Robot::RobotInit() 
 {
-    Vec2 tmp2(2.0f, 2.0f);
-    Vec2 tmp3(2.0f, 2.0f);
-    Vec4 tmp(0.0f, 1.0f, 2.0f, 3.0f);
-    tmp3[1];
-    tmp3.x();
-    tmp3.y();
-    tmp.w();
-    tmp.magnitude();
-
     frc::SmartDashboard::init();
     a_Gyro.Init();
     // a_Gyro.Cal();
@@ -63,6 +57,9 @@ void Robot::RobotPeriodic()
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
 
     a_canHandler.update();
+    frc::SmartDashboard::PutNumber("Desired RPM", shooterDesiredSpeed);
+    frc::SmartDashboard::PutNumber("Current RPM", a_Shooter.getSpeed());
+
     frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
@@ -76,6 +73,7 @@ void Robot::RobotPeriodic()
 void Robot::DisabledInit()
 {
     resetSwerveDrive();
+    shooterDesiredSpeed = 500.0;
 }
 
 void Robot::DisabledPeriodic()
@@ -103,6 +101,16 @@ void Robot::TeleopPeriodic() // main loop
     a_ballTracker.update();
 
     /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
+
+    // FIXME: these buttons clash
+    if(a_xBoxController.GetRawButton(1)) {
+        shooterDesiredSpeed += 10.0;
+    }
+    if(a_xBoxController.GetRawButton(2)) {
+        shooterDesiredSpeed -= 10.0;
+    }
+
+    a_Shooter.setSpeed(shooterDesiredSpeed);
 
     float x = -1 * joystickOne.GetRawAxis(0);
     float y = -1 * joystickOne.GetRawAxis(1);
