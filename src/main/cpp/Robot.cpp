@@ -13,10 +13,11 @@ a_FRModule(FR_DRIVE_ID, FR_STEER_ID, 2), // (when we get analog encoders, replac
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, 3),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, 4),
 joystickOne(JOYSTICK_PORT),
-a_xBoxController(XBOX_CONTROLLER),
+a_XboxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
-a_swerveyDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
+a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
+a_Collector(COLLECTOR_MOTOR_ID, SOLENOID_ID),
 // handler("169.254.179.144", "1185", "data"),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 a_canHandler(CanHandler::layout2022()),
@@ -53,12 +54,12 @@ void Robot::RobotPeriodic()
     a_Gyro.Update(); 
     // handler.update();
 
-    frc::SmartDashboard::PutNumber("Distance Driven: ", a_swerveyDrive.getAvgDistance());
+    frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
 
     a_canHandler.update();
-    frc::SmartDashboard::PutNumber("Desired RPM", shooterDesiredSpeed);
-    frc::SmartDashboard::PutNumber("Current RPM", a_Shooter.getSpeed());
+    frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
+    frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
 
     frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
     frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
@@ -103,11 +104,20 @@ void Robot::TeleopPeriodic() // main loop
     /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
 
     // FIXME: these buttons clash
-    if(a_xBoxController.GetRawButton(1)) {
+    if(a_XboxController.GetRawButton(1)) {
         shooterDesiredSpeed += 10.0;
     }
-    if(a_xBoxController.GetRawButton(2)) {
+    if(a_XboxController.GetRawButton(2)) {
         shooterDesiredSpeed -= 10.0;
+    }
+
+    /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
+
+    if(a_XboxController.GetRawButton(3)){
+        a_Collector.toggleSolenoid();
+    }
+    if(a_XboxController.GetRawButton(4)){
+        a_Collector.setMotorSpeed(COLLECTOR_MOTOR_SPEED);
     }
 
     a_Shooter.setSpeed(shooterDesiredSpeed);
@@ -169,16 +179,16 @@ void Robot::TeleopPeriodic() // main loop
         {
             if(joystickOne.GetRawButton(1)) 
             {
-                a_swerveyDrive.swerveUpdate(x, y, 0.5 * z, gyro, false);
+                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, false);
             } 
             else 
             {
-                a_swerveyDrive.crabDriveUpdate(x, y, gyro);
+                a_SwerveDrive.crabDriveUpdate(x, y, gyro);
             }
         } 
         else 
         {
-            a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, false);
+            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, false);
         }
     }
     else
@@ -187,16 +197,16 @@ void Robot::TeleopPeriodic() // main loop
         {
             if(joystickOne.GetRawButton(1)) 
             {
-                a_swerveyDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
+                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
             } 
             else 
             {
-                a_swerveyDrive.crabDriveUpdate(x, y, gyro);
+                a_SwerveDrive.crabDriveUpdate(x, y, gyro);
             }
         } 
         else 
         {
-            a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
+            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
         }
     }
 }
@@ -249,7 +259,7 @@ void Robot::TestPeriodic()
 
 
     if(joystickOne.GetRawButton(3)) {
-        a_swerveyDrive.turnToAngle(gyro, 180.0);
+        a_SwerveDrive.turnToAngle(gyro, 180.0);
     } else if(!inDeadzone) {
         if(joystickOne.GetRawButton(1)) 
         {
@@ -259,13 +269,13 @@ void Robot::TestPeriodic()
             } 
             else
             {
-                a_swerveyDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
+                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
             }
         } 
         else 
         
         {
-           a_swerveyDrive.crabDriveUpdate(x, y, gyro);
+           a_SwerveDrive.crabDriveUpdate(x, y, gyro);
         }
     } 
     else 
@@ -276,7 +286,7 @@ void Robot::TestPeriodic()
         } 
         else
         {
-            a_swerveyDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
+            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
         }
     }
 
@@ -333,7 +343,7 @@ bool Robot::resetSwerveDrive() {
     auto brAngle = a_canHandler.getData(BR_SWERVE_DATA_ID);
 
     if (flAngle.has_value() && frAngle.has_value() && blAngle.has_value() && brAngle.has_value()) {
-        a_swerveyDrive.resetDrive(*flAngle, *frAngle, *blAngle, *brAngle);
+        a_SwerveDrive.resetDrive(*flAngle, *frAngle, *blAngle, *brAngle);
         return true;
     } else {
         return false;

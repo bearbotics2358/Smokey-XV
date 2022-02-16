@@ -9,6 +9,6 @@ class Climber {
 
     private: 
 
-
+    
 
 }; 

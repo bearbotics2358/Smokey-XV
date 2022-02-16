@@ -7,6 +7,7 @@
 #include <frc/Joystick.h> // Joystick 
 #include "SwerveDrive.h" // Swerve kinematics
 #include "BallShooter.h"
+#include "Collector.h"
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "CanHandler.h"
 #include "vision/photon.h"
@@ -42,14 +43,16 @@ class Robot : public frc::TimedRobot
     SwerveModule a_BRModule;
      
     frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
-    frc::Joystick a_xBoxController; 
+    frc::Joystick a_XboxController; 
     frc::Joystick a_buttonbox;
 
     // Swerve Drive object
-    SwerveDrive a_swerveyDrive; 
+    SwerveDrive a_SwerveDrive;
 
     BallShooter a_Shooter;
     double shooterDesiredSpeed { 0.0 };
+  
+    Collector a_Collector;
 
     //MqttHandler handler;
     CanHandler a_canHandler;
