@@ -6,4 +6,7 @@ namespace misc {
 
     // converts talon units per 100 ms to rpm
     double talonVelToRpm(double units);
+
+    double degToRad(double degrees);
+    double radToDeg(double radians);
 }
