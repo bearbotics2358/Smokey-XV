@@ -103,8 +103,6 @@ void Robot::TeleopPeriodic() // main loop
     a_ballTracker.update();
 
     /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
-
-    // FIXME: these buttons clash
     if(a_XboxController.GetRawButton(OperatorButton::A)) {
         shooterDesiredSpeed += 10.0;
     }
