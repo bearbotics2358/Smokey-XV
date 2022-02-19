@@ -5,7 +5,6 @@
 
 class BeamBreak
 {
-
     public:
 
         BeamBreak(int port); 
@@ -14,12 +13,4 @@ class BeamBreak
     private:
 
         frc::DigitalInput a_beambreak; 
-
-
-
-
-
-
-
-
 };

@@ -14,11 +14,12 @@
 #define RIGHT_SHOOTER_ID 27
 #define SHOOTER_SPEED .5 // currently unused
 
-/*======== COLLECTOR CONSTANTS ========*/
 
+/*======== COLLECTOR CONSTANTS ========*/
 #define COLLECTOR_MOTOR_ID 21
 #define SOLENOID_ID 10
 #define COLLECTOR_MOTOR_SPEED 60 // rpm
+
 
 /*====== MOTOR CONTROLLER IDS ======*/
 #define FL_DRIVE_ID 1
@@ -32,6 +33,7 @@
 
 #define BR_DRIVE_ID 7
 #define BR_STEER_ID 8
+
 
 /*======= ENCODER CONSTANTS =======*/
 
@@ -49,28 +51,6 @@
 #define FR_SWERVE_ABS_ENC_OFFSET 0.0
 #define BL_SWERVE_ABS_ENC_OFFSET 0.0
 #define BR_SWERVE_ABS_ENC_OFFSET 0.0
-
-
-
-
-/*
-// Module CAN IDs FL, FR, BL, BR
-FL:
- Module 1 Turn - 1
- Module 1 Drive - 2
-
-FR:
- Module 2 Turn - 11
- Module 2 Drive - 12
-
-BL:
- Module 3 Turn - 21
- Module 3 Drive - 22
-
-BR:
- Module 4 Turn - 31
- Module 4 Drive - 32
-*/
 
 
 /* ========== Joystick Ports ========= */

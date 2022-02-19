@@ -8,6 +8,7 @@ a_collectorSolenoid(solenoidId, frc::PneumaticsModuleType::REVPH, 0, 1)
 {
 
 }
+
 void Collector::toggleSolenoid(){
     a_collectorSolenoid.Toggle();
 }

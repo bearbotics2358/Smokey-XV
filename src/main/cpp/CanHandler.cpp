@@ -8,8 +8,8 @@
 
 #include "Prefs.h"
 
-CanHandler::CanHandler(const std::vector<Arduino>& in)
-: m_endpoints() {
+CanHandler::CanHandler(const std::vector<Arduino>& in):
+m_endpoints() {
     for (const auto& arduino : in) {
         std::vector<Field> fields;
 
