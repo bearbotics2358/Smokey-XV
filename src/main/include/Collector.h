@@ -15,7 +15,7 @@ class Collector {
 
     private:
 
-    TalonFX a_collectorMotor;
+    TalonSRX a_collectorMotor;
     frc::DoubleSolenoid a_collectorSolenoid;
 
     double alpha { 0.5 };
