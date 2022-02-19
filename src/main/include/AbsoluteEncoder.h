@@ -9,8 +9,9 @@ class AbsoluteEncoder {
         AbsoluteEncoder(int port, double offset);
 
         double getAngle() const;
+        double getRotations() const;
     private:
         frc::AnalogInput m_encoder;
-        // offset angle in radians
+        // offset angle in rotations (0 - 1)
         double m_offset;
 };

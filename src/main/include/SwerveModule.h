@@ -8,20 +8,19 @@
 #include <frc/controller/PIDController.h>
 #include "Prefs.h"
 #include "math/LinAlg.h"
+#include "AbsoluteEncoder.h"
 #include <math.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 class SwerveModule // Handles steering and driving of each Swerve Module
 {
     public:
-        SwerveModule(int driveID, int steerID, int steerEncID); // CAN IDs, analog port for steer encoder
+        SwerveModule(int driveID, int steerID, int steerEncID, int absEncoderPort, double absEncoderOffset); // CAN IDs, analog port for steer encoder
         
         float getDistance(void); // Returns position of the distance encoder
         void resetDriveEncoder(void);
 
-        void resetSteerEncoder(float offset); // set the offset in the turn encoder
-        // this would be the offset from 0 that the wheel is currently at
-        // obtained from arduinos
+        void resetSteerEncoder();
 
         float getAngleRaw(void); // position of steering encoder
         float getAngle(void); // scaled angle between 0 and 360
@@ -54,9 +53,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
 
         TalonFXSensorCollection driveEnc; // built in TalonFX sensors
         rev::SparkMaxRelativeEncoder steerEncNEO; 
-
-        frc::AnalogInput rawSteerEnc;
-        frc::AnalogEncoder steerEnc; // placeholder, may change wiring
+        AbsoluteEncoder absSteerEnc;
 
         frc2::PIDController steerPID;
 

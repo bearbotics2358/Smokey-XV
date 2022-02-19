@@ -33,10 +33,22 @@
 #define BR_DRIVE_ID 7
 #define BR_STEER_ID 8
 
-
+/*======= ENCODER CONSTANTS =======*/
 
 // falcon encoder ticks per 1 revolution
 #define FALCON_UNITS_PER_REV 2048
+
+// swerve drive absolute encoder analog ports
+#define FL_SWERVE_ABS_ENC_PORT 0
+#define FR_SWERVE_ABS_ENC_PORT 1
+#define BL_SWERVE_ABS_ENC_PORT 2
+#define BR_SWERVE_ABS_ENC_PORT 3
+
+// offset from 0 of the absolute encders
+#define FL_SWERVE_ABS_ENC_OFFSET 0.0
+#define FR_SWERVE_ABS_ENC_OFFSET 0.0
+#define BL_SWERVE_ABS_ENC_OFFSET 0.0
+#define BR_SWERVE_ABS_ENC_OFFSET 0.0
 
 
 
