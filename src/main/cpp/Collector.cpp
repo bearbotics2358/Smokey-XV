@@ -1,5 +1,6 @@
 #include "Collector.h"
 #include "Prefs.h"
+#include "misc.h"
 
 Collector::Collector(int motorId, int solenoidId):
 a_collectorMotor(motorId),
@@ -20,6 +21,6 @@ void Collector::setMotorSpeed(double rpm){
     double input = (1 - alpha) * previousInput + alpha * rpm;
     previousInput = input;
 
-    double value = (input * FALCON_UNITS_PER_REV) / 600.0;
+    double value = misc::rpmToTalonVel(input);
     a_collectorMotor.Set(ControlMode::Velocity, value);
 }
