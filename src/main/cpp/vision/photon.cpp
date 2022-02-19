@@ -1,6 +1,8 @@
 #include "vision/photon.h"
 
 #include <photonlib/PhotonUtils.h>
+#include <units/angle.h>
+#include "Prefs.h"
 
 TargetTracker::Mode::Mode(InnerMode mode, int pipelineIndex):
 m_innerMode(mode),
@@ -60,7 +62,12 @@ void TargetTracker::update() {
         m_balls.clear();
         auto targets = result.GetTargets();
         for (auto target : targets) {
-            //units::meter_t distance = photonlib::PhotonUtils::CalculateDistanceToTarget()
+            units::meter_t distance = photonlib::PhotonUtils::CalculateDistanceToTarget(
+                TARGET_CAMERA_HEIGHT,
+                TARGET_HEIGHT,
+                TARGET_CAMERA_PITCH,
+                units::degree_t(target.GetPitch())
+            );
         }
     }
 }

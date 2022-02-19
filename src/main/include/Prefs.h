@@ -1,6 +1,9 @@
 
 #pragma once // only add this code once; saves space by removing redundancy
 
+#include <units/length.h>
+#include <units/angle.h>
+
 // Declare constants such as CAN IDs here 
 
 //#define NEW_SWERVE
@@ -151,14 +154,17 @@ BR:
 
 /* ============= Vision ============= */
 
-#define CONTROL_VELOCITY
-// TARGET_HEIGHT 20
-// COS2_ANGLE 0.786788218
-#define SHOOTER_ANGLE 21
-// 2 * taget height cos^2 (shooter angle)
-#define TH2_COS2_ANGLE 31.47152872
-// sin (2 * shooter angle)
-#define SIN_2ANGLE 0.819152044
+// the height of the camare used to track the target for shooting
+constexpr units::length::meter_t TARGET_CAMERA_HEIGHT = units::length::meter_t(1.0);
+
+// pitch of vision camera that tracks the target, positive is up
+constexpr units::angle::radian_t TARGET_CAMERA_PITCH = units::angle::radian_t(1.0);
+
+// the height of the target we are shooting at
+constexpr units::length::meter_t TARGET_HEIGHT = units::length::meter_t(1.0);
+
+// pitch of target
+constexpr units::angle::radian_t TARGET_PITCH = units::angle::radian_t(0.0);
 
 // mdns name of camera
 #define SHOOTER_CAMERA_NAME "photonvision"
