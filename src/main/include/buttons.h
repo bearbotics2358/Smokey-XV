@@ -1,50 +1,53 @@
 #pragma once
 
 // binary buttons on operator xbox controller
-enum class OperatorButton {
-    A = 0,
-    B = 1,
-    X = 2,
-    Y = 3,
-    LeftBumper = 4,
-    RightBumper = 5,
-    Back = 6,
-    Start = 7,
-    LeftJoystick = 8,
-    RightJoystick = 9
-
+class OperatorButton {
+    public:
+        constexpr static int A = 1;
+        constexpr static int B = 2;
+        constexpr static int X = 3;
+        constexpr static int Y = 4;
+        constexpr static int LeftBumper = 5;
+        constexpr static int RightBumper = 6;
+        constexpr static int Back = 7;
+        constexpr static int Start = 8;
+        constexpr static int LeftJoystick = 9;
+        constexpr static int RightJoystick = 10;
 };
 
 // analog input joysticks on operator xbox controller
-enum class OperatorJoystick {
-    LeftXAxis = 0,
-    LeftYAxis = 1,
-    LeftTrigger = 2,
-    RightTrigger = 3,
-    RightXAxis = 4,
-    RightYAxis = 5,
+class OperatorJoystick {
+    public:
+        constexpr static int LeftXAxis = 0;
+        constexpr static int LeftYAxis = 1;
+        constexpr static int LeftTrigger = 2;
+        constexpr static int RightTrigger = 3;
+        constexpr static int RightXAxis = 4;
+        constexpr static int RightYAxis = 5;
 };
 
 // binary buttons on driver joystick
-enum class DriverBotton {
-    Trigger = 0,
-    ThumbButton = 1,
-    Button3 = 2,
-    Button4 = 3,
-    Button5 = 4,
-    Button6 = 5,
-    Button7 = 6,
-    Button8 = 7,
-    Button9 = 8,
-    Button10 = 9,
-    Button11 = 10,
-    Button12 = 11
+class DriverButton {
+    public:
+        constexpr static int Trigger = 1;
+        constexpr static int ThumbButton = 2;
+        constexpr static int Button3 = 3;
+        constexpr static int Button4 = 4;
+        constexpr static int Button5 = 5;
+        constexpr static int Button6 = 6;
+        constexpr static int Button7 = 7;
+        constexpr static int Button8 = 8;
+        constexpr static int Button9 = 9;
+        constexpr static int Button10 = 10;
+        constexpr static int Button11 = 11;
+        constexpr static int Button12 = 12;
 };
 
 // analog input joysticks on driver xbox controller
-enum class DriverJoystick {
-    XAxis = 0,
-    YAxis = 1,
-    ZAxis = 2,
-    Slider = 3
+class DriverJoystick {
+    public:
+        constexpr static int XAxis = 0;
+        constexpr static int YAxis = 1;
+        constexpr static int ZAxis = 2;
+        constexpr static int Slider = 3;
 };

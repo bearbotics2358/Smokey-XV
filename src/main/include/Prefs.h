@@ -16,7 +16,7 @@
 
 /*======== COLLECTOR CONSTANTS ========*/
 
-#define COLLECTOR_MOTOR_ID 9
+#define COLLECTOR_MOTOR_ID 21
 #define SOLENOID_ID 10
 #define COLLECTOR_MOTOR_SPEED 60 // rpm
 
@@ -32,6 +32,7 @@
 
 #define BR_DRIVE_ID 7
 #define BR_STEER_ID 8
+
 
 
 // falcon encoder ticks per 1 revolution
