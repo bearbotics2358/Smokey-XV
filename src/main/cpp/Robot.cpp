@@ -4,6 +4,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <stdio.h>
 #include "math/LinAlg.h"
+#include "buttons.h"
 #include <iostream>
 /*~~ hi :) ~~ */
 Robot::Robot():
@@ -74,7 +75,7 @@ void Robot::RobotPeriodic()
 void Robot::DisabledInit()
 {
     resetSwerveDrive();
-    shooterDesiredSpeed = 500.0;
+    shooterDesiredSpeed = 0.0;
 }
 
 void Robot::DisabledPeriodic()
@@ -102,29 +103,27 @@ void Robot::TeleopPeriodic() // main loop
     a_ballTracker.update();
 
     /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
-
-    // FIXME: these buttons clash
-    if(a_XboxController.GetRawButton(1)) {
+    if(a_XboxController.GetRawButton(OperatorButton::A)) {
         shooterDesiredSpeed += 10.0;
     }
-    if(a_XboxController.GetRawButton(2)) {
+    if(a_XboxController.GetRawButton(OperatorButton::B)) {
         shooterDesiredSpeed -= 10.0;
     }
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
-    if(a_XboxController.GetRawButton(3)){
+    if(a_XboxController.GetRawButton(OperatorButton::X)){
         a_Collector.toggleSolenoid();
     }
-    if(a_XboxController.GetRawButton(4)){
+    if(a_XboxController.GetRawButton(OperatorButton::Y)){
         a_Collector.setMotorSpeed(COLLECTOR_MOTOR_SPEED);
     }
 
     a_Shooter.setSpeed(shooterDesiredSpeed);
 
-    float x = -1 * joystickOne.GetRawAxis(0);
-    float y = -1 * joystickOne.GetRawAxis(1);
-    float z = -1 * joystickOne.GetRawAxis(2);
+    float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
+    float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
+    float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
     float gyro = a_Gyro.GetAngle(0);
 
     if(fabs(x) < 0.10)
@@ -153,15 +152,15 @@ void Robot::TeleopPeriodic() // main loop
     bool fieldOreo = true; // field oriented? - yes
 
     frc::SmartDashboard::PutNumber("Chase: ", z);
-    bool inDeadzone = (((sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE)) ? true : false); // Checks joystick deadzones
+    bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
-    if(joystickOne.GetRawButton(5))
+    if(joystickOne.GetRawButton(DriverButton::Button5))
     {
         a_Gyro.Cal();
         a_Gyro.Zero();
     }
 
-    if(joystickOne.GetRawButton(4))
+    if(joystickOne.GetRawButton(DriverButton::Button4))
     {
         // vision led on
     }
@@ -169,15 +168,15 @@ void Robot::TeleopPeriodic() // main loop
     {
         // vision led off
     }
-    if(joystickOne.GetRawButton(4)) // && has target (todo once written)
+    if(joystickOne.GetRawButton(DriverButton::Button4)) // && has target (todo once written)
     {
         // track target with vision 
     }
-    else if(joystickOne.GetRawButton(3))
+    else if(joystickOne.GetRawButton(DriverButton::Button3))
     {
         if(!inDeadzone) 
         {
-            if(joystickOne.GetRawButton(1)) 
+            if(joystickOne.GetRawButton(DriverButton::Trigger)) 
             {
                 a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, false);
             } 
@@ -195,7 +194,7 @@ void Robot::TeleopPeriodic() // main loop
     {
         if(!inDeadzone) 
         {
-            if(joystickOne.GetRawButton(1)) 
+            if(joystickOne.GetRawButton(DriverButton::Trigger)) 
             {
                 a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
             } 
@@ -222,9 +221,9 @@ void Robot::TestPeriodic()
 
 
 
-    float x = -1 * joystickOne.GetRawAxis(0);
-    float y = -1 * joystickOne.GetRawAxis(1);
-    float z = -1 * joystickOne.GetRawAxis(2);
+    float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
+    float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
+    float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
     float gyro = a_Gyro.GetAngle(0);
 
     if(fabs(x) < 0.10)
@@ -253,17 +252,17 @@ void Robot::TestPeriodic()
     bool fieldOreo = true; // field oriented? - yes
 
     frc::SmartDashboard::PutNumber("Chase: ", z);
-    bool inDeadzone = (((sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE)) ? true : false); // Checks joystick deadzones
+    bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
 
 
 
-    if(joystickOne.GetRawButton(3)) {
+    if(joystickOne.GetRawButton(DriverButton::Button3)) {
         a_SwerveDrive.turnToAngle(gyro, 180.0);
     } else if(!inDeadzone) {
-        if(joystickOne.GetRawButton(1)) 
+        if(joystickOne.GetRawButton(DriverButton::Trigger)) 
         {
-            if(joystickOne.GetRawButton(2)) 
+            if(joystickOne.GetRawButton(DriverButton::ThumbButton)) 
             {
                 // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
             } 
@@ -280,7 +279,7 @@ void Robot::TestPeriodic()
     } 
     else 
     {
-        if(joystickOne.GetRawButton(2)) 
+        if(joystickOne.GetRawButton(DriverButton::ThumbButton)) 
         {
             // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
         } 
