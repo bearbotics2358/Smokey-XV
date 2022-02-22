@@ -3,13 +3,12 @@
 #include <math.h>
 #include "misc.h"
 
-SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID):
+SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID, int absEncoderPort, double absEncoderOffset):
 driveMotor(driveID),
 steerMotor(steerID, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
 driveEnc(driveMotor),
 steerEncNEO(steerMotor.GetEncoder()),
-rawSteerEnc(steerEncID),
-steerEnc(rawSteerEnc),
+absSteerEnc(absEncoderPort, absEncoderOffset),
 steerPID(0, 0, 0)
 {
     // by default this selects the ingetrated sensor
@@ -41,9 +40,9 @@ void SwerveModule::resetDriveEncoder(void)
     driveEnc.SetIntegratedSensorPosition(0);
 }
 
-void SwerveModule::resetSteerEncoder(float offset)
+void SwerveModule::resetSteerEncoder()
 {
-    steerEncNEO.SetPosition(offset);
+    steerEncNEO.SetPosition(absSteerEnc.getRotations());
 }
 
 float SwerveModule::getAngleRaw(void)

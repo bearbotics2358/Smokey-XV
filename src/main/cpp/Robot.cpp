@@ -9,10 +9,10 @@
 /*~~ hi :) ~~ */
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
-a_FLModule(FL_DRIVE_ID, FL_STEER_ID, 1), 
-a_FRModule(FR_DRIVE_ID, FR_STEER_ID, 2), // (when we get analog encoders, replace 1-4 with actual IDs)
-a_BLModule(BL_DRIVE_ID, BL_STEER_ID, 3),
-a_BRModule(BR_DRIVE_ID, BR_STEER_ID, 4),
+a_FLModule(FL_DRIVE_ID, FL_STEER_ID, 1, FL_SWERVE_ABS_ENC_PORT, FL_SWERVE_ABS_ENC_OFFSET), 
+a_FRModule(FR_DRIVE_ID, FR_STEER_ID, 2, FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_OFFSET), // (when we get analog encoders, replace 1-4 with actual IDs)
+a_BLModule(BL_DRIVE_ID, BL_STEER_ID, 3, BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_OFFSET),
+a_BRModule(BR_DRIVE_ID, BR_STEER_ID, 4, BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_OFFSET),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
@@ -22,7 +22,7 @@ a_Collector(COLLECTOR_MOTOR_ID, SOLENOID_ID),
 a_CompressorController(),
 // handler("169.254.179.144", "1185", "data"),
 //handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
-a_canHandler(CanHandler::layout2022()),
+//a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
 a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0))
 {
@@ -59,23 +59,19 @@ void Robot::RobotPeriodic()
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
 
-    a_canHandler.update();
+    //a_canHandler.update();
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
     frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
 
-    frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
-    frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
-    frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
-    frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
-    //printf("fl angle: %f\n", *a_canHandler.getData(FL_SWERVE_DATA_ID));
-    //printf("fr angle: %f\n", *a_canHandler.getData(FR_SWERVE_DATA_ID));
-    //printf("bl angle: %f\n", *a_canHandler.getData(BL_SWERVE_DATA_ID));
-    //printf("br angle: %f\n", *a_canHandler.getData(BR_SWERVE_DATA_ID));
+    //frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
+    //frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
+    //frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
+    //frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
 }
 
 void Robot::DisabledInit()
 {
-    resetSwerveDrive();
+    a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
@@ -335,20 +331,5 @@ void Robot::TestPeriodic()
 
 
 }
-
-bool Robot::resetSwerveDrive() {
-    auto flAngle = a_canHandler.getData(FL_SWERVE_DATA_ID);
-    auto frAngle = a_canHandler.getData(FR_SWERVE_DATA_ID);
-    auto blAngle = a_canHandler.getData(BL_SWERVE_DATA_ID);
-    auto brAngle = a_canHandler.getData(BR_SWERVE_DATA_ID);
-
-    if (flAngle.has_value() && frAngle.has_value() && blAngle.has_value() && brAngle.has_value()) {
-        a_SwerveDrive.resetDrive(*flAngle, *frAngle, *blAngle, *brAngle);
-        return true;
-    } else {
-        return false;
-    }
-}
-
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop

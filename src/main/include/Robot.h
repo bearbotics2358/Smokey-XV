@@ -32,11 +32,6 @@ class Robot : public frc::TimedRobot
     void TestInit();
     void TestPeriodic();
   private: 
-    // reads values from aduinos and resets swerve drive
-    // returns true on success, false on failure
-    // TODO: add button that does this
-    bool resetSwerveDrive();
-
     JrimmyGyro a_Gyro;
     SwerveModule a_FLModule;
     SwerveModule a_FRModule;
@@ -58,7 +53,7 @@ class Robot : public frc::TimedRobot
     CompressorController a_CompressorController;
 
     //MqttHandler handler;
-    CanHandler a_canHandler;
+    //CanHandler a_canHandler;
 
     TargetTracker a_shooterVision;
     TargetTracker a_ballTracker;

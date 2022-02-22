@@ -8,10 +8,5 @@ a_beambreak(port)
 
 bool BeamBreak::isBeamBroken() 
 {
-    if(a_beambreak.Get() == 1) {
-        return true;
-    } else {
-        return false; 
-    }
-
+    return a_beambreak.Get() == 1;
 }

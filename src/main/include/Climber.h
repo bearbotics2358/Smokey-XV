@@ -1,14 +1,9 @@
 
 class Climber {
-
-
-    public: 
+    public:
 
         Climber(); 
 
 
-    private: 
-
-    
-
+    private:
 }; 
