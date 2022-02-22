@@ -11,6 +11,7 @@
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "CanHandler.h"
 #include "vision/photon.h"
+#include "CompressorController.h"
 
 class Robot : public frc::TimedRobot 
 {
@@ -53,6 +54,8 @@ class Robot : public frc::TimedRobot
     double shooterDesiredSpeed { 0.0 };
   
     Collector a_Collector;
+
+    CompressorController a_CompressorController;
 
     //MqttHandler handler;
     CanHandler a_canHandler;
