@@ -3,14 +3,11 @@
 #include "Prefs.h"
 #include <frc/DigitalInput.h>
 
-class BeamBreak
-{
+class BeamBreak {
     public:
-
-        BeamBreak(int port); 
+        BeamBreak(int port);
         bool isBeamBroken();
 
     private:
-
-        frc::DigitalInput a_beambreak; 
+        frc::DigitalInput a_beambreak;
 };

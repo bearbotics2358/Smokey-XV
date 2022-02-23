@@ -10,11 +10,11 @@ double constexpr sqrtNewtonRaphson(double x, double curr, double prev) {
 }
 
 /*
-* Constexpr version of the square root
-* Return value:
-*	- For a finite and non-negative value of "x", returns an approximation for the square root of "x"
-*   - Otherwise, returns NaN
-*/
+ * Constexpr version of the square root
+ * Return value:
+ *	- For a finite and non-negative value of "x", returns an approximation for the square root of "x"
+ *   - Otherwise, returns NaN
+ */
 // code from: https://gist.github.com/alexshtf/eb5128b3e3e143187794
 constexpr double constSqrt(double x) {
     return x >= 0 && x < std::numeric_limits<double>::infinity()

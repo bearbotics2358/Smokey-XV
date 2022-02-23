@@ -10,6 +10,7 @@ class AbsoluteEncoder {
 
         double getAngle() const;
         double getRotations() const;
+
     private:
         frc::AnalogInput m_encoder;
         // offset angle in rotations (0 - 1)

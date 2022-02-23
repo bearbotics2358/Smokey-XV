@@ -4,13 +4,12 @@
 #include "Prefs.h"
 #include "misc.h"
 
-BallShooter::BallShooter(int leftId, int rightId): 
+BallShooter::BallShooter(int leftId, int rightId):
 a_shooterLeft(leftId),
-a_shooterRight(rightId)
-{
+a_shooterRight(rightId) {
     // by default this selects the ingetrated sensor
     ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
- 
+
     // these settings are present in the documentation example, and since they relate to safety of motor, they are probably a good idea to include
     config.supplyCurrLimit.triggerThresholdCurrent = 40; // the peak supply current, in amps
     config.supplyCurrLimit.triggerThresholdTime = 1.5; // the time at the peak supply current before the limit triggers, in sec

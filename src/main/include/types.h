@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 // I think roborio is only 32 bit, so no need for 64 bit integers
 typedef uint8_t u8;

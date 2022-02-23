@@ -1,15 +1,15 @@
 #pragma once
 
+#include <optional>
 #include <photonlib/PhotonCamera.h>
 #include <string>
-#include <optional>
 #include <vector>
 
 #include "types.h"
 
 struct Target {
-    float angle;
-    float distance;
+        float angle;
+        float distance;
 };
 
 enum class Team {
@@ -19,34 +19,33 @@ enum class Team {
 
 class TargetTracker {
     public:
+        class Mode {
+            public:
+                // creates a mode with target mode and sets the index to pipelineIndex
+                static Mode target(int pipelineIndex);
 
-class Mode {
-    public:
-        // creates a mode with target mode and sets the index to pipelineIndex
-        static Mode target(int pipelineIndex);
+                // creates a mode with ball mode and sets the index to pipelineIndex
+                static Mode ball(int pipelineIndex);
 
-        // creates a mode with ball mode and sets the index to pipelineIndex
-        static Mode ball(int pipelineIndex);
+                int getPipelineIndex() const;
 
-        int getPipelineIndex() const;
+                bool isTarget() const;
 
-        bool isTarget() const;
+                bool isBall() const;
 
-        bool isBall() const;
+            private:
+                enum class InnerMode {
+                    // track target to shoot into
+                    Target,
+                    // track balls
+                    Ball
+                };
 
-    private:
-        enum class InnerMode {
-            // track target to shoot into
-            Target,
-            // track balls
-            Ball
+                Mode(InnerMode mode, int pipelineIndex);
+
+                InnerMode m_innerMode;
+                int m_pipelineIndex;
         };
-
-        Mode(InnerMode mode, int pipelineIndex);
-
-        InnerMode m_innerMode;
-        int m_pipelineIndex;
-};
 
         // takes in the mdns name of the camera
         // this one sets team to read by defaualt
@@ -63,6 +62,7 @@ class Mode {
         std::optional<Target> getTarget() const;
         // TODO: maybe get a way to return the enemy team balls
         const std::vector<Target>& getBalls() const;
+
     private:
         photonlib::PhotonCamera m_camera;
         TargetTracker::Mode m_mode;

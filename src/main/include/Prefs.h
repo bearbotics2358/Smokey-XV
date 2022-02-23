@@ -1,10 +1,10 @@
 
 #pragma once // only add this code once; saves space by removing redundancy
 
-#include <units/length.h>
 #include <units/angle.h>
+#include <units/length.h>
 
-// Declare constants such as CAN IDs here 
+// Declare constants such as CAN IDs here
 
 //#define NEW_SWERVE
 
@@ -86,19 +86,19 @@
 #define TO_BALL2_FROM_LINE 160 // inches
 
 
-#define VOLTS_MAX 1.65 //Subject to change cause movement
-#define VOLTS_MIN 2.52 //Subject to change cause movement
+#define VOLTS_MAX 1.65 // Subject to change cause movement
+#define VOLTS_MIN 2.52 // Subject to change cause movement
 #define ANGLE_MAX 90
 #define ANGLE_MIN 24
 
 #define AUTO_START_BALL_NUM 3 // KNOWN FACT ITS WHAT WE START WITH!!!!!
 
-#define ARM_DEFAULT_POSITION 89 //degrees???? GOOD!
-#define AUTO_ARM_FINAL_POS 35 //degrees???? GOOD!
+#define ARM_DEFAULT_POSITION 89 // degrees???? GOOD!
+#define AUTO_ARM_FINAL_POS 35 // degrees???? GOOD!
 #define AUTO_SHOOT_VELOCITY 463 // RPM, GOOOD!
 #define AUTO_SHOOT_VELOCITY5BALL 440 // could change
 #define AUTO_FEED_VAL 1000 // wowowowow
-#define AUTO_ANGLE_DRIVESTRAIGHT 180 //Degrees
+#define AUTO_ANGLE_DRIVESTRAIGHT 180 // Degrees
 #define AUTO_DRIVE_SPEED .4
 
 
@@ -124,13 +124,12 @@
 
 // int shoot1, int shoot2, int feed1, int feed2, int collect, int pivot
 
-#define REESES_BEAM 2 // Top Beam
-#define BROKEN_BEAM 1 // Bottom Beam
 
 /* ============= MqttHandler ============= */
 
 #define SEND_BUF_LEN 2048
 #define RECV_BUF_LEN 2048
+
 
 /* ============= CanHandler ============= */
 
@@ -144,6 +143,7 @@
 #define BL_SWERVE_DATA_ID 1
 #define FR_SWERVE_DATA_ID 2
 #define BR_SWERVE_DATA_ID 3
+
 
 /* ============= Vision ============= */
 

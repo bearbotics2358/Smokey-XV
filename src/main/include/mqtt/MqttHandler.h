@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
 #include <optional>
+#include <string>
 
-#include "types.h"
-#include "mqtt/mqtt.h"
 #include "Prefs.h"
+#include "mqtt/mqtt.h"
+#include "types.h"
 
 class MqttHandler {
     public:
@@ -21,7 +21,7 @@ class MqttHandler {
 
         // returns none on failure
         static std::optional<MqttHandler> create(const std::string& address, u16 port, const std::string& topic);
-        
+
         // call to recieve new mqtt messages
         bool update();
 
