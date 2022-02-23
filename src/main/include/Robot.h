@@ -4,6 +4,7 @@
 #include "BallShooter.h"
 #include "CanHandler.h"
 #include "Collector.h"
+#include "CompressorController.h"
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "SwerveDrive.h" // Swerve kinematics
 #include "SwerveModule.h" // Swerve modules
@@ -43,6 +44,8 @@ class Robot : public frc::TimedRobot {
 
         // Swerve Drive object
         SwerveDrive a_SwerveDrive;
+
+        CompressorController a_CompressorController;
 
         BallShooter a_Shooter;
         double shooterDesiredSpeed { 0.0 };
