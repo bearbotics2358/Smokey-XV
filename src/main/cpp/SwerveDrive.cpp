@@ -58,16 +58,7 @@ FR_Module(FR_Ptr),
 BL_Module(BL_Ptr),
 BR_Module(BR_Ptr),
 anglePID(0.014, 0.0, 0.0),
-jenkinsTheCrabPID(5, 0.0, 0.0)
-/* FL_Input(0),
-FR_Input(1),
-BL_Input(2),
-BR_Input(3),
-FL_Encoder(FL_Input),
-FR_Encoder(FR_Input),
-BL_Encoder(BL_Input),
-BR_Encoder(BR_Input)*/
-{
+jenkinsTheCrabPID(5, 0.0, 0.0) {
     anglePID.EnableContinuousInput(0.0, 360.0);
     jenkinsTheCrabPID.EnableContinuousInput(0.0, 360.0);
 }
@@ -125,8 +116,8 @@ void SwerveDrive::swerveUpdate(float xIn, float yIn, float zIn, float gyroIn, bo
 
     float max = std::max(std::max(FR_Speed, FL_Speed), std::max(BR_Speed, BL_Speed)); // find max speed value
 
-    if (max > 1) // scale inputs respectively so no speed is greater than 1
-    {
+    // scale inputs respectively so no speed is greater than 1
+    if (max > 1) {
         FL_Speed /= max;
         FR_Speed /= max;
         BL_Speed /= max;
@@ -159,20 +150,6 @@ void SwerveDrive::swerveUpdate(float xIn, float yIn, float zIn, float gyroIn, bo
     }
 
     // update speeds and angles
-
-    /* FL_Module->setDriveSpeed(FL_Speed);
-    FL_Module->steerToAng(FL_Angle);
-
-    FR_Module->setDriveSpeed(FR_Speed);
-    FR_Module->steerToAng(FR_Angle);
-
-    BL_Module->setDriveSpeed(BL_Speed);
-    BL_Module->steerToAng(BL_Angle);
-
-    BR_Module->setDriveSpeed(BR_Speed);
-    BR_Module->steerToAng(BR_Angle);
-    */
-
     if (FL_Module->adjustAngle(FL_Angle)) {
         // frc::SmartDashboard::PutNumber("FL Set: ", FL_Module->setDriveVelocity(-FL_Speed));
         FL_Module->setDriveSpeed(-FL_Speed);
@@ -264,8 +241,8 @@ void SwerveDrive::crabDriveUpdate(float xIn, float yIn, float gyroIn) {
 
     float max = std::max(std::max(FR_Speed, FL_Speed), std::max(BR_Speed, BL_Speed)); // find max speed value
 
-    if (max > 1) // scale inputs respectively so no speed is greater than 1
-    {
+    // scale inputs respectively so no speed is greater than 1
+    if (max > 1) {
         FL_Speed /= max;
         FR_Speed /= max;
         BL_Speed /= max;

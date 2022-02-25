@@ -17,13 +17,13 @@ class SwerveModule // Handles steering and driving of each Swerve Module
     public:
         SwerveModule(int driveID, int steerID, int absEncoderPort, double absEncoderOffset); // CAN IDs, analog port for steer encoder
 
-        float getDistance(void); // Returns position of the distance encoder
-        void resetDriveEncoder(void);
+        float getDistance(); // Returns position of the distance encoder
+        void resetDriveEncoder();
 
         void resetSteerEncoder();
 
-        float getAngleRaw(void); // position of steering encoder
-        float getAngle(void); // scaled angle between 0 and 360
+        float getAngleRaw(); // position of steering encoder
+        float getAngle(); // scaled angle between 0 and 360
 
         void goToPosition(float setpoint); // Position PID control, moves to specified position
         void steerToAng(float setpoint); // Angle PID control
@@ -31,7 +31,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         void setDriveSpeed(float target); // update current
 
         void setSteerSpeed(float target);
-        float getDriveSpeed(void);
+        float getDriveSpeed();
 
         float setDriveVelocity(float percent); // Drive Velocity Loop - WIP
 

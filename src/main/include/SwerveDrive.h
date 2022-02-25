@@ -94,15 +94,5 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         const float DRIVE_WIDTH = 29.75;
 
         const float PI = M_PI;
-
-        /* frc::AnalogInput FL_Input;
-        frc::AnalogInput FR_Input;
-        frc::AnalogInput BL_Input;
-        frc::AnalogInput BR_Input;
-
-        frc::AnalogEncoder FL_Encoder;
-        frc::AnalogEncoder FR_Encoder;
-        frc::AnalogEncoder BL_Encoder;
-        frc::AnalogEncoder BR_Encoder; */
 };
 #endif
