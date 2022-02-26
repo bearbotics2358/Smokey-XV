@@ -1,13 +1,12 @@
 #include "vision/photon.h"
 
+#include "Prefs.h"
 #include <photonlib/PhotonUtils.h>
 #include <units/angle.h>
-#include "Prefs.h"
 
 TargetTracker::Mode::Mode(InnerMode mode, int pipelineIndex):
 m_innerMode(mode),
-m_pipelineIndex(pipelineIndex)
-{}
+m_pipelineIndex(pipelineIndex) {}
 
 TargetTracker::Mode TargetTracker::Mode::target(int pipelineIndex) {
     return Mode(InnerMode::Target, pipelineIndex);
@@ -33,14 +32,12 @@ bool TargetTracker::Mode::isBall() const {
 TargetTracker::TargetTracker(const std::string& cameraName, TargetTracker::Mode mode):
 m_camera(cameraName),
 m_mode(mode),
-m_team(Team::Red)
-{}
+m_team(Team::Red) {}
 
 TargetTracker::TargetTracker(const std::string& cameraName, TargetTracker::Mode mode, Team team):
 m_camera(cameraName),
 m_mode(mode),
-m_team(team)
-{}
+m_team(team) {}
 
 void TargetTracker::setTeam(Team team) {
     // TODO: maybe switch pipelines if in ball mode
@@ -66,8 +63,7 @@ void TargetTracker::update() {
                 TARGET_CAMERA_HEIGHT,
                 TARGET_HEIGHT,
                 TARGET_CAMERA_PITCH,
-                units::degree_t(target.GetPitch())
-            );
+                units::degree_t(target.GetPitch()));
         }
     }
 }

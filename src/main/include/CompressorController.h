@@ -1,14 +1,12 @@
+#pragma once
+
 #include <frc/Compressor.h>
 
 class CompressorController {
 
-public:
+    public:
+        CompressorController();
 
-    CompressorController();
-
-private:
-    frc::Compressor a_Compressor;
-
+    private:
+        frc::Compressor a_Compressor;
 };
-
-

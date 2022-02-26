@@ -1,12 +1,12 @@
 #pragma once
 
-#include <utility>
+#include <math.h>
 #include <stdexcept>
 #include <type_traits>
-#include <math.h>
+#include <utility>
 
-#include "types.h"
 #include "math/ConstMath.h"
+#include "types.h"
 
 // needed because using the > or >= operator in templates confused the compiler to think it is the end of a template
 constexpr bool between(usize n, usize min, usize max) {
@@ -19,13 +19,13 @@ constexpr bool between(usize n, usize min, usize max) {
 // if the rows and cols do not match, the method will not be defined, so calling it will be an error
 // this is very odd looking because c++ templates are very odd
 #define MAT_METHOD(rows_min, rows_max, cols_min, cols_max, modifiers, type) \
-template<usize rr__ = r, usize cc__ = c>                                    \
-modifiers typename std::enable_if_t<between(r, rows_min, rows_max) && between(rr__, rows_min, rows_max) && between(c, cols_min, cols_max) && between(cc__, cols_min, cols_max), type>
+    template<usize rr__ = r, usize cc__ = c>                                \
+    modifiers typename std::enable_if_t<between(r, rows_min, rows_max) && between(rr__, rows_min, rows_max) && between(c, cols_min, cols_max) && between(cc__, cols_min, cols_max), type>
 
 // this enables a method for a vector of any size
 #define VEC_METHOD(modifiers, type) \
-template<usize cc__ = c>            \
-modifiers typename std::enable_if_t<between(c, 1, 1) && between(cc__, 1, 1), type>
+    template<usize cc__ = c>        \
+    modifiers typename std::enable_if_t<between(c, 1, 1) && between(cc__, 1, 1), type>
 
 // these macros are just for certain sized matrixes and vectors, and do the same as the one above prety much
 #define MAT2_METHOD(modifiers, type) MAT_METHOD(2, 2, 2, 2, modifiers, type)
@@ -40,19 +40,22 @@ modifiers typename std::enable_if_t<between(c, 1, 1) && between(cc__, 1, 1), typ
 
 // define an eccesor mathod on a veector between low and high dimension,
 // with name name and accesing data at index index
-#define ACCESOR_METHODS(name, index, low, high)                     \
-VEC_RANGE_METHOD(low, high, constexpr, T&) name() & {               \
-    static_assert(index < size(), "error");                         \
-    return data[index];                                             \
-}                                                                   \
-VEC_RANGE_METHOD(low, high, constexpr, const T&) name() const& {    \
-    static_assert(index < size(), "error");                         \
-    return data[index];                                             \
-}                                                                   \
-VEC_RANGE_METHOD(low, high, constexpr, T) name() && {               \
-    static_assert(index < size(), "error");                         \
-    return data[index];                                             \
-}
+#define ACCESOR_METHODS(name, index, low, high)      \
+    VEC_RANGE_METHOD(low, high, constexpr, T&)       \
+    name()& {                                        \
+        static_assert(index < size(), "error");      \
+        return data[index];                          \
+    }                                                \
+    VEC_RANGE_METHOD(low, high, constexpr, const T&) \
+    name() const& {                                  \
+        static_assert(index < size(), "error");      \
+        return data[index];                          \
+    }                                                \
+    VEC_RANGE_METHOD(low, high, constexpr, T)        \
+    name()&& {                                       \
+        static_assert(index < size(), "error");      \
+        return data[index];                          \
+    }
 
 // NOTE: this matrix does not use simd so it is not super fast or anything
 // TODO: maybe use x and y instead of rows ans columns everywhere because rows adn columns are unintuitive to think about sometimes
@@ -63,17 +66,20 @@ class Matrix {
 
         Matrix() = default;
 
-        constexpr Matrix(T n) noexcept : data{n} {}
+        constexpr Matrix(T n) noexcept:
+        data { n } {}
 
         // this makes a constructor that takes as many elements as the matrix will hold and initilizes the matrix with these arguments
         // the elements start on the first row, move across all the columns, than go to the second row
         template<typename... Args>
-        constexpr Matrix(Args... args) noexcept : data{std::forward<Args>(args)...} {
+        constexpr Matrix(Args... args) noexcept:
+        data { std::forward<Args>(args)... } {
             static_assert(sizeof...(args) == size(), "Incorrect number of arguments for Matrix");
         }
 
         // creates a 2d counterclockwise rotation matrix given an angle in radians
-        MAT2_METHOD(static constexpr, Mtype) rotation(num angle) noexcept {
+        MAT2_METHOD(static constexpr, Mtype)
+        rotation(num angle) noexcept {
             return Matrix(
                 cos(angle), -sin(angle),
                 sin(angle), cos(angle));
@@ -140,7 +146,7 @@ class Matrix {
         // operator overloads
         // adition does alement wise adding, or adding a constant to every element
         constexpr Mtype& operator+=(const Mtype& other) {
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 data[i] += other.data[i];
             }
             return *this;
@@ -153,7 +159,7 @@ class Matrix {
         }
 
         constexpr Mtype& operator+=(const T& n) {
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 data[i] += n;
             }
             return *this;
@@ -164,10 +170,10 @@ class Matrix {
             out += n;
             return out;
         }
-    
+
         // subtraction does alement wise subtraction, or subtracting a constant from every element
         constexpr Mtype& operator-=(const Mtype& other) {
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 data[i] -= other.data[i];
             }
             return *this;
@@ -180,7 +186,7 @@ class Matrix {
         }
 
         constexpr Mtype& operator-=(const T& n) {
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 data[i] -= n;
             }
             return *this;
@@ -194,7 +200,7 @@ class Matrix {
 
         // multiplying or dividing by a number multiplies or divides every element in the matrix
         constexpr Mtype& operator*=(const T& n) {
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 data[i] *= n;
             }
             return *this;
@@ -207,7 +213,7 @@ class Matrix {
         }
 
         constexpr Mtype& operator/=(const T& n) {
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 data[i] /= n;
             }
             return *this;
@@ -229,10 +235,10 @@ class Matrix {
             T def;
             // temporary array
             T row_tmp[cols()];
-            for (usize row = 0; row < rows(); row ++) {
-                for (usize col = 0; col < other_cols; col ++) {
+            for (usize row = 0; row < rows(); row++) {
+                for (usize col = 0; col < other_cols; col++) {
                     T tmp = def;
-                    for (usize i = 0; i < cols(); i ++) {
+                    for (usize i = 0; i < cols(); i++) {
                         // TODO: maybe avoid use of at
                         tmp += at_unchecked(i, row) * other.at_unchecked(col, i);
                     }
@@ -240,7 +246,7 @@ class Matrix {
                 }
 
                 // copy temporary row to matrix
-                for (usize col = 0; col < cols(); col ++) {
+                for (usize col = 0; col < cols(); col++) {
                     at_unchecked(col, row) = row_tmp[col];
                 }
             }
@@ -253,11 +259,11 @@ class Matrix {
             // apparantly is doesn't reset between loop iterations
             T def;
             Matrix<T, r, other_cols> out;
-            for (usize row = 0; row < rows(); row ++) {
-                for (usize col = 0; col < other_cols; col ++) {
+            for (usize row = 0; row < rows(); row++) {
+                for (usize col = 0; col < other_cols; col++) {
                     T tmp = def;
                     // TODO: maybe don't use at if performance is needed
-                    for (usize i = 0; i < cols(); i ++) {
+                    for (usize i = 0; i < cols(); i++) {
                         tmp += at_unchecked(i, row) * other.at_unchecked(col, i);
                     }
                     out.at_unchecked(col, row) = tmp;
@@ -267,16 +273,19 @@ class Matrix {
         }
 
         // normalizes this vector
-        VEC_METHOD(, void) normalize() {
+        VEC_METHOD(, void)
+        normalize() {
             (*this) /= magnitude();
         }
 
         // returns this vector normalized, but does not actually normalize this vector
-        VEC_METHOD(, Mtype) as_normalized() const {
+        VEC_METHOD(, Mtype)
+        as_normalized() const {
             return (*this) / magnitude();
         }
 
-        VEC_METHOD(, T) magnitude() const {
+        VEC_METHOD(, T)
+        magnitude() const {
             return sqrt(magnitude_squared());
         }
 
@@ -284,39 +293,46 @@ class Matrix {
         // they use a different square root, so they might be slower at run time, which is why they are constexpr
         // TODO: figure out if they are actually that much slower
         // normalizes this vector
-        VEC_METHOD(constexpr, void) const_normalize() {
+        VEC_METHOD(constexpr, void)
+        const_normalize() {
             (*this) /= const_magnitude();
         }
 
         // returns this vector normalized, but does not actually normalize this vector
-        VEC_METHOD(constexpr, Mtype) const_as_normalized() const {
+        VEC_METHOD(constexpr, Mtype)
+        const_as_normalized() const {
             return (*this) / const_magnitude();
         }
 
-        VEC_METHOD(constexpr, T) const_magnitude() const {
+        VEC_METHOD(constexpr, T)
+        const_magnitude() const {
             return constSqrt(magnitude_squared());
         }
 
-        VEC_METHOD(constexpr, T) magnitude_squared() const {
+        VEC_METHOD(constexpr, T)
+        magnitude_squared() const {
             T out(0);
-            for (usize i = 0; i < size(); i ++) {
+            for (usize i = 0; i < size(); i++) {
                 out += data[i] * data[i];
             }
             return out;
         }
 
         // returns the angle from the positive x axis in radians in the range of (-pi, pi)
-        VEC2_METHOD(constexpr, num) angle() const {
+        VEC2_METHOD(constexpr, num)
+        angle() const {
             return atan2(y(), x());
         }
 
         // returns the vetor normal to this vector and facing towards its right hand side
-        VEC2_METHOD(constexpr, Mtype) right_normal() const {
+        VEC2_METHOD(constexpr, Mtype)
+        right_normal() const {
             return Mtype(y(), -x());
         }
 
         // returns the vetor normal to this vector and facing towards its left hand side
-        VEC2_METHOD(constexpr, Mtype) left_normal() const {
+        VEC2_METHOD(constexpr, Mtype)
+        left_normal() const {
             return Mtype(-y(), x());
         }
 

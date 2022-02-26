@@ -1,8 +1,8 @@
 #include "CanHandler.h"
 
+#include <stdio.h>
 #include <string>
 #include <utility>
-#include <stdio.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -25,7 +25,7 @@ m_endpoints() {
             }
 
             u32 bitnum = 0;
-            for (u8 k = 0; k < desired_bits; k ++) {
+            for (u8 k = 0; k < desired_bits; k++) {
                 bitnum |= 1 << k;
             }
 
@@ -51,6 +51,7 @@ m_endpoints() {
 }
 
 CanHandler CanHandler::layout2022() {
+    // clang-format off
     std::vector<Arduino> layout {
         Arduino {
             .can_id = LEFT_ARDUINO_CAN_ID,
@@ -85,6 +86,7 @@ CanHandler CanHandler::layout2022() {
             }
         }
     };
+    // clang-format on
 
     return CanHandler(layout);
 }
@@ -103,7 +105,7 @@ std::optional<float> CanHandler::getData(int which) const {
 void CanHandler::update() {
     frc::CANData data;
     for (auto& endpoint : m_endpoints) {
-        if (endpoint.can.ReadPacketNew(endpoint.api_id, &data)) {   
+        if (endpoint.can.ReadPacketNew(endpoint.api_id, &data)) {
             for (usize j = 0; j / 2 < endpoint.data.size(); j += 2) {
                 Field& datas = endpoint.data[j];
                 datas.data = (data.data[j] << 8) | data.data[j + 1];

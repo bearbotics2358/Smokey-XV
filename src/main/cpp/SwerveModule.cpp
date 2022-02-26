@@ -1,16 +1,15 @@
 
 #include "SwerveModule.h"
-#include <math.h>
 #include "misc.h"
+#include <math.h>
 
-SwerveModule::SwerveModule(int driveID, int steerID, int steerEncID, int absEncoderPort, double absEncoderOffset):
+SwerveModule::SwerveModule(int driveID, int steerID, AbsoluteEncoder&& absEncoder):
 driveMotor(driveID),
 steerMotor(steerID, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
 driveEnc(driveMotor),
 steerEncNEO(steerMotor.GetEncoder()),
-absSteerEnc(absEncoderPort, absEncoderOffset),
-steerPID(0, 0, 0)
-{
+absSteerEnc(std::move(absEncoder)),
+steerPID(0, 0, 0) {
     // by default this selects the ingetrated sensor
     ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
 
@@ -29,67 +28,57 @@ steerPID(0, 0, 0)
     steerPID.EnableContinuousInput(0.0, 360.0);
 }
 
-float SwerveModule::getDistance(void)
-{
+float SwerveModule::getDistance() {
     float ret = driveEnc.GetIntegratedSensorPosition();
     return ret;
 }
 
-void SwerveModule::resetDriveEncoder(void)
-{
+void SwerveModule::resetDriveEncoder() {
     driveEnc.SetIntegratedSensorPosition(0);
 }
 
-void SwerveModule::resetSteerEncoder()
-{
+void SwerveModule::resetSteerEncoder() {
     steerEncNEO.SetPosition(absSteerEnc.getRotations());
 }
 
-float SwerveModule::getAngleRaw(void)
-{
+float SwerveModule::getAngleRaw() {
     float ret = steerEncNEO.GetPosition();
     return ret;
 }
 
-float SwerveModule::getAngle(void)
-{
+float SwerveModule::getAngle() {
     float temp = getAngleRaw(); // get raw position
     float angle = (fmod(temp, TICKS_STEERING) / TICKS_STEERING) * 360; // convert to angle in degrees
 
     float adjusted = angle;
-    if(angle < 0)
-    {
+    if (angle < 0) {
         adjusted += 360; // bounds to 0-360
     }
 
     return adjusted;
 }
 
-void SwerveModule::goToPosition(float setpoint)
-{
+void SwerveModule::goToPosition(float setpoint) {
     float ticks = SwerveModule::inchesToMotorTicks(setpoint);
     driveMotor.Set(TalonFXControlMode::Position, ticks);
 }
 
 void SwerveModule::steerToAng(float setpoint) // the twO
 {
-    float speed = std::clamp(steerPID.Calculate(getAngle(), setpoint) / 270.0, -0.5, 0.5);                                           
+    float speed = std::clamp(steerPID.Calculate(getAngle(), setpoint) / 270.0, -0.5, 0.5);
     steerMotor.Set(speed);
 }
 
 
-void SwerveModule::setDriveSpeed(float target)
-{
+void SwerveModule::setDriveSpeed(float target) {
     driveMotor.Set(TalonFXControlMode::PercentOutput, target);
 }
 
-void SwerveModule::setSteerSpeed(float target)
-{
+void SwerveModule::setSteerSpeed(float target) {
     steerMotor.Set(target);
 }
 
-float SwerveModule::getDriveSpeed(void)
-{
+float SwerveModule::getDriveSpeed() {
     return driveEnc.GetIntegratedSensorVelocity();
 }
 
@@ -98,20 +87,18 @@ float SwerveModule::setDriveVelocity(float percent) // the onE
     float speed = percent * DRIVE_VELOCITY;
     float rpm = SwerveModule::wheelSpeedToRpm(speed);
 
-    driveMotor.Set(TalonFXControlMode::Velocity, misc::rpmToTalonVel(rpm)); 
+    driveMotor.Set(TalonFXControlMode::Velocity, misc::rpmToTalonVel(rpm));
 
     return speed;
 }
 
-void SwerveModule::updateDrivePID(double pNew, double iNew, double dNew)
-{   
+void SwerveModule::updateDrivePID(double pNew, double iNew, double dNew) {
     driveMotor.Config_kP(0, pNew);
     driveMotor.Config_kI(0, iNew);
     driveMotor.Config_kD(0, dNew);
 }
 
-void SwerveModule::updateSteerPID(double pNew, double iNew, double dNew)
-{
+void SwerveModule::updateSteerPID(double pNew, double iNew, double dNew) {
     steerPID.SetP(pNew);
     steerPID.SetI(iNew);
     steerPID.SetD(dNew);
@@ -120,35 +107,34 @@ void SwerveModule::updateSteerPID(double pNew, double iNew, double dNew)
 bool SwerveModule::adjustAngle(float targetAngle) {
     float tempCurrent = getAngle();
     float tempTarget = targetAngle;
-    bool changeMade = false; 
+    bool changeMade = false;
 
-    if(tempCurrent - tempTarget > 180) {
-        tempCurrent -= 360;  
-    } else if(tempCurrent - tempTarget < -180) {
-        tempCurrent += 360; 
+    if (tempCurrent - tempTarget > 180) {
+        tempCurrent -= 360;
+    } else if (tempCurrent - tempTarget < -180) {
+        tempCurrent += 360;
     }
     float distOfAngle = tempTarget - tempCurrent;
 
-    if(distOfAngle > 90) {
-        tempTarget -= 180; 
+    if (distOfAngle > 90) {
+        tempTarget -= 180;
         changeMade = true;
-    } 
-
-    if(distOfAngle < -90)
-    {
-        tempTarget += 180;
-        changeMade = true; 
     }
 
-    if(tempTarget < 0) {
+    if (distOfAngle < -90) {
+        tempTarget += 180;
+        changeMade = true;
+    }
+
+    if (tempTarget < 0) {
         tempTarget += 360;
-    } else if(tempTarget > 360) {
+    } else if (tempTarget > 360) {
         tempTarget -= 360;
-    } 
+    }
 
     steerToAng(tempTarget);
 
-    return changeMade; 
+    return changeMade;
 }
 
 void SwerveModule::driveDirection(Vec2 direction) {
@@ -178,8 +164,8 @@ double SwerveModule::inchesToMotorTicks(double inches) {
 }
 
 /*
-    steer module to given angle 
+    steer module to given angle
     - return boolean (do we need to change the speed or not?)
-        o specify wether or not the direction need to be reversed  
+        o specify wether or not the direction need to be reversed
         o still move even if angle doesn't need to be adjusted
-*/ 
+*/

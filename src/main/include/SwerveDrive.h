@@ -2,23 +2,23 @@
 
 #include <frc/controller/PIDController.h>
 
+#include "Prefs.h"
 #include "SwerveModule.h"
 #include "math/LinAlg.h"
-#include "Prefs.h"
 
 #ifdef NEW_SWERVE
 struct SwerveTransform {
-    SwerveTransform(Vec2 direction, float rotSpeed);
+        SwerveTransform(Vec2 direction, float rotSpeed);
 
-    static SwerveTransform translate(Vec2 direction, float gyroAngle, bool fieldOriented = true);
-    static SwerveTransform translateRotate(Vec2 direction, float rotSpeed, float gyroAngle, bool fieldOriented);
+        static SwerveTransform translate(Vec2 direction, float gyroAngle, bool fieldOriented = true);
+        static SwerveTransform translateRotate(Vec2 direction, float rotSpeed, float gyroAngle, bool fieldOriented);
 
-    // direction for robot to move in
-    Vec2 direction;
+        // direction for robot to move in
+        Vec2 direction;
 
-    // speed of rotation in radians
-    // if this is 0, the robot will try and hold its current angle
-    float rotSpeed;
+        // speed of rotation in radians
+        // if this is 0, the robot will try and hold its current angle
+        float rotSpeed;
 };
 
 class SwerveDrive {
@@ -57,33 +57,33 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         void crabDriveUpdate(float xIn, float yIn, float gyroIn); // clutzy from club penguin
 
 
-        
+
         void swerveUpdate(float xIn, float yIn, float zIn, float gyroIn, bool fieldOriented); // Updates Swerve Modules for swerve drive
-            /*
-                xIn = x asix on joystick
-                yIn = y axis on joystick
-                zIn =  z axis on joystick
-                gyroIn = sensor
-                fieldOriented = are you looking at the field head on or not? 
-            */
+        /*
+            xIn = x asix on joystick
+            yIn = y axis on joystick
+            zIn =  z axis on joystick
+            gyroIn = sensor
+            fieldOriented = are you looking at the field head on or not?
+        */
 
 
         void driveDistance(float dist, float direction); // dist in inches and angle 0-360
         void resetDrive();
         float getAvgDistance(void); // baka-47
 
-        void turnToAngle(float gyro, float angle); 
-        
+        void turnToAngle(float gyro, float angle);
+
         void makeShiftTurn(float speed);
 
         void GoToTheDon(float speed, float direction, float distance, float gyro);
-    private:
 
+    private:
         SwerveModule *FL_Module;
         SwerveModule *FR_Module;
         SwerveModule *BL_Module;
         SwerveModule *BR_Module;
-        
+
         frc2::PIDController anglePID;
         frc2::PIDController jenkinsTheCrabPID; // blame kordt
 
@@ -94,15 +94,5 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         const float DRIVE_WIDTH = 29.75;
 
         const float PI = M_PI;
-
-        /* frc::AnalogInput FL_Input;
-        frc::AnalogInput FR_Input;
-        frc::AnalogInput BL_Input;
-        frc::AnalogInput BR_Input;
-
-        frc::AnalogEncoder FL_Encoder; 
-        frc::AnalogEncoder FR_Encoder; 
-        frc::AnalogEncoder BL_Encoder; 
-        frc::AnalogEncoder BR_Encoder; */
 };
 #endif

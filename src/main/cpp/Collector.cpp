@@ -10,11 +10,11 @@ a_collectorSolenoid(solenoidId, frc::PneumaticsModuleType::REVPH, 0, 1)
 
 }
 
-void Collector::toggleSolenoid(){
+void Collector::toggleSolenoid() {
     a_collectorSolenoid.Toggle();
 }
 
-void Collector::resetSolenoid(){
+void Collector::resetSolenoid() {
     a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
