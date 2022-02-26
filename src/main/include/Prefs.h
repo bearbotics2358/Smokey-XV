@@ -8,6 +8,8 @@
     #define RIGHT_SHOOTER_ID 27
     #define SHOOTER_SPEED .5
 
+    #define SPEED_COLLECTOR_ID 18
+
 /*======== SHOOTER CONSTANTS ========*/
 
 #define COLLECTOR_MOTOR_ID 9
@@ -114,3 +116,4 @@
 #define TH2_COS2_ANGLE 31.47152872
 // sin (2 * shooter angle)
 #define SIN_2ANGLE 0.819152044
+
