@@ -3,12 +3,12 @@
 #include "misc.h"
 #include <math.h>
 
-SwerveModule::SwerveModule(int driveID, int steerID, int absEncoderPort, double absEncoderOffset):
+SwerveModule::SwerveModule(int driveID, int steerID, AbsoluteEncoder&& absEncoder):
 driveMotor(driveID),
 steerMotor(steerID, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
 driveEnc(driveMotor),
 steerEncNEO(steerMotor.GetEncoder()),
-absSteerEnc(absEncoderPort, absEncoderOffset),
+absSteerEnc(std::move(absEncoder)),
 steerPID(0, 0, 0) {
     // by default this selects the ingetrated sensor
     ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;

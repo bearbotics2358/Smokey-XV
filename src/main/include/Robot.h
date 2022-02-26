@@ -45,12 +45,12 @@ class Robot : public frc::TimedRobot {
         // Swerve Drive object
         SwerveDrive a_SwerveDrive;
 
-        CompressorController a_CompressorController;
-
         BallShooter a_Shooter;
         double shooterDesiredSpeed { 0.0 };
 
         Collector a_Collector;
+
+        CompressorController a_CompressorController;
 
         // MqttHandler handler;
         // CanHandler a_canHandler;

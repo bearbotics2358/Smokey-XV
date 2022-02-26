@@ -46,6 +46,19 @@
 #define BL_SWERVE_ABS_ENC_PORT 2
 #define BR_SWERVE_ABS_ENC_PORT 3
 
+// min and max voltage of absolute encoders on swerve drives
+#define FL_SWERVE_ABS_ENC_MIN_VOLTS 0.0
+#define FL_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+
+#define FR_SWERVE_ABS_ENC_MIN_VOLTS 0.0
+#define FR_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+
+#define BL_SWERVE_ABS_ENC_MIN_VOLTS 0.0
+#define BL_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+
+#define BR_SWERVE_ABS_ENC_MIN_VOLTS 0.0
+#define BR_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+
 // offset from 0 of the absolute encders
 #define FL_SWERVE_ABS_ENC_OFFSET 0.0
 #define FR_SWERVE_ABS_ENC_OFFSET 0.0

@@ -15,7 +15,7 @@
 class SwerveModule // Handles steering and driving of each Swerve Module
 {
     public:
-        SwerveModule(int driveID, int steerID, int absEncoderPort, double absEncoderOffset); // CAN IDs, analog port for steer encoder
+        SwerveModule(int driveID, int steerID, AbsoluteEncoder&& absEncoder); // CAN IDs, analog port for steer encoder
 
         float getDistance(); // Returns position of the distance encoder
         void resetDriveEncoder();
