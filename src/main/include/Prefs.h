@@ -16,7 +16,9 @@
 
 
 /*======== COLLECTOR CONSTANTS ========*/
+
 #define COLLECTOR_MOTOR_ID 21
+#define INDEXER_MOTOR_ID 22
 #define SOLENOID_ID 10
 #define COLLECTOR_MOTOR_SPEED 60 // rpm
 

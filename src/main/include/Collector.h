@@ -6,16 +6,18 @@
 class Collector {
     public:
 
-    Collector(int motorId, int solenoidId);
+    Collector(int collectorMotorId, int indexerMotorId, int solenoidId);
 
     void toggleSolenoid();
     void resetSolenoid();
-    void setMotorSpeed(double rpm);
+    void setCollectorMotorSpeed(double rpm);
+    void setIndexerMotorSpeed(double rpm);
 
 
     private:
 
     TalonSRX a_collectorMotor;
+    TalonSRX a_indexerMotor;
     frc::DoubleSolenoid a_collectorSolenoid;
 
     double alpha { 0.5 };
