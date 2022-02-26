@@ -2,7 +2,7 @@
 #include "Prefs.h"
 
     MotorRunFast::MotorRunFast() :
-    a_speed(SPEED_COLLECTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless)
+    a_speed(SPEED_COLLECTOR_ID)
     {
 
     }

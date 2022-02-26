@@ -1,4 +1,4 @@
-#include <rev/CANSparkMax.h>
+#include <ctre/Phoenix.h>
 
 class MotorRunFast {
 
@@ -9,10 +9,6 @@ class MotorRunFast {
 
     private: 
 
-        rev::CANSparkMax a_speed;
-
-
-
-
+        WPI_TalonSRX a_speed;
 
 }; 
