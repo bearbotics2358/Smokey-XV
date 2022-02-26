@@ -5,7 +5,7 @@
 Collector::Collector(int collectorMotorId, int indexerMotorId, int solenoidId):
 a_collectorMotor(collectorMotorId),
 a_indexerMotor(indexerMotorId),
-a_collectorSolenoid(solenoidId, frc::PneumaticsModuleType::REVPH, 0, 1)
+a_collectorSolenoid(frc::PneumaticsModuleType::REVPH, 0, 1)
 {
 
 }
@@ -26,3 +26,4 @@ void Collector::setIndexerMotorSpeed(double rpm){
     double value = misc::rpmToTalonVel(rpm);
     a_indexerMotor.Set(ControlMode::Velocity, value);
 }
+void 
