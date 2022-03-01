@@ -12,13 +12,14 @@ class Collector {
         void resetSolenoid();
         void setCollectorMotorSpeed(double rpm);
         void setIndexerMotorSpeed(double rpm);
-        static frc::DoubleSolenoid a_collectorSolenoid;
+        bool getValue();
 
 
     private:
 
         TalonSRX a_collectorMotor;
         TalonSRX a_indexerMotor;
+        frc::DoubleSolenoid a_collectorSolenoid;
 
 
         double alpha { 0.5 };

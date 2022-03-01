@@ -26,4 +26,6 @@ void Collector::setIndexerMotorSpeed(double rpm){
     double value = misc::rpmToTalonVel(rpm);
     a_indexerMotor.Set(ControlMode::Velocity, value);
 }
-void 
+bool Collector::getValue(){
+    return a_collectorSolenoid.Get();
+}

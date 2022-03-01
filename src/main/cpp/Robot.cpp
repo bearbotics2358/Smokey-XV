@@ -55,7 +55,7 @@ void Robot::RobotPeriodic() {
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
-    frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", Collector::a_collectorSolenoid.Get());
+    frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
     // a_canHandler.update();
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
@@ -104,7 +104,7 @@ void Robot::TeleopPeriodic() // main loop
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
-    if (a_XboxController.GetRawButton(3)) {
+    if (a_XboxController.GetRawButton(OperatorButton::X)) {
         a_Collector.toggleSolenoid();
     }
     if(a_XboxController.GetRawButton(OperatorButton::Y)){
