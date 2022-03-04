@@ -6,7 +6,7 @@
 class Collector {
     public:
 
-        Collector(int collectorMotorId, int indexerMotorId, int solenoidId);
+        Collector(int collectorMotorId, int indexerMotorId, int solenoidId, int pushSolenoidModule, int pullSolenoidModule);
 
         void toggleSolenoid();
         void resetSolenoid();

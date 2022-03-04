@@ -2,6 +2,7 @@
 #pragma once
 
 #include "BallShooter.h"
+#include "Climber.h"
 #include "CanHandler.h"
 #include "Collector.h"
 #include "CompressorController.h"
@@ -49,6 +50,8 @@ class Robot : public frc::TimedRobot {
         double shooterDesiredSpeed { 0.0 };
 
         Collector a_Collector;
+
+        Climber a_Climber;
 
         CompressorController a_CompressorController;
 

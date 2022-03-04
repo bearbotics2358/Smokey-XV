@@ -2,10 +2,10 @@
 #include "Prefs.h"
 #include "misc.h"
 
-Collector::Collector(int collectorMotorId, int indexerMotorId, int solenoidId):
+Collector::Collector(int collectorMotorId, int indexerMotorId, int solenoidId, int pushSolenoidModule, int pullSolenoidModule):
 a_collectorMotor(collectorMotorId),
 a_indexerMotor(indexerMotorId),
-a_collectorSolenoid(frc::PneumaticsModuleType::REVPH, 0, 1)
+a_collectorSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule)
 {
 
 }

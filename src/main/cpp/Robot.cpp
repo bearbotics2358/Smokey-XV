@@ -18,7 +18,8 @@ a_XboxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
 a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
-a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID),
+a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
+a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
 // handler("169.254.179.144", "1185", "data"),
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
@@ -107,10 +108,10 @@ void Robot::TeleopPeriodic() // main loop
     if (a_XboxController.GetRawButton(OperatorButton::X)) {
         a_Collector.toggleSolenoid();
     }
-    if(a_XboxController.GetRawButton(OperatorButton::Y)){
+    if (a_XboxController.GetRawButton(OperatorButton::Y)){
         a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_SPEED);
     }
-    if(a_XboxController.GetRawButton(OperatorButton::Start)){
+    if (a_XboxController.GetRawButton(OperatorButton::Start)){
         a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_SPEED);
     }
 
