@@ -55,6 +55,7 @@ void Robot::RobotPeriodic() {
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+    frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
     // a_canHandler.update();
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
@@ -90,7 +91,10 @@ void Robot::TeleopPeriodic() // main loop
     a_shooterVision.update();
     a_ballTracker.update();
 
+    a_CompressorController.update();
+
     /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
+
     if (a_XboxController.GetRawButton(OperatorButton::A)) {
         shooterDesiredSpeed += 10.0;
     }
@@ -105,6 +109,9 @@ void Robot::TeleopPeriodic() // main loop
     }
     if(a_XboxController.GetRawButton(OperatorButton::Y)){
         a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_SPEED);
+    }
+    if(a_XboxController.GetRawButton(OperatorButton::Start)){
+        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_SPEED);
     }
 
     a_Shooter.setSpeed(shooterDesiredSpeed);

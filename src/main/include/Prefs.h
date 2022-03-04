@@ -21,6 +21,7 @@
 #define INDEXER_MOTOR_ID 22
 #define SOLENOID_ID 10
 #define COLLECTOR_MOTOR_SPEED 60 // rpm
+#define INDEXER_MOTOR_SPEED 60 // rpm
 
 
 /*====== MOTOR CONTROLLER IDS ======*/

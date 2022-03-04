@@ -6,7 +6,9 @@ class CompressorController {
 
     public:
         CompressorController();
+        void update();
 
     private:
         frc::Compressor a_Compressor;
+
 };
