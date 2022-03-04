@@ -32,7 +32,7 @@ Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *ButtonBox, SwerveDrive *
 }
 
 void Autonomous::Init(){
-	// a_Gyro->Zero();
+	a_Gyro->Zero();
     a_Anticipation.Start();
 }
 
@@ -87,6 +87,10 @@ void Autonomous::StartPathMaster(){
 			AutonomousStart1();
 		
         	break;
+
+        case 2:
+            frc::SmartDashboard::PutBoolean("Auto Started", true);
+            AutonomousStart2();
 	}
 }
 
@@ -198,14 +202,9 @@ void Autonomous::AutonomousPeriodic1(){
 		    break;
 
         case kShoot1:
-            a_BallShooter->setSpeed(2200);
-            
-            if(a_BallShooter->getSpeed() >= 2200) 
-            {
-                a_Collector->setIndexerMotorSpeed(300);
+            if(IndexAndShoot(2200)){
+                break;
             }
-            
-            break;
 
         case kTaxi1:
             DriveDist(120, 180);
@@ -214,6 +213,53 @@ void Autonomous::AutonomousPeriodic1(){
     }
 }
 
+void Autonomous::AutonomousStart2(){
+    a_Gyro->Zero();
+}
+
+void Autonomous::AutonomousPeriodic2(){
+
+    AutoState2 nexState = a_AutoState2;
+
+    switch (a_AutoState2){
+        case kAutoIdle2:
+            IDontLikeExercise();
+            
+            break;
+        
+        case kCollectDown2:
+            ToggleCollector();
+
+            break;
+
+        case kDriveBackThroughBall2:
+            GoToMcDonalds(0.4, 0, 36);
+
+            break;
+
+        case kLoad2:
+            ToggleCollector();
+            break;
+        
+        case kTurn2:
+            TurnTaAngle(-159);
+
+            break;
+        
+        case kSpool2:
+            SpoolShooter(2200);
+            break;
+
+        case kDriveToWall2:
+            DriveDist(120, 0);
+            break;
+
+        case kShoot2:
+            if(IndexAndShoot(2200)){
+                break;
+            }
+        }
+}
 
 void Autonomous::IDontLikeExercise(){
 
@@ -239,6 +285,13 @@ void Autonomous::waitplz(double anticipate){
 
 }
 */
+void Autonomous::SpoolShooter(float speed) {
+    a_BallShooter->setSpeed(speed);
+}
+
+void Autonomous::ToggleCollector() {
+    a_Collector->toggleSolenoid();
+}
 
 bool Autonomous::DriveDist(double dist, double angle){ // true is done, false is not done
 
@@ -258,41 +311,17 @@ bool Autonomous::DriveDist(double dist, double angle){ // true is done, false is
 
 }
 
+bool Autonomous::IndexAndShoot(float speed){
+    a_BallShooter->setSpeed(2200);
 
-/*bool Autonomous::RootyTootyShooty(int count, float vel){
-    currbeam = CheckBallPos();
-    
-    
-    if(BallsShot < ((2 * count)) + 1 && currbeam != prevbeam){
-        BallsShot++;
-        prevbeam = currbeam;
-        return false;
-    }
-    else if(BallsShot < ((2 * count)) + 1){
-        a_CFS->ShootVelocity(vel);
-        float avg = (fabs(a_CFS->GetWheelSpeedL()) + fabs(a_CFS->GetWheelSpeedR())) / 2.0;
-        if(avg >= 400)
-        {
-            a_CFS->FeedVelocity(vel);
-        }
-        else
-        {
-            a_CFS->FeedVelocity(0); 
-        }
-        
-        return false;
-    }
-    else{
-        BallsShot = 0;
-        a_CFS->ShootVelocity(0);
-        a_CFS->FeedVelocity(0);
+    if(a_BallShooter->getSpeed() >= speed) {
+        a_Collector->setIndexerMotorSpeed(300);
         return true;
     }
-
-
-    
+    else if(a_BallShooter->getSpeed() < speed) {
+        return false;
+    }
 }
-*/
 
 bool Autonomous::TurnTaAngle(float angle){
     
@@ -336,7 +365,6 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist){ // true is 
 
 }
 
-
 bool Autonomous::GoToMcDonalds(float speed, float dir, float dist){ // true is done, false is not done
 
     if(fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)){
@@ -347,7 +375,7 @@ bool Autonomous::GoToMcDonalds(float speed, float dir, float dist){ // true is d
             //a_CFS->AutoCollect();
 		} else {
             a_SwerveDrive->GoToTheDon(speed, dir, dist, a_Gyro->GetAngle(0));
-            //a_CFS->AutoCollect();
+            a_Collector->setCollectorMotorSpeed(300);
         }
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;

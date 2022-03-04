@@ -23,21 +23,20 @@ enum AutoState0 { // Encoders
  enum AutoState1 { // Encoders
 	kAutoIdle1 = 0,
 	kTurnAround1,
-	//kArmMove1,
-	//kBallFind1,
 	kShoot1,
     kTaxi1
-    //kDriveAway1
 };
 
 enum AutoState2 { // T.O.F and Encoders
 	kAutoIdle2 = 0,
-	kArmMove2,
 	kShoot2,
-    kTurnToParallel2,
+    kTurn2,
+	kCollectDown2,
+	kLoad2,
     kDriveToWall2,
-    kDriveBackThroughThreeBalls2,
-    kSecondShoot2
+    kDriveBackThroughBall2,
+    kSecondShoot2,
+	kSpool2
 };
 
 enum AutoState3 { // T.O.F and Encoders
@@ -113,11 +112,11 @@ class Autonomous
 
 	void IDontLikeExercise(); // IDLE
 	void waitplz(double anticipate); // Wait
-/*
-	bool MoveDaArm(double angle); // arm move to angle
-	bool CheckBallPos(); // Returns true if top beam break is broken
-	bool RootyTootyShooty(int count, float vel); // Shoots specified number of balls (call over and over)
-*/	
+
+	void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
+
+	void ToggleCollector(); // Toggles the Collector Pistons
+
 	bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
 	bool TurnTaAngle(float angle); // turns to a specific angle
@@ -126,7 +125,9 @@ class Autonomous
 	
 	bool TurnLime(); // Uses limelight to face target; if no target, turn until found
 	
-	bool GoToMcDonalds(float speed, float dir, float dist); // Driving in a direction while collecting
+	bool GoToMcDonalds(float speed, float dir, float dist); // Driving in a direction while collecting]
+
+	bool IndexAndShoot(float speed); // Shooting a ball when the shooter is spinning fast enough
 
 
  private:
