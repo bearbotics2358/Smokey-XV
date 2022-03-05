@@ -62,6 +62,8 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
     frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
 
+    frc::SmartDashboard::PutNumber("Climber Arm Height in mm", a_Climber.getHeight());
+
     // frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
     // frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
     // frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
@@ -77,6 +79,8 @@ void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
+    a_Collector.resetSolenoid();
+    a_Climber.resetSolenoid();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -85,6 +89,8 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
+    a_Collector.resetSolenoid();
+    a_Climber.resetSolenoid();
 }
 
 void Robot::TeleopPeriodic() // main loop
@@ -94,25 +100,44 @@ void Robot::TeleopPeriodic() // main loop
 
     a_CompressorController.update();
 
-    /* =-=-=-=-=-=-=-=-=-=-= Joystick Controls =-=-=-=-=-=-=-=-=-=-= */
+    /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)){
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
+    }
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::LeftBumper)){
+        a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
+    }
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::Back)){
+        a_Climber.toggleSolenoid();
+    }
+
+    /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
+
+    
     if (a_XboxController.GetRawButton(OperatorButton::A)) {
         shooterDesiredSpeed += 10.0;
     }
     if (a_XboxController.GetRawButton(OperatorButton::B)) {
         shooterDesiredSpeed -= 10.0;
     }
+    
+    /*
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::A)){
+        shooterDesiredSpeed = SHOOTER_MOTOR_RPM;
+    }
+    */
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
-    if (a_XboxController.GetRawButton(OperatorButton::X)) {
+    if (a_XboxController.GetRawButton(OperatorButton::Start)) {
         a_Collector.toggleSolenoid();
     }
-    if (a_XboxController.GetRawButton(OperatorButton::Y)){
-        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_SPEED);
+    if (a_XboxController.GetRawButton(OperatorButton::X)){
+        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_RPM);
     }
-    if (a_XboxController.GetRawButton(OperatorButton::Start)){
-        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_SPEED);
+    if (a_XboxController.GetRawButton(OperatorButton::Y)){
+        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
     }
 
     a_Shooter.setSpeed(shooterDesiredSpeed);

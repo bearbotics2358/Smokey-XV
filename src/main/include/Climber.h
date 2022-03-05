@@ -6,9 +6,12 @@ class Climber {
     public:
         Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule);
         void setArmSpeed(double rpm);
+        void toggleSolenoid();
+        void resetSolenoid();
+        double getHeight();
 
 
     private:
         frc::DoubleSolenoid a_climberSolenoid;
-        TalonFX a_climberBackArmMotor;
+        TalonFX a_climberArmMotor;
 };
