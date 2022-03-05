@@ -25,6 +25,6 @@ void Climber::resetSolenoid() {
 }
 
 double Climber::getHeight() { // in mm
-    double ticks = a_climberArmMotor.GetSensorCollection().GetIntegratedSensorPosition() * 4; // multiplied by 4 because the encoder is QuadEncoder
+    double ticks = a_climberArmMotor.GetSensorCollection().GetIntegratedSensorPosition();
     return ticks * CLIMBER_MM_PER_TICK;
 }

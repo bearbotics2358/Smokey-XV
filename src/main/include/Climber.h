@@ -10,7 +10,6 @@ class Climber {
         void resetSolenoid();
         double getHeight();
 
-
     private:
         frc::DoubleSolenoid a_climberSolenoid;
         TalonFX a_climberArmMotor;
