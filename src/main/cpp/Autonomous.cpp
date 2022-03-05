@@ -5,9 +5,9 @@
 
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *ButtonBox, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
     a_Gyro(Gyro),
-    a_ButtonBox(ButtonBox),
+    a_Joystick(Joystick),
     a_SwerveDrive(SwerveDrive),
     a_Anticipation(),
     a_BallShooter(BallShooter),
@@ -38,15 +38,21 @@ void Autonomous::Init(){
 
 void Autonomous::DecidePath(){
     
-    if(a_ButtonBox->GetRawButton(1)){
+    if(a_Joystick->GetRawButton(8)){
     
         autoPathMaster = 0;
 
     }
-    else if(a_ButtonBox->GetRawButton(2)){
+    else if(a_Joystick->GetRawButton(10)){
     
         autoPathMaster = 1;
 
+    }
+
+    else if(a_Joystick->GetRawButton(12)){
+        
+        autoPathMaster = 2;
+    
     }
 
 
@@ -72,24 +78,24 @@ void Autonomous::StartPathMaster(){
 		
         case -1:
 			// Error!
-			frc::SmartDashboard::PutBoolean("Auto Started", false);
+			frc::SmartDashboard::PutBoolean("Auto Failed", false);
 		
         	break;
 		
         case 0:
-			frc::SmartDashboard::PutBoolean("Auto Started", true);
+			frc::SmartDashboard::PutBoolean("0-ball Taxi started", true);
 			AutonomousStart0();
 		
         	break;
 		
         case 1:
-			frc::SmartDashboard::PutBoolean("Auto Started", true);
+			frc::SmartDashboard::PutBoolean("1-ball Taxi started", true);
 			AutonomousStart1();
 		
         	break;
 
         case 2:
-            frc::SmartDashboard::PutBoolean("Auto Started", true);
+            frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
             AutonomousStart2();
 	}
 }
@@ -100,21 +106,27 @@ void Autonomous::StartPathMaster(int path){
 		
         case -1:
 			// Error!
-			frc::SmartDashboard::PutBoolean("Auto Started", false);
+			frc::SmartDashboard::PutBoolean("Auto Failed", false);
 		
         	break;
 		
         case 0:
-			frc::SmartDashboard::PutBoolean("Auto Started", true);
+			frc::SmartDashboard::PutBoolean("0-ball Taxi Started", true);
 			AutonomousStart0();
 		
         	break;
 		
         case 1:
-			frc::SmartDashboard::PutBoolean("Auto Started", true);
+			frc::SmartDashboard::PutBoolean("1-ball Taxi Started", true);
 			AutonomousStart1();
 		
         	break;
+        
+        case 2:
+            frc::SmartDashboard::PutBoolean("2-ball Taxi Started", true);
+            AutonomousStart2();
+
+            break;
 	}
 }
 
@@ -131,6 +143,11 @@ void Autonomous::PeriodicPathMaster(){
 		case 1:
 			AutonomousPeriodic1();
 			
+            break;
+
+        case 2:
+            AutonomousPeriodic2();
+
             break;
 	}
 }
@@ -150,6 +167,10 @@ void Autonomous::PeriodicPathMaster(int path){
 			
             break;
 
+        case 2:
+            AutonomousPeriodic2();
+
+            break;
 	}
 }
 
@@ -158,7 +179,21 @@ void Autonomous::PeriodicPathMaster(int path){
 
 void Autonomous::AutonomousStart0(){
 
-   // a_AutoState0 = kArmMove0;
+    a_AutoState0 = kDriveAway0;
+    a_Gyro->Zero();
+
+}
+
+void Autonomous::AutonomousStart1(){
+
+    a_AutoState1 = kShoot1;
+    a_Gyro->Zero();
+
+}
+
+void Autonomous::AutonomousStart2(){
+
+    a_AutoState2 = kCollectDown2;
     a_Gyro->Zero();
 
 }
@@ -177,10 +212,12 @@ void Autonomous::AutonomousPeriodic0(){
 		    break;
 
         case kDriveAway0:
-            DriveDist(120, 0);
-
+            if(DriveDist(120, 0)){
+                nextState = kAutoIdle0;
+            }
             break;
     }
+    a_AutoState0 = nextState;
 }
 
 void Autonomous::AutonomousStart1(){
@@ -198,19 +235,32 @@ void Autonomous::AutonomousPeriodic1(){
 
 	    case kAutoIdle1:
 		    IDontLikeExercise();
-        
-		    break;
+            break;
 
         case kShoot1:
-            if(IndexAndShoot(2200)){
-                break;
+            if(IndexAndShoot(SHOOT_FROM_WALL)){
+                nextState = kCheckShot1;
             }
+            break;
 
+        case kCheckShot1:
+            if(BallShot(SHOOT_FROM_WALL)){
+                nextState = kDoneShooting1;
+            }
+            break;
+
+        case kDoneShooting1:
+            IDontLikeExercise();
+            nextState = kTaxi1;
+            break;
+        
         case kTaxi1:
-            DriveDist(120, 180);
-
+            if(DriveDist(120, 180)){
+                nextState = kAutoIdle1;
+            }
             break;
     }
+    a_AutoState1 = nextState;
 }
 
 void Autonomous::AutonomousStart2(){
@@ -219,7 +269,7 @@ void Autonomous::AutonomousStart2(){
 
 void Autonomous::AutonomousPeriodic2(){
 
-    AutoState2 nexState = a_AutoState2;
+    AutoState2 nextState = a_AutoState2;
 
     switch (a_AutoState2){
         case kAutoIdle2:
@@ -229,36 +279,63 @@ void Autonomous::AutonomousPeriodic2(){
         
         case kCollectDown2:
             ToggleCollector();
-
+            nextState = kDriveBackThroughBall2;
             break;
 
         case kDriveBackThroughBall2:
-            GoToMcDonalds(0.4, 0, 36);
-
+            if(GoToMcDonalds(0.4, 0, 36)){
+                nextState = kLoad2;
+            }
             break;
 
         case kLoad2:
             ToggleCollector();
+            nextState = kTurn2;
             break;
         
         case kTurn2:
-            TurnTaAngle(-159);
-
+            if(TurnTaAngle(-159)){
+                nextState = kSpool2;
+            }
             break;
         
         case kSpool2:
-            SpoolShooter(2200);
+            SpoolShooter(SHOOT_FROM_WALL);
+            nextState = kDriveToWall2;
             break;
 
         case kDriveToWall2:
-            DriveDist(120, 0);
+            if(DriveDist(120, 0)){
+                nextState = kShoot2;
+            }
             break;
 
         case kShoot2:
-            if(IndexAndShoot(2200)){
-                break;
+            if(IndexAndShoot(SHOOT_FROM_WALL)){
+                nextState = kCheckFirstShot2;
             }
-        }
+            break;
+       
+        case kCheckFirstShot2:
+            if(BallShot(SHOOT_FROM_WALL)){
+                nextState = kSecondShoot2;
+            }
+            break;
+
+        case kSecondShoot2:
+            if(IndexAndShoot(SHOOT_FROM_WALL)){
+                nextState = kCheckSecondShot2;
+            }
+            break;
+        
+        case kCheckSecondShot2:
+            if(BallShot(SHOOT_FROM_WALL)){
+                nextState = kAutoIdle2;
+            }
+            break;
+
+    }
+    a_AutoState2 = nextState;
 }
 
 void Autonomous::IDontLikeExercise(){
@@ -285,6 +362,7 @@ void Autonomous::waitplz(double anticipate){
 
 }
 */
+
 void Autonomous::SpoolShooter(float speed) {
     a_BallShooter->setSpeed(speed);
 }
@@ -311,8 +389,8 @@ bool Autonomous::DriveDist(double dist, double angle){ // true is done, false is
 
 }
 
-bool Autonomous::IndexAndShoot(float speed){
-    a_BallShooter->setSpeed(2200);
+bool Autonomous::IndexAndShoot(float speed){ //returns true if the shooter is running correctly and the indexer has switched on
+    a_BallShooter->setSpeed(speed);
 
     if(a_BallShooter->getSpeed() >= speed) {
         a_Collector->setIndexerMotorSpeed(300);
@@ -340,6 +418,15 @@ bool Autonomous::TurnTaAngle(float angle){
 
 }
 
+bool Autonomous::BallShot(float speed){ //looks for a dip in RPM value to detect a shot being made
+    if(a_BallShooter->getSpeed() < speed){
+        a_Collector->setIndexerMotorSpeed(0);
+        return true;
+    }
+    else if(a_BallShooter->getSpeed() >= speed){
+        return false;
+    }
+}
 
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist){ // true is done, false is not done
 
