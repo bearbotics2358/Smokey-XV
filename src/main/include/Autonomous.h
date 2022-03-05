@@ -24,6 +24,8 @@ enum AutoState0 { // Encoders
 	kAutoIdle1 = 0,
 	kTurnAround1,
 	kShoot1,
+	kCheckShot1,
+	kDoneShooting1,
     kTaxi1
 };
 
@@ -36,7 +38,10 @@ enum AutoState2 { // T.O.F and Encoders
     kDriveToWall2,
     kDriveBackThroughBall2,
     kSecondShoot2,
-	kSpool2
+	kSpool2,
+	kCheckFirstShot2,
+	kCheckSecondShot2,
+	kDoneShooting2
 };
 
 enum AutoState3 { // T.O.F and Encoders
@@ -76,7 +81,7 @@ class Autonomous
 {
  public:
  
-	Autonomous(JrimmyGyro *Gyro, frc::Joystick *ButtonBox, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
+	Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
 	void Init();
 	//void UpdateGameData();
 	void DecidePath();
@@ -119,6 +124,8 @@ class Autonomous
 
 	bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
+	bool BallShot(float speed); //checks if a ball has been shot by measuring RPM values
+
 	bool TurnTaAngle(float angle); // turns to a specific angle
 	
 	bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
@@ -134,7 +141,7 @@ class Autonomous
 
 	
 	JrimmyGyro *a_Gyro;
-	frc::Joystick *a_ButtonBox;
+	frc::Joystick *a_Joystick;
 	SwerveDrive *a_SwerveDrive;
 	frc::Timer a_Anticipation;
 	BallShooter *a_BallShooter;

@@ -13,6 +13,7 @@
 #include "vision/photon.h"
 #include <frc/Joystick.h> // Joystick
 #include <frc/TimedRobot.h> // "Timed Robot" template
+#include "Autonomous.h"
 
 class Robot : public frc::TimedRobot {
     public:
@@ -38,11 +39,12 @@ class Robot : public frc::TimedRobot {
         SwerveModule a_FRModule;
         SwerveModule a_BLModule;
         SwerveModule a_BRModule;
+        Autonomous a_Autonomous;
 
         frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
         frc::Joystick a_XboxController;
         frc::Joystick a_buttonbox;
-
+        
         // Swerve Drive object
         SwerveDrive a_SwerveDrive;
 
@@ -60,4 +62,6 @@ class Robot : public frc::TimedRobot {
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;
+
+        //stuff that autonomous needs
 };

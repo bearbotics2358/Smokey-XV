@@ -19,7 +19,7 @@
 #define LEFT_SHOOTER_ID 26
 #define RIGHT_SHOOTER_ID 27
 #define SHOOTER_SPEED .5 // currently unused
-
+#define SHOOT_FROM_WALL 2200
 
 /*======== COLLECTOR CONSTANTS ========*/
 

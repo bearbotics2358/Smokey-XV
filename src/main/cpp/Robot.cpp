@@ -6,6 +6,9 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <iostream>
 #include <stdio.h>
+#include "Autonomous.h"
+#include <JrimmyGyro.h>
+
 /*~~ hi :) ~~ */
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
@@ -25,7 +28,9 @@ a_CompressorController(),
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
+a_Autonomous(&a_Gyro, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector),
+a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
+{
     /*if (!handler.ready()) {
         // do something if handler failed to connect
     }*/
@@ -74,14 +79,19 @@ void Robot::DisabledInit() {
 }
 
 void Robot::DisabledPeriodic() {
+     a_Autonomous.DecidePath();
+     frc::SmartDashboard::PutNumber("opopopo00", a_Autonomous.GetCurrentPath());
 }
 
 void Robot::AutonomousInit() {
+    a_Autonomous.Init();
+    a_Autonomous.StartPathMaster();
 }
 
 void Robot::AutonomousPeriodic() {
     a_shooterVision.update();
     a_ballTracker.update();
+    a_Autonomous.PeriodicPathMaster();
 }
 
 void Robot::TeleopInit() {
