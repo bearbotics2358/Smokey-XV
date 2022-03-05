@@ -419,6 +419,7 @@ bool Autonomous::TurnTaAngle(float angle){
 }
 
 bool Autonomous::BallShot(float speed){ //looks for a dip in RPM value to detect a shot being made
+    //going to reimplement using beambreak soon
     if(a_BallShooter->getSpeed() < speed){
         a_Collector->setIndexerMotorSpeed(0);
         return true;
