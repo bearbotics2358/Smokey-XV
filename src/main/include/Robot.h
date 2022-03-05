@@ -64,4 +64,5 @@ class Robot : public frc::TimedRobot {
         TargetTracker a_ballTracker;
 
         //stuff that autonomous needs
+        BeamBreak a_BeamBreak;
 };

@@ -24,11 +24,12 @@ a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
 a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
+a_BeamBreak(0), //I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("169.254.179.144", "1185", "data"),
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_Autonomous(&a_Gyro, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector),
+a_Autonomous(&a_Gyro, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
 {
     /*if (!handler.ready()) {

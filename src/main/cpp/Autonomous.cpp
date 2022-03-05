@@ -5,19 +5,20 @@
 
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak):
     a_Gyro(Gyro),
     a_Joystick(Joystick),
     a_SwerveDrive(SwerveDrive),
     a_Anticipation(),
     a_BallShooter(BallShooter),
     a_Collector(Collector),
+    a_BeamBreak(BeamBreak),
     a_AutoState0(kAutoIdle0),
     a_AutoState1(kAutoIdle1),
     a_AutoState2(kAutoIdle2),
     a_AutoState3(kAutoIdle3),
     a_AutoState4(kAutoIdle4),
-    a_AutoState5(kAutoIdle5) 
+    a_AutoState5(kAutoIdle5)
     
 {
 
@@ -175,7 +176,7 @@ void Autonomous::PeriodicPathMaster(int path){
 }
 
 
-
+// ----------------------------------AUTONOMOUS ROUTINES---------------------------------------- //
 
 void Autonomous::AutonomousStart0(){
 
@@ -183,22 +184,6 @@ void Autonomous::AutonomousStart0(){
     a_Gyro->Zero();
 
 }
-
-void Autonomous::AutonomousStart1(){
-
-    a_AutoState1 = kShoot1;
-    a_Gyro->Zero();
-
-}
-
-void Autonomous::AutonomousStart2(){
-
-    a_AutoState2 = kCollectDown2;
-    a_Gyro->Zero();
-
-}
-
-// ----------------------------------AUTONOMOUS ROUTINES---------------------------------------- //
 
 void Autonomous::AutonomousPeriodic0(){
 
@@ -222,6 +207,7 @@ void Autonomous::AutonomousPeriodic0(){
 
 void Autonomous::AutonomousStart1(){
     
+    a_AutoState1 = kShoot1;
     a_Gyro->Zero();
 
 }
@@ -264,6 +250,7 @@ void Autonomous::AutonomousPeriodic1(){
 }
 
 void Autonomous::AutonomousStart2(){
+    a_AutoState2 = kCollectDown2;
     a_Gyro->Zero();
 }
 
@@ -420,7 +407,7 @@ bool Autonomous::TurnTaAngle(float angle){
 
 bool Autonomous::BallShot(float speed){ //looks for a dip in RPM value to detect a shot being made
     //going to reimplement using beambreak soon
-    if(a_BallShooter->getSpeed() < speed){
+    if(a_BeamBreak->beamBroken()){
         a_Collector->setIndexerMotorSpeed(0);
         return true;
     }

@@ -6,6 +6,7 @@
 #include "SwerveDrive.h"
 #include "BallShooter.h"
 #include "Collector.h"
+#include "BeamBreak.h"
 #include <frc/Joystick.h> 
 #include <frc/Timer.h>
 #include <Prefs.h>
@@ -81,7 +82,7 @@ class Autonomous
 {
  public:
  
-	Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
+	Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak);
 	void Init();
 	//void UpdateGameData();
 	void DecidePath();
@@ -146,6 +147,7 @@ class Autonomous
 	frc::Timer a_Anticipation;
 	BallShooter *a_BallShooter;
     Collector *a_Collector;
+	BeamBreak *a_BeamBreak;
 
 	AutoState0 a_AutoState0;
 	AutoState1 a_AutoState1;
