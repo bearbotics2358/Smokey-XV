@@ -7,6 +7,7 @@
 #include <iostream>
 #include <stdio.h>
 #include "Autonomous.h"
+#include "Climber.h"
 #include <JrimmyGyro.h>
 
 /*~~ hi :) ~~ */
@@ -113,13 +114,13 @@ void Robot::TeleopPeriodic() // main loop
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)){
+    if (joystickOne.GetRawButton(8)){
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
     }
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::LeftBumper)){
+    if (joystickOne.GetRawButton(7)){
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
     }
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::Back)){
+    if (joystickOne.GetRawButtonPressed(2)){
         a_Climber.toggleSolenoid();
     }
 
