@@ -7,9 +7,9 @@ class Climber {
         Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule);
         void setArmSpeed(double rpm);
         void toggleSolenoid();
-        void resetSolenoid();
+        void resetClimber();
         double getHeight();
-
+        double getSpeed();
 
     private:
         frc::DoubleSolenoid a_climberSolenoid;

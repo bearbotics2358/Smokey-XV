@@ -69,7 +69,8 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
     frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
 
-    frc::SmartDashboard::PutNumber("Climber Arm Height in mm", a_Climber.getHeight());
+    frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
+    frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
 
     // frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
     // frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
@@ -89,7 +90,7 @@ void Robot::DisabledPeriodic() {
 
 void Robot::AutonomousInit() {
     a_Collector.resetSolenoid();
-    a_Climber.resetSolenoid();
+    a_Climber.resetClimber();
     a_Autonomous.Init();
     a_Autonomous.StartPathMaster();
 }
@@ -102,7 +103,7 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
     a_Collector.resetSolenoid();
-    a_Climber.resetSolenoid();
+    a_Climber.resetClimber();
 }
 
 void Robot::TeleopPeriodic() // main loop
