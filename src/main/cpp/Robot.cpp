@@ -121,9 +121,10 @@ void Robot::TeleopPeriodic() // main loop
 
     if (joystickOne.GetRawButton(8)) {
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
-    }
-    if (joystickOne.GetRawButton(7)) {
+    } else if (joystickOne.GetRawButton(7)) {
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
+    } else {
+        a_Climber.setArmSpeed(0);
     }
     if (joystickOne.GetRawButton(2)) {
         a_Climber.toggleSolenoid();
