@@ -9,6 +9,7 @@
 #include "BeamBreak.h"
 #include <frc/Joystick.h> 
 #include <frc/Timer.h>
+#include <units/math.h>
 #include <Prefs.h>
 #include <JrimmyGyro.h>
 
@@ -82,7 +83,7 @@ class Autonomous
 {
  public:
  
-	Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak);
+	Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak);
 	void Init();
 	//void UpdateGameData();
 	void DecidePath();
@@ -117,7 +118,7 @@ class Autonomous
 // ------------------Sub-Routines-------------------------//
 
 	void IDontLikeExercise(); // IDLE
-	void waitplz(double anticipate); // Wait
+	bool waitplz(double time); // Wait
 
 	void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
@@ -144,7 +145,7 @@ class Autonomous
 	JrimmyGyro *a_Gyro;
 	frc::Joystick *a_Joystick;
 	SwerveDrive *a_SwerveDrive;
-	frc::Timer a_Anticipation;
+	frc::Timer *a_Timer;
 	BallShooter *a_BallShooter;
     Collector *a_Collector;
 	BeamBreak *a_BeamBreak;

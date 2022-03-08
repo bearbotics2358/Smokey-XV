@@ -17,7 +17,7 @@ a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_
 a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET)),
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET)),
-a_Autonomous(&a_Gyro, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
+a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
@@ -31,7 +31,8 @@ a_BeamBreak(0), // I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
+a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
+{
     /*if (!handler.ready()) {
         // do something if handler failed to connect
     }*/
@@ -119,14 +120,24 @@ void Robot::TeleopPeriodic() // main loop
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
+<<<<<<< HEAD
+    if (joystickOne.GetRawButton(OperatorButton::LeftBumper)) {
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
+    } else if (joystickOne.GetRawButton(OperatorButton::RightBumper)) {
+=======
     if (joystickOne.GetRawButton(DriverButton::Button8)) {
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
     } else if (joystickOne.GetRawButton(DriverButton::Button7)) {
+>>>>>>> d485f9af32560b2098e16d6bf655ef151fa27660
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
     } else {
         a_Climber.setArmSpeed(0);
     }
+<<<<<<< HEAD
+    if (joystickOne.GetRawButton(OperatorButton::Back)) {
+=======
     if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
+>>>>>>> d485f9af32560b2098e16d6bf655ef151fa27660
         a_Climber.toggleSolenoid();
     }
 
