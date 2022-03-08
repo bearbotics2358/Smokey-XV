@@ -1,18 +1,19 @@
 
 #pragma once
 
+#include "Autonomous.h"
 #include "BallShooter.h"
-#include "Climber.h"
 #include "CanHandler.h"
+#include "Climber.h"
 #include "Collector.h"
 #include "CompressorController.h"
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "SwerveDrive.h" // Swerve kinematics
 #include "SwerveModule.h" // Swerve modules
-#include "mqtt/MqttHandler.h"
 #include "vision/photon.h"
 #include <frc/Joystick.h> // Joystick
 #include <frc/TimedRobot.h> // "Timed Robot" template
+#include <frc/Timer.h>
 #include "Autonomous.h"
 
 class Robot : public frc::TimedRobot {
@@ -44,6 +45,7 @@ class Robot : public frc::TimedRobot {
         frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
         frc::Joystick a_XboxController;
         frc::Joystick a_buttonbox;
+        frc::Timer a_Timer;
         
         // Swerve Drive object
         SwerveDrive a_SwerveDrive;
@@ -57,12 +59,11 @@ class Robot : public frc::TimedRobot {
 
         CompressorController a_CompressorController;
 
-        // MqttHandler handler;
         // CanHandler a_canHandler;
+
+        // stuff that autonomous needs
+        BeamBreak a_BeamBreak;
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;
-
-        //stuff that autonomous needs
-        BeamBreak a_BeamBreak;
 };

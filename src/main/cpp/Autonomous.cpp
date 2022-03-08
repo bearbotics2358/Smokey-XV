@@ -5,11 +5,11 @@
 
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak):
     a_Gyro(Gyro),
+    a_Timer(Timer),
     a_Joystick(Joystick),
     a_SwerveDrive(SwerveDrive),
-    a_Anticipation(),
     a_BallShooter(BallShooter),
     a_Collector(Collector),
     a_BeamBreak(BeamBreak),
@@ -34,7 +34,7 @@ Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, SwerveDrive *S
 
 void Autonomous::Init(){
 	a_Gyro->Zero();
-    a_Anticipation.Start();
+    a_Timer->Start();
 }
 
 void Autonomous::DecidePath(){
@@ -197,7 +197,7 @@ void Autonomous::AutonomousPeriodic0(){
 		    break;
 
         case kDriveAway0:
-            if(DriveDist(120, 0)){
+            if(IHaveAProposal(1000, 35, 0)){
                 nextState = kAutoIdle0;
             }
             break;
@@ -230,9 +230,10 @@ void Autonomous::AutonomousPeriodic1(){
             break;
 
         case kCheckShot1:
-            if(BallShot(SHOOT_FROM_WALL)){
-                nextState = kDoneShooting1;
+            if(a_Timer->Get().value() >= 2){
+                nextState = kDoneShooting1; //-----TEMPORARY SOLUTION: WILL BE CHANGED TO BEAMBREAK LATER-----//
             }
+
             break;
 
         case kDoneShooting1:
@@ -241,7 +242,7 @@ void Autonomous::AutonomousPeriodic1(){
             break;
         
         case kTaxi1:
-            if(DriveDist(120, 180)){
+            if(IHaveAProposal(2000, 120, 180)){
                 nextState = kAutoIdle1;
             }
             break;
@@ -292,7 +293,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
 
         case kDriveToWall2:
-            if(DriveDist(120, 0)){
+            if(IHaveAProposal(2000, 120, 0)){
                 nextState = kShoot2;
             }
             break;
@@ -333,19 +334,16 @@ void Autonomous::IDontLikeExercise(){
     a_BallShooter->setSpeed(0);
     
 }
-
 /*
-void Autonomous::waitplz(double anticipate){
-    double woah = frc2::Timer::GetMatchTime().to<double>;
-    
-    while (a_Anticipation.Get().to<double> < woah.to<double> + anticipate)
-    {
-        if (woah >= 15){
-            break; 
-        }
-    }
-    
+bool Autonomous::waitplz(double time){
+    double timeTrack = time + a_Timer->Get().value();
 
+    if (a_Timer->Get().value() < timeTrack){
+        return false;
+    }
+    else if (a_Timer->Get().value() >= timeTrack){
+        return true;
+    }
 
 }
 */

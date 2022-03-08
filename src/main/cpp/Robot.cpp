@@ -17,6 +17,7 @@ a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_
 a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET)),
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET)),
+a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
@@ -30,8 +31,8 @@ a_BeamBreak(0), // I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_Autonomous(&a_Gyro, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
-a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
+a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
+{
     /*if (!handler.ready()) {
         // do something if handler failed to connect
     }*/
@@ -119,14 +120,24 @@ void Robot::TeleopPeriodic() // main loop
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
+<<<<<<< HEAD
     if (joystickOne.GetRawButton(OperatorButton::LeftBumper)) {
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
     } else if (joystickOne.GetRawButton(OperatorButton::RightBumper)) {
+=======
+    if (joystickOne.GetRawButton(DriverButton::Button8)) {
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
+    } else if (joystickOne.GetRawButton(DriverButton::Button7)) {
+>>>>>>> d485f9af32560b2098e16d6bf655ef151fa27660
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
     } else {
         a_Climber.setArmSpeed(0);
     }
+<<<<<<< HEAD
     if (joystickOne.GetRawButton(OperatorButton::Back)) {
+=======
+    if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
+>>>>>>> d485f9af32560b2098e16d6bf655ef151fa27660
         a_Climber.toggleSolenoid();
     }
 
@@ -139,6 +150,8 @@ void Robot::TeleopPeriodic() // main loop
     if (a_XboxController.GetRawButton(OperatorButton::B)) {
         shooterDesiredSpeed -= 10.0;
     }
+
+    a_Shooter.setSpeed(shooterDesiredSpeed);
 
     /*
     if (a_XboxController.GetRawButtonPressed(OperatorButton::A)){
@@ -161,8 +174,6 @@ void Robot::TeleopPeriodic() // main loop
     } else {
         a_Collector.setIndexerMotorSpeed(0);
     }
-
-    a_Shooter.setSpeed(shooterDesiredSpeed);
 
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
@@ -282,47 +293,6 @@ void Robot::TestPeriodic() {
     }
 
     frc::SmartDashboard::PutNumber("Gyro: ", gyro);
-
-
-    /*
-
-    if(fabs(a_xBoxController.GetRawAxis(1)) < 0.10) {
-        a_CFS.ArmMove(0);
-    } else {,
-        a_CFS.ArmMove(a_xBoxController.GetRawAxis(1));
-    }
-
-    if(fabs(a_xBoxController.GetRawAxis(3)) < 0.10) {
-        a_CFS.Collect(0);
-    } else {
-        a_CFS.Collect(a_xBoxController.GetRawAxis(3));
-    }
-
-    if(fabs(a_xBoxController.GetRawAxis(2)) < 0.10) {
-        a_CFS.Collect(0);
-    } else {
-        a_CFS.Collect(-1.0 * a_xBoxController.GetRawAxis(2));
-    }
-
-    if(a_xBoxController.GetRawButton(6)) {
-        a_CFS.Feed(FEED_SPEED);
-    } else {
-        a_CFS.Feed(0);
-    }
-
-    if(a_xBoxController.GetRawButton(5)) {
-        a_CFS.Feed(-1.0 * FEED_SPEED);
-    } else {
-        a_CFS.Feed(0);
-    }
-
-    if(a_xBoxController.GetPOV() == 0) {
-        // climb
-    } else {
-        // don't climb
-    }
-
-    */
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop
