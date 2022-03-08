@@ -42,13 +42,13 @@
 #define FL_STEER_ID 2
 
 #define FR_DRIVE_ID 3
-#define FR_STEER_ID 4
+#define FR_STEER_ID 8
 
 #define BL_DRIVE_ID 5
 #define BL_STEER_ID 6
 
 #define BR_DRIVE_ID 7
-#define BR_STEER_ID 8
+#define BR_STEER_ID 4
 
 
 /*======= ENCODER CONSTANTS =======*/
@@ -58,9 +58,9 @@
 
 // swerve drive absolute encoder analog ports
 #define FL_SWERVE_ABS_ENC_PORT 0
-#define FR_SWERVE_ABS_ENC_PORT 1
-#define BL_SWERVE_ABS_ENC_PORT 2
-#define BR_SWERVE_ABS_ENC_PORT 3
+#define FR_SWERVE_ABS_ENC_PORT 3
+#define BL_SWERVE_ABS_ENC_PORT 1
+#define BR_SWERVE_ABS_ENC_PORT 2
 
 // min and max voltage of absolute encoders on swerve drives
 #define FL_SWERVE_ABS_ENC_MIN_VOLTS 0.0
@@ -76,10 +76,11 @@
 #define BR_SWERVE_ABS_ENC_MAX_VOLTS 5.0
 
 // offset from 0 of the absolute encders
-#define FL_SWERVE_ABS_ENC_OFFSET 0.0
-#define FR_SWERVE_ABS_ENC_OFFSET 0.0
-#define BL_SWERVE_ABS_ENC_OFFSET 0.0
-#define BR_SWERVE_ABS_ENC_OFFSET 0.0
+#define FL_SWERVE_ABS_ENC_OFFSET 196.8
+#define FR_SWERVE_ABS_ENC_OFFSET 265.6
+#define BL_SWERVE_ABS_ENC_OFFSET 178.0
+#define BR_SWERVE_ABS_ENC_OFFSET 1.05
+
 
 
 /* ========== Joystick Ports ========= */
