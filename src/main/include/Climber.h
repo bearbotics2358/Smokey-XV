@@ -1,6 +1,6 @@
 #pragma once
-#include <frc/DoubleSolenoid.h>
 #include <ctre/Phoenix.h>
+#include <frc/DoubleSolenoid.h>
 
 class Climber {
     public:
@@ -12,6 +12,6 @@ class Climber {
         double getSpeed();
 
     private:
-        frc::DoubleSolenoid a_climberSolenoid;
         TalonFX a_climberArmMotor;
+        frc::DoubleSolenoid a_climberSolenoid;
 };
