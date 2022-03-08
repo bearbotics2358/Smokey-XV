@@ -30,7 +30,7 @@ a_BeamBreak(0), //I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_Autonomous(&a_Gyro, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
+a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
 {
     /*if (!handler.ready()) {
