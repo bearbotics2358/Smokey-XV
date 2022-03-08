@@ -24,6 +24,8 @@ class SwerveModule // Handles steering and driving of each Swerve Module
 
         float getAngleRaw(); // position of steering encoder
         float getAngle(); // scaled angle between 0 and 360
+        // TEMP
+        float getAbsAngleDegrees();
 
         void goToPosition(float setpoint); // Position PID control, moves to specified position
         void steerToAng(float setpoint); // Angle PID control

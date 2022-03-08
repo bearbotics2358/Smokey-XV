@@ -1,14 +1,14 @@
 
 #include "Robot.h"
+#include "Autonomous.h"
+#include "Climber.h"
 #include "Prefs.h"
 #include "buttons.h"
 #include "math/LinAlg.h"
+#include <JrimmyGyro.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <iostream>
 #include <stdio.h>
-#include "Autonomous.h"
-#include "Climber.h"
-#include <JrimmyGyro.h>
 
 /*~~ hi :) ~~ */
 Robot::Robot():
@@ -17,6 +17,7 @@ a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_
 a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET)),
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET)),
+a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_buttonbox(BUTTON_BOX),
@@ -25,12 +26,11 @@ a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
 a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
-a_BeamBreak(0), //I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
+a_BeamBreak(0), // I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("169.254.179.144", "1185", "data"),
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
 {
     /*if (!handler.ready()) {
@@ -72,10 +72,15 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
 
-    // frc::SmartDashboard::PutNumber("Fl wheel angle", *a_canHandler.getData(FL_SWERVE_DATA_ID));
-    // frc::SmartDashboard::PutNumber("Fr wheel angle", *a_canHandler.getData(FR_SWERVE_DATA_ID));
-    // frc::SmartDashboard::PutNumber("Bl wheel angle", *a_canHandler.getData(BL_SWERVE_DATA_ID));
-    // frc::SmartDashboard::PutNumber("Br wheel angle", *a_canHandler.getData(BR_SWERVE_DATA_ID));
+    frc::SmartDashboard::PutNumber("FL rel encoder", a_FLModule.getAngle());
+    frc::SmartDashboard::PutNumber("FR rel encoder", a_FRModule.getAngle());
+    frc::SmartDashboard::PutNumber("BL rel encoder", a_BLModule.getAngle());
+    frc::SmartDashboard::PutNumber("BR rel encoder", a_BRModule.getAngle());
+
+    frc::SmartDashboard::PutNumber("FL abs encoder", a_FLModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("FR abs encoder", a_FRModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("BL abs encoder", a_BLModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("BR abs encoder", a_BRModule.getAbsAngleDegrees());
 }
 
 void Robot::DisabledInit() {
@@ -84,8 +89,8 @@ void Robot::DisabledInit() {
 }
 
 void Robot::DisabledPeriodic() {
-     a_Autonomous.DecidePath();
-     frc::SmartDashboard::PutNumber("opopopo00", a_Autonomous.GetCurrentPath());
+    a_Autonomous.DecidePath();
+    frc::SmartDashboard::PutNumber("opopopo00", a_Autonomous.GetCurrentPath());
 }
 
 void Robot::AutonomousInit() {
@@ -115,26 +120,29 @@ void Robot::TeleopPeriodic() // main loop
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (joystickOne.GetRawButton(8)){
+    if (joystickOne.GetRawButton(DriverButton::Button8)) {
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
-    }
-    if (joystickOne.GetRawButton(7)){
+    } else if (joystickOne.GetRawButton(DriverButton::Button7)) {
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
+    } else {
+        a_Climber.setArmSpeed(0);
     }
-    if (joystickOne.GetRawButton(2)){
+    if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
         a_Climber.toggleSolenoid();
     }
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    
+
     if (a_XboxController.GetRawButton(OperatorButton::A)) {
         shooterDesiredSpeed += 10.0;
     }
     if (a_XboxController.GetRawButton(OperatorButton::B)) {
         shooterDesiredSpeed -= 10.0;
     }
-    
+
+    a_Shooter.setSpeed(shooterDesiredSpeed);
+
     /*
     if (a_XboxController.GetRawButtonPressed(OperatorButton::A)){
         shooterDesiredSpeed = SHOOTER_MOTOR_RPM;
@@ -146,14 +154,16 @@ void Robot::TeleopPeriodic() // main loop
     if (a_XboxController.GetRawButton(OperatorButton::Start)) {
         a_Collector.toggleSolenoid();
     }
-    if (a_XboxController.GetRawButton(OperatorButton::X)){
+    if (a_XboxController.GetRawButton(OperatorButton::X)) {
         a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_RPM);
+    } else {
+        a_Collector.setCollectorMotorSpeed(0);
     }
-    if (a_XboxController.GetRawButton(OperatorButton::Y)){
+    if (a_XboxController.GetRawButton(OperatorButton::Y)) {
         a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
+    } else {
+        a_Collector.setIndexerMotorSpeed(0);
     }
-
-    a_Shooter.setSpeed(shooterDesiredSpeed);
 
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
@@ -273,47 +283,6 @@ void Robot::TestPeriodic() {
     }
 
     frc::SmartDashboard::PutNumber("Gyro: ", gyro);
-
-
-    /*
-
-    if(fabs(a_xBoxController.GetRawAxis(1)) < 0.10) {
-        a_CFS.ArmMove(0);
-    } else {,
-        a_CFS.ArmMove(a_xBoxController.GetRawAxis(1));
-    }
-
-    if(fabs(a_xBoxController.GetRawAxis(3)) < 0.10) {
-        a_CFS.Collect(0);
-    } else {
-        a_CFS.Collect(a_xBoxController.GetRawAxis(3));
-    }
-
-    if(fabs(a_xBoxController.GetRawAxis(2)) < 0.10) {
-        a_CFS.Collect(0);
-    } else {
-        a_CFS.Collect(-1.0 * a_xBoxController.GetRawAxis(2));
-    }
-
-    if(a_xBoxController.GetRawButton(6)) {
-        a_CFS.Feed(FEED_SPEED);
-    } else {
-        a_CFS.Feed(0);
-    }
-
-    if(a_xBoxController.GetRawButton(5)) {
-        a_CFS.Feed(-1.0 * FEED_SPEED);
-    } else {
-        a_CFS.Feed(0);
-    }
-
-    if(a_xBoxController.GetPOV() == 0) {
-        // climb
-    } else {
-        // don't climb
-    }
-
-    */
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop

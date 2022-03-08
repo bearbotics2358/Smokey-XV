@@ -38,7 +38,7 @@ void SwerveModule::resetDriveEncoder() {
 }
 
 void SwerveModule::resetSteerEncoder() {
-    steerEncNEO.SetPosition(absSteerEnc.getRotations());
+    steerEncNEO.SetPosition(-absSteerEnc.getRotations());
 }
 
 float SwerveModule::getAngleRaw() {
@@ -56,6 +56,10 @@ float SwerveModule::getAngle() {
     }
 
     return adjusted;
+}
+
+float SwerveModule::getAbsAngleDegrees() {
+    return absSteerEnc.getRotations() * -360.0;
 }
 
 void SwerveModule::goToPosition(float setpoint) {

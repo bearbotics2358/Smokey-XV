@@ -5,7 +5,7 @@
 class AbsoluteEncoder {
     public:
         AbsoluteEncoder(int port, double minVolts, double maxVolts);
-        // offset is in radians
+        // offset is in degrees
         AbsoluteEncoder(int port, double minVolts, double maxVolts, double offset);
 
         double getAngle() const;
