@@ -32,8 +32,9 @@
 #define COLLECTOR_MOTOR_ID 21
 #define INDEXER_MOTOR_ID 22
 #define SOLENOID_ID 10
-#define COLLECTOR_MOTOR_RPM 60
-#define INDEXER_MOTOR_RPM 60
+#define COLLECTOR_MOTOR_RPM 250
+// NOTE: this is not actully the rpm it will go because of the gear ratio, but it goes the speed we want
+#define INDEXER_MOTOR_RPM 20
 #define COLLECTOR_PUSH_SOLENOID_MODULE 8
 #define COLLECTOR_PULL_SOLENOID_MODULE 9
 

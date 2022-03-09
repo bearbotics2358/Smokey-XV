@@ -83,13 +83,13 @@ void Robot::RobotPeriodic() {
 }
 
 void Robot::DisabledInit() {
-    a_SwerveDrive.resetDrive();
-    shooterDesiredSpeed = 0.0;
+    // a_SwerveDrive.resetDrive();
+    shooterDesiredSpeed = 500.0;
 }
 
 void Robot::DisabledPeriodic() {
     a_Autonomous.DecidePath();
-    frc::SmartDashboard::PutNumber("opopopo00", a_Autonomous.GetCurrentPath());
+    frc::SmartDashboard::PutNumber("Selected Autonomous", a_Autonomous.GetCurrentPath());
 }
 
 void Robot::AutonomousInit() {
@@ -126,7 +126,7 @@ void Robot::TeleopPeriodic() // main loop
     } else {
         a_Climber.setArmSpeed(0);
     }
-    if (a_XboxController.GetRawButton(OperatorButton::Back)) {
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::Back)) {
         a_Climber.toggleSolenoid();
     }
 
@@ -150,7 +150,7 @@ void Robot::TeleopPeriodic() // main loop
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
-    if (a_XboxController.GetRawButton(OperatorButton::Start)) {
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::Start)) {
         a_Collector.toggleSolenoid();
     }
     if (a_XboxController.GetRawButton(OperatorButton::X)) {
@@ -167,7 +167,7 @@ void Robot::TeleopPeriodic() // main loop
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.GetAngle(0);
+    float gyro = a_Gyro.GetAngle(2);
 
     if (fabs(x) < 0.10) {
         x = 0;
