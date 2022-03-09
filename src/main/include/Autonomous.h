@@ -120,7 +120,9 @@ class Autonomous {
 
         void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
-        void ToggleCollector(); // Toggles the Collector Pistons
+		void IDontLikeExercise(); // IDLE
+		bool waitForTime(double time); // Wait
+		void ToggleCollector();
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
