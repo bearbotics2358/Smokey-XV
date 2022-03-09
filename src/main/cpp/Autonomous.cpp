@@ -221,8 +221,13 @@ void Autonomous::AutonomousPeriodic1(){
 
         case kShoot1:
             if(IndexAndShoot(SHOOT_FROM_WALL)){
-                nextState = kCheckShot1;
+                nextState = kStartTimer1;
             }
+            break;
+
+        case kStartTimer1:
+            a_Timer->Start();
+            nextState = kCheckShot1;
             break;
 
         case kCheckShot1:
@@ -238,7 +243,7 @@ void Autonomous::AutonomousPeriodic1(){
             break;
         
         case kTaxi1:
-            if(IHaveAProposal(30, 120, 180)){
+            if(IHaveAProposal(0.3, 120, 180)){
                 nextState = kAutoIdle1;
             }
             break;
@@ -332,7 +337,7 @@ void Autonomous::IDontLikeExercise(){
 }
 
 bool Autonomous::waitForTime(double time){
-    a_Timer->Start();
+    
 
     if (a_Timer->Get().value() < time){
         return false;
@@ -375,7 +380,7 @@ bool Autonomous::IndexAndShoot(float speed){ //returns true if the shooter is ru
     a_BallShooter->setSpeed(speed);
 
     if(a_BallShooter->getSpeed() >= speed) {
-        a_Collector->setIndexerMotorSpeed(300);
+        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_RPM);
         return true;
     }
     else if(a_BallShooter->getSpeed() < speed) {

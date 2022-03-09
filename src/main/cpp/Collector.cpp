@@ -15,7 +15,7 @@ void Collector::toggleSolenoid() {
 }
 
 void Collector::resetSolenoid() {
-    a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Collector::setCollectorMotorSpeed(double rpm){

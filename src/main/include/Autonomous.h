@@ -27,6 +27,7 @@ enum AutoState1 { // Encoders
     kTurnAround1,
     kShoot1,
     kCheckShot1,
+	kStartTimer1,
     kDoneShooting1,
     kTaxi1
 };
@@ -120,7 +121,6 @@ class Autonomous {
 
         void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
-		void IDontLikeExercise(); // IDLE
 		bool waitForTime(double time); // Wait
 		void ToggleCollector();
 
