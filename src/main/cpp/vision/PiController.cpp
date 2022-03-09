@@ -49,6 +49,14 @@ const std::vector<Error>& PiController::errors() const {
     return m_data->errors;
 }
 
+std::optional<const Error&> PiController::last_error() const {
+    if (m_data->errors.empty()) {
+        return {};
+    } else {
+        return m_data->errors.back();
+    }
+}
+
 void PiController::clear_errors() {
     // this should call the destructor of error
     m_data->errors.clear();
