@@ -118,7 +118,7 @@ class Autonomous
 // ------------------Sub-Routines-------------------------//
 
 	void IDontLikeExercise(); // IDLE
-	bool waitplz(double time); // Wait
+	bool waitForTime(double time); // Wait
 
 	void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 

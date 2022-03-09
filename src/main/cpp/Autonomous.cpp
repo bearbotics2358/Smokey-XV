@@ -2,9 +2,6 @@
 #include "Autonomous.h"
 
 
-
-
-
 Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak):
     a_Gyro(Gyro),
     a_Timer(Timer),
@@ -22,7 +19,7 @@ Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joyst
     
 {
 
-    autoPathMaster = -1;
+    autoPathMaster = 1;
     BallsShot = 0;
     prevbeam = false;
     currbeam = true;
@@ -34,12 +31,11 @@ Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joyst
 
 void Autonomous::Init(){
 	a_Gyro->Zero();
-    a_Timer->Start();
 }
 
 void Autonomous::DecidePath(){
     
-    if(a_Joystick->GetRawButton(8)){
+    if(a_Joystick->GetRawButton(11)){
     
         autoPathMaster = 0;
 
@@ -230,8 +226,8 @@ void Autonomous::AutonomousPeriodic1(){
             break;
 
         case kCheckShot1:
-            if(a_Timer->Get().value() >= 2){
-                nextState = kDoneShooting1; //-----TEMPORARY SOLUTION: WILL BE CHANGED TO BEAMBREAK LATER-----//
+            if(waitForTime(2)){
+                nextState = kDoneShooting1;
             }
 
             break;
@@ -242,7 +238,7 @@ void Autonomous::AutonomousPeriodic1(){
             break;
         
         case kTaxi1:
-            if(IHaveAProposal(2000, 120, 180)){
+            if(IHaveAProposal(30, 120, 180)){
                 nextState = kAutoIdle1;
             }
             break;
@@ -293,7 +289,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
 
         case kDriveToWall2:
-            if(IHaveAProposal(2000, 120, 0)){
+            if(IHaveAProposal(0.3, 120, 0)){
                 nextState = kShoot2;
             }
             break;
@@ -305,7 +301,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
        
         case kCheckFirstShot2:
-            if(BallShot(SHOOT_FROM_WALL)){
+            if(waitForTime(2)){
                 nextState = kSecondShoot2;
             }
             break;
@@ -317,7 +313,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
         
         case kCheckSecondShot2:
-            if(BallShot(SHOOT_FROM_WALL)){
+            if(waitForTime(2)){
                 nextState = kAutoIdle2;
             }
             break;
@@ -334,19 +330,20 @@ void Autonomous::IDontLikeExercise(){
     a_BallShooter->setSpeed(0);
     
 }
-/*
-bool Autonomous::waitplz(double time){
-    double timeTrack = time + a_Timer->Get().value();
 
-    if (a_Timer->Get().value() < timeTrack){
+bool Autonomous::waitForTime(double time){
+    a_Timer->Start();
+
+    if (a_Timer->Get().value() < time){
         return false;
     }
-    else if (a_Timer->Get().value() >= timeTrack){
+    else if (a_Timer->Get().value() >= time){
         return true;
+        a_Timer->Stop();
     }
 
 }
-*/
+
 
 void Autonomous::SpoolShooter(float speed) {
     a_BallShooter->setSpeed(speed);
