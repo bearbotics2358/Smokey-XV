@@ -31,8 +31,7 @@ a_BeamBreak(0), // I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) 
-{
+a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
     }*/
@@ -120,14 +119,14 @@ void Robot::TeleopPeriodic() // main loop
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (joystickOne.GetRawButton(DriverButton::Button8)) {
+    if (a_XboxController.GetRawButton(OperatorButton::LeftBumper)) {
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
-    } else if (joystickOne.GetRawButton(DriverButton::Button7)) {
+    } else if (a_XboxController.GetRawButton(OperatorButton::RightBumper)) {
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
     } else {
         a_Climber.setArmSpeed(0);
     }
-    if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
+    if (a_XboxController.GetRawButton(OperatorButton::Back)) {
         a_Climber.toggleSolenoid();
     }
 

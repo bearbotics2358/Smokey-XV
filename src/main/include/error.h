@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 
 enum class ErrorType : int {
     Ok = 0,

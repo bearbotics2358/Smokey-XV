@@ -1,19 +1,35 @@
 #include "Climber.h"
-#include "misc.h"
 #include "Prefs.h"
+#include "misc.h"
+#include <iostream>
 
 Climber::Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule):
 a_climberArmMotor(climberMotorId),
-a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule)
-{
+a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule) {
+    // by default this selects the ingetrated sensor
+    // do this to set kp value
+    ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
+
+    // these settings are present in the documentation example, and since they relate to safety of motor, they are probably a good idea to include
+    config.supplyCurrLimit.triggerThresholdCurrent = 40; // the peak supply current, in amps
+    config.supplyCurrLimit.triggerThresholdTime = 1.5; // the time at the peak supply current before the limit triggers, in sec
+    config.supplyCurrLimit.currentLimit = 30; // the current to maintain if the peak supply limit is triggered
+
+    config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
+
+    // FIXME: pid tune
+    config.slot0.kP = 1.0;
+
+    a_climberArmMotor.ConfigAllSettings(config);
+
     a_climberArmMotor.SetNeutralMode(NeutralMode::Brake);
     a_climberArmMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
-
 }
 
 void Climber::setArmSpeed(double mmPerSecond) {
     double value = (mmPerSecond * 0.1) * CLIMBER_TICKS_PER_MM;
-    a_climberArmMotor.Set(ControlMode::Velocity, value);
+    double value2 = misc::rpmToTalonVel(value);
+    a_climberArmMotor.Set(ControlMode::Velocity, value2);
 }
 
 void Climber::toggleSolenoid() {
