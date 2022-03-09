@@ -1,6 +1,6 @@
 #include "vision/PiController.h"
 
-static const std::string data_topic { "pi/cv/data" };
+/*static const std::string data_topic { "pi/cv/data" };
 static const std::string control_topic { "pi/cv/control" };
 static const std::string error_topic { "pi/cv/error" };
 
@@ -9,21 +9,23 @@ m_client(std::move(client)),
 m_data(std::move(data)) {}
 
 std::optional<PiController> PiController::create(const std::string& address, int port) {
-    auto client = MqttClient::create(address, port);
-    if (!client.has_value()) {
+    auto client_opt = MqttClient::create(address, port);
+    if (!client_opt.has_value()) {
         return {};
     }
 
+    MqttClient client = std::move(client_opt.value());
+
     std::unique_ptr<PiData> data(new PiData);
 
-    auto res1 = client->subscribe(data_topic, data_callback, data.get());
-    auto res2 = client->subscribe(error_topic, error_callback, data.get());
+    auto res1 = client.subscribe(data_topic, data_callback, data.get());
+    auto res2 = client.subscribe(error_topic, error_callback, data.get());
 
     if (res1.is_err() || res2.is_err()) {
         return {};
     }
 
-    return std::make_optional<PiController>(PiController(std::move(*client), std::move(data)));
+    return std::make_optional<PiController>(PiController(std::move(client), std::move(data)));
 }
 
 void PiController::update() {
@@ -67,4 +69,4 @@ void PiController::data_callback(std::string_view msg, PiData *data) {
 }
 
 void PiController::error_callback(std::string_view msg, PiData *data) {
-}
+}*/

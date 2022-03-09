@@ -119,14 +119,14 @@ void Robot::TeleopPeriodic() // main loop
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (joystickOne.GetRawButton(OperatorButton::LeftBumper)) {
+    if (a_XboxController.GetRawButton(OperatorButton::LeftBumper)) {
         a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
-    } else if (joystickOne.GetRawButton(OperatorButton::RightBumper)) {
+    } else if (a_XboxController.GetRawButton(OperatorButton::RightBumper)) {
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
     } else {
         a_Climber.setArmSpeed(0);
     }
-    if (joystickOne.GetRawButton(OperatorButton::Back)) {
+    if (a_XboxController.GetRawButton(OperatorButton::Back)) {
         a_Climber.toggleSolenoid();
     }
 
