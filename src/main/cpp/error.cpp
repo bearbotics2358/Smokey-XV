@@ -50,6 +50,10 @@ Error::Error(ErrorType type, std::string&& message):
 m_type(type),
 m_message(std::move(message)) {}
 
+Error::Error(ErrorType type, std::string_view message):
+m_type(type),
+m_message(message) {}
+
 Error::~Error() {}
 
 std::string Error::serialize() const {

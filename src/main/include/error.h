@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 
 enum class ErrorType : int {
     Ok = 0,
@@ -27,10 +28,11 @@ const char *error_type_to_string(ErrorType type);
 // returns none if the int is not a valid error type
 std::optional<ErrorType> error_type_from_int(int n);
 
-#define ERROR_CONSTRUCTOR_DEFS(ctor_name, error_type)                                                \
-    static inline Error ctor_name() { return Error(error_type); }                                    \
-    static inline Error ctor_name(const std::string& message) { return Error(error_type, message); } \
-    static inline Error ctor_name(std::string&& message) { return Error(error_type, std::move(message)); }
+#define ERROR_CONSTRUCTOR_DEFS(ctor_name, error_type)                                                      \
+    static inline Error ctor_name() { return Error(error_type); }                                          \
+    static inline Error ctor_name(const std::string& message) { return Error(error_type, message); }       \
+    static inline Error ctor_name(std::string&& message) { return Error(error_type, std::move(message)); } \
+    static inline Error ctor_name(std::string_view message) { return Error(error_type, message); }
 
 // TODO: add domain codes
 class [[nodiscard]] Error {
@@ -38,6 +40,7 @@ class [[nodiscard]] Error {
         Error(ErrorType type);
         Error(ErrorType type, const std::string& message);
         Error(ErrorType type, std::string&& message);
+        Error(ErrorType type, std::string_view message);
         ~Error();
 
         static inline Error ok() { return Error(ErrorType::Ok); }
@@ -55,6 +58,7 @@ class [[nodiscard]] Error {
         // string serialization used to send errors across mqtt
         std::string serialize() const;
         static std::optional<Error> deserialize(const std::string& string);
+        static std::optional<Error> deserualize(std::string_view string);
 
         // make a string to be displayed to the user
         std::string to_string() const;

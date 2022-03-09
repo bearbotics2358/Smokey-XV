@@ -18,17 +18,27 @@ enum class Mode {
     None,
 };
 
+// returns none on invalid string
+std::optional<Mode> string_to_mode(std::string_view str);
+
 struct Ball {
         Team team;
         double distance;
         double angle;
 };
 
-struct PiData {
+class PiData {
+    public:
         std::vector<Ball> balls {};
         // TODO: update this mode to what the pi will start in
         Mode mode { Mode::None };
         std::vector<Error> errors {};
+
+    private:
+        friend class PiController;
+
+        // helper method which loggs that an invalid message was recieved and pushes an error to the errors vector
+        void invalid_msg(std::string_view msg);
 };
 
 class PiController {
