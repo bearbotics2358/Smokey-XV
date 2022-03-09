@@ -33,6 +33,9 @@ struct PiData {
 
 class PiController {
     public:
+        PiController(PiController&& in) = default;
+        PiController& operator=(PiController&& in) = default;
+
         ~PiController();
 
         // create new pi controller, returns none on failure
@@ -49,8 +52,6 @@ class PiController {
         bool has_error() const;
         // get all errors that have occured since last clear_errors called
         const std::vector<Error>& errors() const;
-        // gets the last error that has occured
-        std::optional<const Error&> last_error() const;
         // clear any errors that have occured
         void clear_errors();
 
