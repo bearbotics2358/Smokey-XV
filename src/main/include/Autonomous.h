@@ -117,11 +117,11 @@ class Autonomous {
         // ------------------Sub-Routines-------------------------//
 
         void IDontLikeExercise(); // IDLE
-        bool waitplz(double time); // Wait
 
         void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
-		bool waitForTime(double time); // Wait
+        void StartTimer();
+		bool WaitForTime(double time); // Wait
 		void ToggleCollector();
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders

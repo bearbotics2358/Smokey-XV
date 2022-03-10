@@ -231,7 +231,7 @@ void Autonomous::AutonomousPeriodic1(){
             break;
 
         case kCheckShot1:
-            if(waitForTime(2)){
+            if(WaitForTime(1)){
                 nextState = kDoneShooting1;
             }
 
@@ -243,7 +243,7 @@ void Autonomous::AutonomousPeriodic1(){
             break;
         
         case kTaxi1:
-            if(IHaveAProposal(0.3, 120, 180)){
+            if(DriveDist(-120, 0)){
                 nextState = kAutoIdle1;
             }
             break;
@@ -306,7 +306,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
        
         case kCheckFirstShot2:
-            if(waitForTime(2)){
+            if(WaitForTime(1)){
                 nextState = kSecondShoot2;
             }
             break;
@@ -318,7 +318,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
         
         case kCheckSecondShot2:
-            if(waitForTime(2)){
+            if(WaitForTime(1)){
                 nextState = kAutoIdle2;
             }
             break;
@@ -336,7 +336,11 @@ void Autonomous::IDontLikeExercise(){
     
 }
 
-bool Autonomous::waitForTime(double time){
+void Autonomous::StartTimer(){
+    a_Timer->Start();
+}
+
+bool Autonomous::WaitForTime(double time){ //-----MUST HAVE A SEPARATE CASE USING TIMERSTART-----//
     
 
     if (a_Timer->Get().value() < time){
@@ -379,11 +383,11 @@ bool Autonomous::DriveDist(double dist, double angle){ // true is done, false is
 bool Autonomous::IndexAndShoot(float speed){ //returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if(a_BallShooter->getSpeed() >= speed) {
+    if(a_BallShooter->getSpeed() >= speed - 200) {
         a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_RPM);
         return true;
     }
-    else if(a_BallShooter->getSpeed() < speed) {
+    else if(a_BallShooter->getSpeed() < speed - 200) {
         return false;
     }
 }
