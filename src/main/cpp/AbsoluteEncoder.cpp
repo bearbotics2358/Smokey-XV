@@ -13,7 +13,7 @@ AbsoluteEncoder::AbsoluteEncoder(int port, double minVolts, double maxVolts, dou
 m_encoder(port),
 m_minVolts(minVolts),
 m_voltRange(maxVolts - minVolts),
-m_offset(offset / (360)) {}
+m_offset(offset) {}
 
 double AbsoluteEncoder::getAngle() const {
     return 2 * M_PI * getRotations();

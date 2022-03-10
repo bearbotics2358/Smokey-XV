@@ -34,20 +34,17 @@ float SwerveModule::getDistance() {
 }
 
 void SwerveModule::resetDriveEncoder() {
-    driveEnc.SetIntegratedSensorPosition(0);
+    double absAngle = 360 * absSteerEnc.getRotations();
+    float relAngle = getRelativeAngle();
+    encZeroPoint = absAngle - relAngle;
 }
 
 void SwerveModule::resetSteerEncoder() {
     steerEncNEO.SetPosition(-absSteerEnc.getRotations());
 }
 
-float SwerveModule::getAngleRaw() {
-    float ret = steerEncNEO.GetPosition();
-    return ret;
-}
-
-float SwerveModule::getAngle() {
-    float temp = getAngleRaw(); // get raw position
+double SwerveModule::getRelativeAngle() {
+    float temp = steerEncNEO.GetPosition();
     float angle = (fmod(temp, TICKS_STEERING) / TICKS_STEERING) * 360; // convert to angle in degrees
 
     float adjusted = angle;
@@ -56,6 +53,10 @@ float SwerveModule::getAngle() {
     }
 
     return adjusted;
+}
+
+float SwerveModule::getAngle() {
+    return misc::clampDegrees(getRelativeAngle() + encZeroPoint);
 }
 
 float SwerveModule::getAbsAngleDegrees() {

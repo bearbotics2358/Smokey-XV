@@ -22,9 +22,9 @@ class SwerveModule // Handles steering and driving of each Swerve Module
 
         void resetSteerEncoder();
 
-        float getAngleRaw(); // position of steering encoder
         float getAngle(); // scaled angle between 0 and 360
         // TEMP
+        // TODO: remove
         float getAbsAngleDegrees();
 
         void goToPosition(float setpoint); // Position PID control, moves to specified position
@@ -49,6 +49,13 @@ class SwerveModule // Handles steering and driving of each Swerve Module
     private:
         static double wheelSpeedToRpm(double speed);
         static double inchesToMotorTicks(double inches);
+
+        // get angle from relative encoder in degrees
+        double getRelativeAngle();
+
+        // how many degrees away from the actual zero degrees
+        // that the relative encoder's zero point is
+        double encZeroPoint;
 
         TalonFX driveMotor;
         rev::CANSparkMax steerMotor;
