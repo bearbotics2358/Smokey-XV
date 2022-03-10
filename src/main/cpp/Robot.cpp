@@ -51,7 +51,6 @@ a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
 void Robot::RobotInit() {
     frc::SmartDashboard::init();
     a_Gyro.Init();
-    // a_Gyro.Cal();
     a_Gyro.Zero();
 }
 
@@ -82,6 +81,7 @@ void Robot::RobotPeriodic() {
 }
 
 void Robot::DisabledInit() {
+    a_doEnabledInit = true;
     // a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 500.0;
 }
@@ -91,30 +91,43 @@ void Robot::DisabledPeriodic() {
     frc::SmartDashboard::PutNumber("Selected Autonomous", a_Autonomous.GetCurrentPath());
 }
 
-void Robot::AutonomousInit() {
+void Robot::EnabledInit() {
     a_Collector.resetSolenoid();
     a_Climber.resetClimber();
+}
+
+void Robot::EnabledPeriodic() {
+    a_shooterVision.update();
+    a_ballTracker.update();
+    a_CompressorController.update();
+}
+
+void Robot::AutonomousInit() {
+    if (a_doEnabledInit) {
+        EnabledInit();
+        a_doEnabledInit = false;
+    }
+
     a_Autonomous.Init();
     a_Autonomous.StartPathMaster();
 }
 
 void Robot::AutonomousPeriodic() {
-    a_shooterVision.update();
-    a_ballTracker.update();
+    EnabledPeriodic();
+
     a_Autonomous.PeriodicPathMaster();
 }
 
 void Robot::TeleopInit() {
-    a_Collector.resetSolenoid();
-    a_Climber.resetClimber();
+    if (a_doEnabledInit) {
+        EnabledInit();
+        a_doEnabledInit = false;
+    }
 }
 
-void Robot::TeleopPeriodic() // main loop
-{
-    a_shooterVision.update();
-    a_ballTracker.update();
-
-    a_CompressorController.update();
+// main loop
+void Robot::TeleopPeriodic() {
+    EnabledPeriodic();
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
@@ -226,11 +239,15 @@ void Robot::TeleopPeriodic() // main loop
 }
 
 void Robot::TestInit() {
+    if (a_doEnabledInit) {
+        EnabledInit();
+        a_doEnabledInit = false;
+    }
 }
 
 
 void Robot::TestPeriodic() {
-
+    EnabledPeriodic();
 
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);

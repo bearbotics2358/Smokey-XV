@@ -24,6 +24,13 @@ class Robot : public frc::TimedRobot {
         void DisabledInit();
         void DisabledPeriodic();
 
+        // called whenever the robot transitions from disabled to either autonomous, teleop, or test
+        // this means it is basically called whenever the robot is enabled
+        // is not called when the robot moves between autonomous, teleop, or test
+        void EnabledInit();
+        // called during autonomous, teleop, and test periodic
+        void EnabledPeriodic();
+
         void AutonomousInit();
         void AutonomousPeriodic();
 
@@ -34,6 +41,9 @@ class Robot : public frc::TimedRobot {
         void TestPeriodic();
 
     private:
+        // keeps track of when to call enabled init
+        bool a_doEnabledInit { true };
+
         JrimmyGyro a_Gyro;
         SwerveModule a_FLModule;
         SwerveModule a_FRModule;
