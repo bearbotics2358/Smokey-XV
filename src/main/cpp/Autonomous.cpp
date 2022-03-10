@@ -12,10 +12,7 @@ Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joyst
     a_BeamBreak(BeamBreak),
     a_AutoState0(kAutoIdle0),
     a_AutoState1(kAutoIdle1),
-    a_AutoState2(kAutoIdle2),
-    a_AutoState3(kAutoIdle3),
-    a_AutoState4(kAutoIdle4),
-    a_AutoState5(kAutoIdle5)
+    a_AutoState2(kAutoIdle2)
     
 {
 
@@ -193,7 +190,7 @@ void Autonomous::AutonomousPeriodic0(){
 		    break;
 
         case kDriveAway0:
-            if(IHaveAProposal(1000, 35, 0)){
+            if(DriveDist(36, 0)){
                 nextState = kAutoIdle0;
             }
             break;
@@ -226,11 +223,11 @@ void Autonomous::AutonomousPeriodic1(){
             break;
 
         case kStartTimer1:
-            a_Timer->Start();
-            nextState = kCheckShot1;
+            StartTimer();
+            nextState = kWait1;
             break;
 
-        case kCheckShot1:
+        case kWait1:
             if(WaitForTime(1)){
                 nextState = kDoneShooting1;
             }
@@ -243,7 +240,7 @@ void Autonomous::AutonomousPeriodic1(){
             break;
         
         case kTaxi1:
-            if(DriveDist(-120, 0)){
+            if(DriveDist(120, 180)){
                 nextState = kAutoIdle1;
             }
             break;
@@ -272,7 +269,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
 
         case kDriveBackThroughBall2:
-            if(GoToMcDonalds(0.4, 0, 36)){
+            if(DriveWhileCollecting(36, 0)){
                 nextState = kLoad2;
             }
             break;
@@ -283,7 +280,7 @@ void Autonomous::AutonomousPeriodic2(){
             break;
         
         case kTurn2:
-            if(TurnTaAngle(-159)){
+            if(TurnToAngle(-159)){
                 nextState = kSpool2;
             }
             break;
@@ -301,11 +298,11 @@ void Autonomous::AutonomousPeriodic2(){
 
         case kShoot2:
             if(IndexAndShoot(SHOOT_FROM_WALL)){
-                nextState = kCheckFirstShot2;
+                nextState = kWait1_2;
             }
             break;
        
-        case kCheckFirstShot2:
+        case kWait1_2:
             if(WaitForTime(1)){
                 nextState = kSecondShoot2;
             }
@@ -313,11 +310,11 @@ void Autonomous::AutonomousPeriodic2(){
 
         case kSecondShoot2:
             if(IndexAndShoot(SHOOT_FROM_WALL)){
-                nextState = kCheckSecondShot2;
+                nextState = kWait2_2;
             }
             break;
         
-        case kCheckSecondShot2:
+        case kWait2_2:
             if(WaitForTime(1)){
                 nextState = kAutoIdle2;
             }
@@ -340,15 +337,17 @@ void Autonomous::StartTimer(){
     a_Timer->Start();
 }
 
-bool Autonomous::WaitForTime(double time){ //-----MUST HAVE A SEPARATE CASE USING TIMERSTART-----//
+bool Autonomous::WaitForTime(double time){ 
     
-
+    //-----Another case must be written to use StartTimer, though this will handle stopping and resetting-----//
+    
     if (a_Timer->Get().value() < time){
         return false;
     }
     else if (a_Timer->Get().value() >= time){
-        return true;
         a_Timer->Stop();
+        a_Timer->Reset();
+        return true;
     }
 
 }
@@ -384,7 +383,7 @@ bool Autonomous::IndexAndShoot(float speed){ //returns true if the shooter is ru
     a_BallShooter->setSpeed(speed);
 
     if(a_BallShooter->getSpeed() >= speed - 200) {
-        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_RPM);
+        a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
         return true;
     }
     else if(a_BallShooter->getSpeed() < speed - 200) {
@@ -392,7 +391,7 @@ bool Autonomous::IndexAndShoot(float speed){ //returns true if the shooter is ru
     }
 }
 
-bool Autonomous::TurnTaAngle(float angle){
+bool Autonomous::TurnToAngle(float angle){
     
     if(fabs(a_Gyro->GetAngle(0) - angle) >= 1){
         a_SwerveDrive->turnToAngle(a_Gyro->GetAngle(0), angle);
@@ -439,32 +438,16 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist){ // true is 
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
 
-    }
-            
-
-}
-
-bool Autonomous::GoToMcDonalds(float speed, float dir, float dist){ // true is done, false is not done
-
-    if(fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)){
-
-        if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))){
-		    a_SwerveDrive->GoToTheDon(speed / 2, dir, dist, a_Gyro->GetAngle(0));
-            //a_CFS->ShootVelocity(AUTO_SHOOT_VELOCITY);
-            //a_CFS->AutoCollect();
-		} else {
-            a_SwerveDrive->GoToTheDon(speed, dir, dist, a_Gyro->GetAngle(0));
-            a_Collector->setCollectorMotorSpeed(300);
         }
-        frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
-        return false;
-
-    } else {
-        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->GetAngle(0), true);
-        frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
-        return true;
-
     }
-            
 
-}
+    bool Autonomous::DriveWhileCollecting(double dist, double angle) {
+        a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_RPM);
+        if(DriveDist(dist, angle)){
+            a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_RPM);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
