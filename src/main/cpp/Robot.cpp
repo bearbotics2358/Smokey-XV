@@ -132,9 +132,9 @@ void Robot::TeleopPeriodic() {
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
     if (a_XboxController.GetRawButton(OperatorButton::LeftBumper)) {
-        a_Climber.setArmSpeed(CLIMBER_MOTOR_RPM);
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_SPEED);
     } else if (a_XboxController.GetRawButton(OperatorButton::RightBumper)) {
-        a_Climber.setArmSpeed(-CLIMBER_MOTOR_RPM);
+        a_Climber.setArmSpeed(-CLIMBER_MOTOR_SPEED);
     } else {
         a_Climber.setArmSpeed(0);
     }

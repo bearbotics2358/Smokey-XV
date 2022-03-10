@@ -14,17 +14,15 @@
 #define CLIMBER_MOTOR_ID 24
 #define CLIMBER_PUSH_SOLENOID_MODULE 2
 #define CLIMBER_PULL_SOLENOID_MODULE 3
-#define CLIMBER_MOTOR_SPEED 200 // in mm/second
-#define CLIMBER_MM_PER_TICK 0.026
-#define CLIMBER_TICKS_PER_MM 3.8347
-#define CLIMBER_MOTOR_RPM 60
+#define CLIMBER_MOTOR_SPEED 200 // the desired speed for the arm to rise (mm/s)
+#define CLIMBER_MM_PER_TICK 0.026 // how many mm the climber arm rises every motor tick
+#define CLIMBER_TICKS_PER_MM 3.8347 // how many ticks for every mm the climber arm rises
 
 /*======== SHOOTER CONSTANTS ========*/
 
 #define LEFT_SHOOTER_ID 26
 #define RIGHT_SHOOTER_ID 27
 #define SHOOTER_MOTOR_RPM 220
-// speed in rpm
 #define SHOOTER_SPEED 2000
 #define SHOOT_FROM_WALL 1000
 
