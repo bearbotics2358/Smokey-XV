@@ -106,6 +106,7 @@ void Robot::RobotPeriodic() {
     }
     frc::SmartDashboard::PutNumber("Min volts FR", minVoltsfr);
     frc::SmartDashboard::PutNumber("Max volts FR", maxVoltsfr);
+    frc::SmartDashboard::PutNumber("FR Volts", voltsfr);
 
     static double minVoltsbl = 6.0;
     static double maxVoltsbl = -1.0;
@@ -116,6 +117,7 @@ void Robot::RobotPeriodic() {
     }
     frc::SmartDashboard::PutNumber("Min volts BL", minVoltsbl);
     frc::SmartDashboard::PutNumber("Max volts BL", maxVoltsbl);
+    frc::SmartDashboard::PutNumber("BL Volts", voltsbl);
 
     static double minVoltsbr = 6.0;
     static double maxVoltsbr = -1.0;
@@ -126,6 +128,7 @@ void Robot::RobotPeriodic() {
     }
     frc::SmartDashboard::PutNumber("Min volts BR", minVoltsbr);
     frc::SmartDashboard::PutNumber("Max volts BR", maxVoltsbr);
+    frc::SmartDashboard::PutNumber("BR Volts", voltsbr);
 }
 
 void Robot::DisabledInit() {
