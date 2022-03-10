@@ -4,7 +4,7 @@
 #include "Climber.h"
 #include "Prefs.h"
 #include "buttons.h"
-#include "math/LinAlg.h"
+#include "misc.h"
 #include <JrimmyGyro.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <iostream>
@@ -83,7 +83,7 @@ void Robot::RobotPeriodic() {
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
     // a_SwerveDrive.resetDrive();
-    shooterDesiredSpeed = 500.0;
+    shooterDesiredSpeed = 0.0;
 }
 
 void Robot::DisabledPeriodic() {
@@ -145,20 +145,25 @@ void Robot::TeleopPeriodic() {
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 
 
-    if (a_XboxController.GetRawButton(OperatorButton::A)) {
+    /*if (a_XboxController.GetRawButton(OperatorButton::A)) {
         shooterDesiredSpeed += 10.0;
     }
     if (a_XboxController.GetRawButton(OperatorButton::B)) {
         shooterDesiredSpeed -= 10.0;
-    }
+    }*/
 
-    a_Shooter.setSpeed(shooterDesiredSpeed);
+    // a_Shooter.setSpeed(shooterDesiredSpeed);
 
-    /*
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::A)){
-        shooterDesiredSpeed = SHOOTER_MOTOR_RPM;
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::A)) {
+        a_Shooter.setSpeed(SHOOTER_SPEED);
+        // TODO: decrease margin of error when better pid tuned
+        if (a_Shooter.getSpeed() >= 0.8 * SHOOTER_SPEED) {
+            a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
+        }
+    } else {
+        a_Shooter.setSpeed(0);
+        a_Collector.setIndexerMotorSpeed(0);
     }
-    */
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
@@ -170,11 +175,13 @@ void Robot::TeleopPeriodic() {
     } else {
         a_Collector.setCollectorMotorSpeed(0);
     }
-    if (a_XboxController.GetRawButton(OperatorButton::Y)) {
+    /*if (a_XboxController.GetRawButton(OperatorButton::Y)) {
         a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
     } else {
         a_Collector.setIndexerMotorSpeed(0);
-    }
+    }*/
+
+    /* =-=-=-=-=-=-=-=-=-=-= Swerve Controls =-=-=-=-=-=-=-=-=-=-= */
 
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);

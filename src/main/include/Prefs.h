@@ -24,7 +24,8 @@
 #define LEFT_SHOOTER_ID 26
 #define RIGHT_SHOOTER_ID 27
 #define SHOOTER_MOTOR_RPM 220
-#define SHOOTER_SPEED 0.5 // currently unused
+// speed in rpm
+#define SHOOTER_SPEED 2000
 #define SHOOT_FROM_WALL 1000
 
 /*======== COLLECTOR CONSTANTS ========*/

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "misc.h"
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
 
@@ -9,11 +10,9 @@ class BallShooter {
 
         // sets speed in rpm
         void setSpeed(double rpm);
+
         // gets speed in rpms
         double getSpeed();
-
-        // TEMP
-        void setAlpha(double alpha) { this->alpha = alpha; }
 
     private:
         TalonFX a_shooterLeft;
