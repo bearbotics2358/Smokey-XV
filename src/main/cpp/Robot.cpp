@@ -82,7 +82,7 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    // a_SwerveDrive.resetDrive();
+    a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
