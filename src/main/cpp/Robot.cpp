@@ -81,23 +81,56 @@ void Robot::RobotPeriodic() {
 
     // current swerve module to test for
     // only do 1 at a atime to avoid printing too much
-    SwerveModule& tm = a_FLModule;
-    auto volts = tm.getAbsEncVoltage();
-    std::cout << volts << std::endl;
-    static double minVolts = 6.0;
-    static double maxVolts = -1.0;
-    if (volts > maxVolts) {
-        maxVolts = volts;
-    } else if (volts < minVolts) {
-        minVolts = volts;
+    auto voltsfl = a_FLModule.getAbsEncVoltage();
+    auto voltsfr = a_FRModule.getAbsEncVoltage();
+    auto voltsbl = a_BLModule.getAbsEncVoltage();
+    auto voltsbr = a_BRModule.getAbsEncVoltage();
+
+    static double minVoltsfl = 6.0;
+    static double maxVoltsfl = -1.0;
+    if (voltsfl > maxVoltsfl) {
+        maxVoltsfl = voltsfl;
+    } else if (voltsfl < minVoltsfl) {
+        minVoltsfl = voltsfl;
     }
-    frc::SmartDashboard::PutNumber("Min volts", minVolts);
-    frc::SmartDashboard::PutNumber("Max volts", maxVolts);
+    frc::SmartDashboard::PutNumber("Min volts FL", minVoltsfl);
+    frc::SmartDashboard::PutNumber("Max volts FL", maxVoltsfl);
+    frc::SmartDashboard::PutNumber("FL Volts", voltsfl);
+
+    static double minVoltsfr = 6.0;
+    static double maxVoltsfr = -1.0;
+    if (voltsfr > maxVoltsfr) {
+        maxVoltsfr = voltsfr;
+    } else if (voltsfr < minVoltsfr) {
+        minVoltsfr = voltsfr;
+    }
+    frc::SmartDashboard::PutNumber("Min volts FR", minVoltsfr);
+    frc::SmartDashboard::PutNumber("Max volts FR", maxVoltsfr);
+
+    static double minVoltsbl = 6.0;
+    static double maxVoltsbl = -1.0;
+    if (voltsbl > maxVoltsbl) {
+        maxVoltsbl = voltsbl;
+    } else if (voltsbl < minVoltsbl) {
+        minVoltsbl = voltsbl;
+    }
+    frc::SmartDashboard::PutNumber("Min volts BL", minVoltsbl);
+    frc::SmartDashboard::PutNumber("Max volts BL", maxVoltsbl);
+
+    static double minVoltsbr = 6.0;
+    static double maxVoltsbr = -1.0;
+    if (voltsbr > maxVoltsbr) {
+        maxVoltsbr = voltsbr;
+    } else if (voltsbr < minVoltsbr) {
+        minVoltsbr = voltsbr;
+    }
+    frc::SmartDashboard::PutNumber("Min volts BR", minVoltsbr);
+    frc::SmartDashboard::PutNumber("Max volts BR", maxVoltsbr);
 }
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    // a_SwerveDrive.resetDrive();
+    a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
