@@ -10,6 +10,7 @@ class AbsoluteEncoder {
 
         double getAngle() const;
         double getRotations() const;
+        double getVoltage() const;
 
     private:
         frc::AnalogInput m_encoder;

@@ -46,6 +46,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // the magnitude of the vector is passed into setDriveSpeed
         void driveDirection(Vec2 direction);
 
+        // TEMP
+        // TODO: remove
+        double getAbsEncVoltage() const;
+
     private:
         static double wheelSpeedToRpm(double speed);
         static double inchesToMotorTicks(double inches);

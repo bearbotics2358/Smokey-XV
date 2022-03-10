@@ -173,3 +173,7 @@ double SwerveModule::inchesToMotorTicks(double inches) {
         o specify wether or not the direction need to be reversed
         o still move even if angle doesn't need to be adjusted
 */
+
+double SwerveModule::getAbsEncVoltage() const {
+    absSteerEnc.getVoltage();
+}

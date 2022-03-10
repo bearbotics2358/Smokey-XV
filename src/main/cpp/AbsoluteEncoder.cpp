@@ -24,3 +24,7 @@ double AbsoluteEncoder::getRotations() const {
     // convert volts to rotations
     return ((volts - m_minVolts) / m_voltRange) - m_offset;
 }
+
+double AbsoluteEncoder::getVoltage() const {
+    return m_encoder.GetVoltage();
+}

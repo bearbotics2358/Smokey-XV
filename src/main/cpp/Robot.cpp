@@ -78,6 +78,21 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("FR abs encoder", a_FRModule.getAbsAngleDegrees());
     frc::SmartDashboard::PutNumber("BL abs encoder", a_BLModule.getAbsAngleDegrees());
     frc::SmartDashboard::PutNumber("BR abs encoder", a_BRModule.getAbsAngleDegrees());
+
+    // current swerve module to test for
+    // only do 1 at a atime to avoid printing too much
+    SwerveModule& tm = a_FLModule;
+    auto volts = tm.getAbsEncVoltage();
+    std::cout << volts << std::endl;
+    static double minVolts = 6.0;
+    static double maxVolts = -1.0;
+    if (volts > maxVolts) {
+        maxVolts = volts;
+    } else if (volts < minVolts) {
+        minVolts = volts;
+    }
+    frc::SmartDashboard::PutNumber("Min volts", minVolts);
+    frc::SmartDashboard::PutNumber("Max volts", maxVolts);
 }
 
 void Robot::DisabledInit() {
