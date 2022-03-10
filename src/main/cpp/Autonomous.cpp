@@ -91,6 +91,8 @@ void Autonomous::StartPathMaster(){
         case 2:
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
             AutonomousStart2();
+
+            break;
 	}
 }
 
