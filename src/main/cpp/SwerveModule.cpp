@@ -33,13 +33,13 @@ float SwerveModule::getDistance() {
 }
 
 void SwerveModule::resetDriveEncoder() {
-    double absAngle = 360 * absSteerEnc.getRotations();
-    float relAngle = getRelativeAngle();
-    encZeroPoint = absAngle - relAngle;
+    driveEnc.SetIntegratedSensorPosition(0);
 }
 
 void SwerveModule::resetSteerEncoder() {
-    steerEncNEO.SetPosition(-absSteerEnc.getRotations());
+    double absAngle = 360 * absSteerEnc.getRotations();
+    float relAngle = getRelativeAngle();
+    encZeroPoint = absAngle - relAngle;
 }
 
 double SwerveModule::getRelativeAngle() {

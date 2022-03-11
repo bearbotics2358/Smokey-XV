@@ -62,7 +62,7 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
-    frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());        
+    frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());
 
     // a_canHandler.update();
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
@@ -84,13 +84,14 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    a_SwerveDrive.resetDrive();
+    // a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
 void Robot::DisabledPeriodic() {
     a_Autonomous.DecidePath();
     frc::SmartDashboard::PutNumber("Selected Autonomous", a_Autonomous.GetCurrentPath());
+    a_SwerveDrive.resetDrive();
 }
 
 void Robot::EnabledInit() {
@@ -222,6 +223,7 @@ void Robot::TeleopPeriodic() {
     } else {
         // vision led off
     }
+
     if (joystickOne.GetRawButton(DriverButton::Button4)) /* && has target (todo once written) */ {
         // track target with vision
     } else if (joystickOne.GetRawButton(DriverButton::Button3)) {
