@@ -92,16 +92,28 @@ void SwerveDrive::resetDrive() {
     brModule.resetSteerEncoder();
 }
 
-void SwerveDrive::driveDistance(float dist, float direction) {
-    flModule.steerToAng(direction);
-    frModule.steerToAng(direction);
-    blModule.steerToAng(direction);
-    brModule.steerToAng(direction);
+void SwerveDrive::driveDistance(float dist, float directionDegrees) {
+    flModule.steerToAng(directionDegrees);
+    frModule.steerToAng(directionDegrees);
+    blModule.steerToAng(directionDegrees);
+    brModule.steerToAng(directionDegrees);
 
     flModule.goToPosition(dist);
     frModule.goToPosition(dist);
     blModule.goToPosition(dist);
     brModule.goToPosition(dist);
+}
+
+void SwerveDrive::driveDirection(float percent, float directionDegrees) {
+    flModule.steerToAng(directionDegrees);
+    flModule.steerToAng(directionDegrees);
+    flModule.steerToAng(directionDegrees);
+    flModule.steerToAng(directionDegrees);
+
+    flModule.setDrivePercent(percent);
+    frModule.setDrivePercent(percent);
+    blModule.setDrivePercent(percent);
+    brModule.setDrivePercent(percent);
 }
 
 float SwerveDrive::getAvgDistance() {
