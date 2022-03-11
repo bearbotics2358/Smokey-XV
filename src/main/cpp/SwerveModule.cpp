@@ -29,25 +29,21 @@ steerPID(0, 0, 0) {
 }
 
 float SwerveModule::getDistance() {
-    float ret = driveEnc.GetIntegratedSensorPosition();
-    return ret;
+    motorTicksToInches(driveEnc.GetIntegratedSensorPosition());
 }
 
 void SwerveModule::resetDriveEncoder() {
-    driveEnc.SetIntegratedSensorPosition(0);
+    double absAngle = 360 * absSteerEnc.getRotations();
+    float relAngle = getRelativeAngle();
+    encZeroPoint = absAngle - relAngle;
 }
 
 void SwerveModule::resetSteerEncoder() {
     steerEncNEO.SetPosition(-absSteerEnc.getRotations());
 }
 
-float SwerveModule::getAngleRaw() {
-    float ret = steerEncNEO.GetPosition();
-    return ret;
-}
-
-float SwerveModule::getAngle() {
-    float temp = getAngleRaw(); // get raw position
+double SwerveModule::getRelativeAngle() {
+    float temp = steerEncNEO.GetPosition();
     float angle = (fmod(temp, TICKS_STEERING) / TICKS_STEERING) * 360; // convert to angle in degrees
 
     float adjusted = angle;
@@ -58,33 +54,33 @@ float SwerveModule::getAngle() {
     return adjusted;
 }
 
-float SwerveModule::getAbsAngleDegrees() {
-    return absSteerEnc.getRotations() * -360.0;
+float SwerveModule::getAngle() {
+    return misc::clampDegrees(getRelativeAngle() + encZeroPoint);
 }
 
-void SwerveModule::goToPosition(float setpoint) {
-    float ticks = SwerveModule::inchesToMotorTicks(setpoint);
+float SwerveModule::getAbsAngleDegrees() {
+    return absSteerEnc.getRotations() * 360.0;
+}
+
+void SwerveModule::goToPosition(float inches) {
+    float ticks = SwerveModule::inchesToMotorTicks(inches);
     driveMotor.Set(TalonFXControlMode::Position, ticks);
 }
 
-void SwerveModule::steerToAng(float setpoint) // the twO
-{
-    float speed = std::clamp(steerPID.Calculate(getAngle(), setpoint) / 270.0, -0.5, 0.5);
+void SwerveModule::steerToAng(float degrees) {
+    float speed = std::clamp(steerPID.Calculate(getAngle(), degrees) / 270.0, -0.5, 0.5);
     steerMotor.Set(speed);
 }
 
-
-void SwerveModule::setDriveSpeed(float target) {
-    driveMotor.Set(TalonFXControlMode::PercentOutput, target);
+void SwerveModule::setDrivePercent(float percent) {
+    driveMotor.Set(TalonFXControlMode::PercentOutput, percent);
 }
 
-float SwerveModule::getDriveSpeed() {
-    return driveEnc.GetIntegratedSensorVelocity();
+void SwerveModule::setSteerPercent(float percent) {
+    steerMotor.Set(percent);
 }
 
-float SwerveModule::setDriveVelocity(float percent) // the onE
-{
-    float speed = percent * DRIVE_VELOCITY;
+float SwerveModule::setDriveSpeed(float speed) {
     float rpm = SwerveModule::wheelSpeedToRpm(speed);
 
     driveMotor.Set(TalonFXControlMode::Velocity, misc::rpmToTalonVel(rpm));
@@ -92,13 +88,13 @@ float SwerveModule::setDriveVelocity(float percent) // the onE
     return speed;
 }
 
-void SwerveModule::updateDrivePID(double pNew, double iNew, double dNew) {
+void SwerveModule::setDrivePID(double pNew, double iNew, double dNew) {
     driveMotor.Config_kP(0, pNew);
     driveMotor.Config_kI(0, iNew);
     driveMotor.Config_kD(0, dNew);
 }
 
-void SwerveModule::updateSteerPID(double pNew, double iNew, double dNew) {
+void SwerveModule::setSteerPID(double pNew, double iNew, double dNew) {
     steerPID.SetP(pNew);
     steerPID.SetI(iNew);
     steerPID.SetD(dNew);
@@ -139,9 +135,9 @@ bool SwerveModule::adjustAngle(float targetAngle) {
 
 void SwerveModule::driveDirection(Vec2 direction) {
     if (adjustAngle(direction.angle())) {
-        setDriveSpeed(-direction.magnitude());
+        setDrivePercent(-direction.magnitude());
     } else {
-        setDriveSpeed(direction.magnitude());
+        setDrivePercent(direction.magnitude());
     }
 }
 
@@ -163,9 +159,11 @@ double SwerveModule::inchesToMotorTicks(double inches) {
     return ticks * SWERVE_DRIVE_MOTOR_GEAR_RATIO;
 }
 
-/*
-    steer module to given angle
-    - return boolean (do we need to change the speed or not?)
-        o specify wether or not the direction need to be reversed
-        o still move even if angle doesn't need to be adjusted
-*/
+double SwerveModule::motorTicksToInches(double motorTicks) {
+    // like ticks of the wheel
+    double scaledTicks = motorTicks / SWERVE_DRIVE_MOTOR_GEAR_RATIO;
+    double rotations = (scaledTicks / FALCON_UNITS_PER_REV);
+    // angular position in radians
+    double angularPosition = rotations * 2 * M_PI;
+    return angularPosition * 0.5 * WHEEL_DIAMETER;
+}

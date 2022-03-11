@@ -13,14 +13,14 @@
 /*~~ hi :) ~~ */
 Robot::Robot():
 a_Gyro(frc::I2C::kMXP), // 1
-a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_SWERVE_ABS_ENC_MIN_VOLTS, FL_SWERVE_ABS_ENC_MAX_VOLTS, FL_SWERVE_ABS_ENC_OFFSET)),
-a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET)),
-a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET)),
-a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET)),
+a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_SWERVE_ABS_ENC_MIN_VOLTS, FL_SWERVE_ABS_ENC_MAX_VOLTS, FL_SWERVE_ABS_ENC_OFFSET / 360)),
+a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET / 360)),
+a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
+a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
 a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
-a_SwerveDrive(&a_FLModule, &a_FRModule, &a_BLModule, &a_BRModule),
+a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
 a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
@@ -35,17 +35,17 @@ a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
         // do something if handler failed to connect
     }*/
 
-    a_FLModule.updateDrivePID(0.001, 0, 0);
-    a_FLModule.updateSteerPID(2.0, 0, 0.02);
+    a_FLModule.setDrivePID(0.001, 0, 0);
+    a_FLModule.setSteerPID(2.0, 0, 0.02);
 
-    a_FRModule.updateDrivePID(0.001, 0, 0);
-    a_FRModule.updateSteerPID(2.2, 0, 0.002);
+    a_FRModule.setDrivePID(0.001, 0, 0);
+    a_FRModule.setSteerPID(2.2, 0, 0.002);
 
-    a_BLModule.updateDrivePID(0.001, 0, 0);
-    a_BLModule.updateSteerPID(2.0, 0, 0.002);
+    a_BLModule.setDrivePID(0.001, 0, 0);
+    a_BLModule.setSteerPID(2.0, 0, 0.002);
 
-    a_BRModule.updateDrivePID(0.001, 0, 0);
-    a_BRModule.updateSteerPID(2.0, 0, 0.01);
+    a_BRModule.setDrivePID(0.001, 0, 0);
+    a_BRModule.setSteerPID(2.0, 0, 0.01);
 }
 
 void Robot::RobotInit() {
@@ -59,7 +59,7 @@ void Robot::RobotPeriodic() {
     // handler.update();
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
-    frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+    frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
     frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());        
@@ -84,7 +84,7 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    // a_SwerveDrive.resetDrive();
+    a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
@@ -188,7 +188,7 @@ void Robot::TeleopPeriodic() {
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.GetAngle(2);
+    float gyro = a_Gyro.getAngle();
 
     if (fabs(x) < 0.10) {
         x = 0;
@@ -261,7 +261,7 @@ void Robot::TestPeriodic() {
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.GetAngle(0);
+    float gyro = a_Gyro.getAngle();
 
     if (fabs(x) < 0.10) {
         x = 0;

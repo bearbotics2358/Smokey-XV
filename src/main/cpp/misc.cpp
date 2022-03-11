@@ -17,3 +17,16 @@ double misc::degToRad(double degrees) {
 double misc::radToDeg(double radians) {
     return radians * 360 / (2 * M_PI);
 }
+
+double misc::clampDegrees(double degrees) {
+    return 360 * misc::clampRotations(degrees / 360.0);
+}
+
+double misc::clampRotations(double rotations) {
+    double out = fmod(rotations, 1);
+    if (out < 0) {
+        return 1 + out;
+    } else {
+        return out;
+    }
+}

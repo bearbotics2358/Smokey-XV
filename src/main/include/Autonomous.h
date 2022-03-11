@@ -18,61 +18,31 @@
 
 enum AutoState0 { // Encoders
     kAutoIdle0 = 0,
-    // kArmMove0,
     kDriveAway0
 };
 
 enum AutoState1 { // Encoders
     kAutoIdle1 = 0,
-    kTurnAround1,
     kShoot1,
-    kCheckShot1,
-	kStartTimer1,
+    kStartTimer1,
+    kWait1,
     kDoneShooting1,
     kTaxi1
 };
 
 enum AutoState2 { // T.O.F and Encoders
     kAutoIdle2 = 0,
-    kShoot2,
-    kTurn2,
     kCollectDown2,
-    kLoad2,
-    kDriveToWall2,
     kDriveBackThroughBall2,
-    kSecondShoot2,
+    kLoad2,
+    kTurn2,
     kSpool2,
-    kCheckFirstShot2,
+    kDriveToWall2,
+    kShoot2,
+    kWait1_2,
+    kSecondShoot2,
     kCheckSecondShot2,
-    kDoneShooting2
-};
-
-enum AutoState3 { // T.O.F and Encoders
-    kAutoIdle3 = 0,
-    kArmMove3,
-    kShoot3,
-    kTurnToParallel3,
-    kDriveToWall3,
-    kDriveBackThroughFiveBalls3,
-    kDriveForwardThroughControlPanel3,
-    kSecondShoot3
-};
-
-enum AutoState4 { //
-    kAutoIdle4 = 0,
-    kArmMove4,
-    kDriveBackLonger4,
-    kTurntoShoot4,
-    kPrime4,
-    kShootBalls4
-};
-
-enum AutoState5 { //
-    kAutoIdle5 = 0,
-    kArmMove5,
-    kDriveBack5,
-    kTurntoShoot5,
-    kShootBalls5
+    kWait2_2
 };
 
 
@@ -105,21 +75,14 @@ class Autonomous {
         void AutonomousStart2();
         void AutonomousPeriodic2();
 
-        void AutonomousStart3();
-        void AutonomousPeriodic3();
-
-        void AutonomousStart4();
-        void AutonomousPeriodic4();
-
-        void AutonomousStart5();
-        void AutonomousPeriodic5();
-
         // ------------------Sub-Routines-------------------------//
 
         void IDontLikeExercise(); // IDLE
 
         void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
+        //Timer System
+        //     Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
 		bool WaitForTime(double time); // Wait
 		void ToggleCollector();
@@ -128,13 +91,11 @@ class Autonomous {
 
         bool BallShot(float speed); // checks if a ball has been shot by measuring RPM values
 
-        bool TurnTaAngle(float angle); // turns to a specific angle
+        bool TurnToAngle(float angle); // turns to a specific angle
 
         bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
 
-        bool TurnLime(); // Uses limelight to face target; if no target, turn until found
-
-        bool GoToMcDonalds(float speed, float dir, float dist); // Driving in a direction while collecting]
+        bool DriveWhileCollecting(double dist, double angle); // Driving in a direction while collecting
 
         bool IndexAndShoot(float speed); // Shooting a ball when the shooter is spinning fast enough
 
@@ -151,9 +112,6 @@ class Autonomous {
         AutoState0 a_AutoState0;
         AutoState1 a_AutoState1;
         AutoState2 a_AutoState2;
-        AutoState3 a_AutoState3;
-        AutoState4 a_AutoState4;
-        AutoState5 a_AutoState5;
 
         int autoPathMaster;
         int BallsShot;

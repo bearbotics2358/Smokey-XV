@@ -64,24 +64,23 @@
 #define BR_SWERVE_ABS_ENC_PORT 2
 
 // min and max voltage of absolute encoders on swerve drives
-#define FL_SWERVE_ABS_ENC_MIN_VOLTS 0.0
-#define FL_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+#define FL_SWERVE_ABS_ENC_MIN_VOLTS 0.014076
+#define FL_SWERVE_ABS_ENC_MAX_VOLTS 4.952392
 
-#define FR_SWERVE_ABS_ENC_MIN_VOLTS 0.0
-#define FR_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+#define FR_SWERVE_ABS_ENC_MIN_VOLTS 0.037842
+#define FR_SWERVE_ABS_ENC_MAX_VOLTS 4.962158
 
-#define BL_SWERVE_ABS_ENC_MIN_VOLTS 0.0
-#define BL_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+#define BL_SWERVE_ABS_ENC_MIN_VOLTS 0.004883
+#define BL_SWERVE_ABS_ENC_MAX_VOLTS 4.641113
 
-#define BR_SWERVE_ABS_ENC_MIN_VOLTS 0.0
-#define BR_SWERVE_ABS_ENC_MAX_VOLTS 5.0
+#define BR_SWERVE_ABS_ENC_MIN_VOLTS 0.010986
+#define BR_SWERVE_ABS_ENC_MAX_VOLTS 4.963378
 
 // offset from 0 of the absolute encders
-#define FL_SWERVE_ABS_ENC_OFFSET 196.8
-#define FR_SWERVE_ABS_ENC_OFFSET 265.6
-#define BL_SWERVE_ABS_ENC_OFFSET 178.0
-#define BR_SWERVE_ABS_ENC_OFFSET 1.05
-
+#define FL_SWERVE_ABS_ENC_OFFSET 16.24
+#define FR_SWERVE_ABS_ENC_OFFSET 85.76
+#define BL_SWERVE_ABS_ENC_OFFSET 0.22
+#define BR_SWERVE_ABS_ENC_OFFSET 179.77
 
 
 /* ========== Joystick Ports ========= */
@@ -107,6 +106,7 @@
 // ratio is drive motor rotations / wheel rotations
 #define SWERVE_DRIVE_MOTOR_GEAR_RATIO (18.0 / 1.0)
 
+// FIXME: this is wrong, must be in meters
 #define WHEEL_DIAMETER 4.0
 
 /* ============= AUTO VALUES 4 Jason yoyoyo =========== */

@@ -1,12 +1,24 @@
 #pragma once
 
 namespace misc {
-// converts rpm to talon units per 100 ms
+/** Converts rpm to the unit the talon motor uses for velocity control (ticks per 100 ms).
+ *  @param rpm input rpm.
+ *  @return the talon velocity units.
+ */
 double rpmToTalonVel(double rpm);
 
-// converts talon units per 100 ms to rpm
+/** Converts the tolon motor velocity units (ticks per 100 ms) to rpm.
+ *  @param units input talon velocity units.
+ *  @return converted rpm.
+ */
 double talonVelToRpm(double units);
 
 double degToRad(double degrees);
 double radToDeg(double radians);
+
+// clamps degrees to be in the range of 0-360
+// if they are out of this range they are converted to an equivalent degrees in this range
+double clampDegrees(double degrees);
+
+double clampRotations(double rotations);
 }
