@@ -152,34 +152,34 @@ void SwerveDrive::swerveUpdate(float xIn, float yIn, float zIn, float gyroIn, bo
     // update speeds and angles
     if (FL_Module->adjustAngle(FL_Angle)) {
         // frc::SmartDashboard::PutNumber("FL Set: ", FL_Module->setDriveVelocity(-FL_Speed));
-        FL_Module->setDriveSpeed(-FL_Speed);
+        FL_Module->setDrivePercent(-FL_Speed);
     } else {
         // frc::SmartDashboard::PutNumber("FL Set: ", FL_Module->setDriveVelocity(FL_Speed));
-        FL_Module->setDriveSpeed(FL_Speed);
+        FL_Module->setDrivePercent(FL_Speed);
     }
 
     if (FR_Module->adjustAngle(FR_Angle)) {
         // frc::SmartDashboard::PutNumber("FR Set: ", FR_Module->setDriveVelocity(-FR_Speed));
-        FR_Module->setDriveSpeed(-FR_Speed);
+        FR_Module->setDrivePercent(-FR_Speed);
     } else {
         // frc::SmartDashboard::PutNumber("FR Set: ", FR_Module->setDriveVelocity(-FR_Speed));
-        FR_Module->setDriveSpeed(FR_Speed);
+        FR_Module->setDrivePercent(FR_Speed);
     }
 
     if (BL_Module->adjustAngle(BL_Angle)) {
         // frc::SmartDashboard::PutNumber("BL Set: ", FL_Module->setDriveVelocity(-BL_Speed));
-        BL_Module->setDriveSpeed(-BL_Speed);
+        BL_Module->setDrivePercent(-BL_Speed);
     } else {
         // frc::SmartDashboard::PutNumber("BL Set: ", FL_Module->setDriveVelocity(-BL_Speed));
-        BL_Module->setDriveSpeed(BL_Speed);
+        BL_Module->setDrivePercent(BL_Speed);
     }
 
     if (BR_Module->adjustAngle(BR_Angle)) {
         // frc::SmartDashboard::PutNumber("BR Set: ", FL_Module->setDriveVelocity(-BR_Speed));
-        BR_Module->setDriveSpeed(-BR_Speed);
+        BR_Module->setDrivePercent(-BR_Speed);
     } else {
         // frc::SmartDashboard::PutNumber("BR Set: ", FL_Module->setDriveVelocity(-BR_Speed));
-        BR_Module->setDriveSpeed(BR_Speed);
+        BR_Module->setDrivePercent(BR_Speed);
     }
 }
 
@@ -277,27 +277,27 @@ void SwerveDrive::crabDriveUpdate(float xIn, float yIn, float gyroIn) {
     // update speeds and angles
 
     if (FL_Module->adjustAngle(FL_Angle)) {
-        FL_Module->setDriveSpeed(-1 * FL_Speed);
+        FL_Module->setDrivePercent(-1 * FL_Speed);
     } else {
-        FL_Module->setDriveSpeed(FL_Speed);
+        FL_Module->setDrivePercent(FL_Speed);
     }
 
     if (FR_Module->adjustAngle(FR_Angle)) {
-        FR_Module->setDriveSpeed(-1 * FR_Speed);
+        FR_Module->setDrivePercent(-1 * FR_Speed);
     } else {
-        FR_Module->setDriveSpeed(FR_Speed);
+        FR_Module->setDrivePercent(FR_Speed);
     }
 
     if (BL_Module->adjustAngle(BL_Angle)) {
-        BL_Module->setDriveSpeed(-1 * BL_Speed);
+        BL_Module->setDrivePercent(-1 * BL_Speed);
     } else {
-        BL_Module->setDriveSpeed(BL_Speed);
+        BL_Module->setDrivePercent(BL_Speed);
     }
 
     if (BR_Module->adjustAngle(BR_Angle)) {
-        BR_Module->setDriveSpeed(-1 * BR_Speed);
+        BR_Module->setDrivePercent(-1 * BR_Speed);
     } else {
-        BR_Module->setDriveSpeed(BR_Speed);
+        BR_Module->setDrivePercent(BR_Speed);
     }
 }
 
@@ -373,10 +373,10 @@ void SwerveDrive::turnToAngle(float gyro, float angle) {
     BR_Module->steerToAng(315);
 
     float speed = std::clamp(anglePID.Calculate(gyro, angle), -0.2, 0.2); // calculates a speed we need to go based off our current sensor and target position
-    FL_Module->setDriveSpeed(speed);
-    FR_Module->setDriveSpeed(speed);
-    BL_Module->setDriveSpeed(speed);
-    BR_Module->setDriveSpeed(speed);
+    FL_Module->setDrivePercent(speed);
+    FR_Module->setDrivePercent(speed);
+    BL_Module->setDrivePercent(speed);
+    BR_Module->setDrivePercent(speed);
 }
 
 void SwerveDrive::makeShiftTurn(float speed) {
@@ -385,10 +385,10 @@ void SwerveDrive::makeShiftTurn(float speed) {
     BL_Module->steerToAng(225);
     BR_Module->steerToAng(315);
 
-    FL_Module->setDriveSpeed(speed);
-    FR_Module->setDriveSpeed(speed);
-    BL_Module->setDriveSpeed(speed);
-    BR_Module->setDriveSpeed(speed);
+    FL_Module->setDrivePercent(speed);
+    FR_Module->setDrivePercent(speed);
+    BL_Module->setDrivePercent(speed);
+    BR_Module->setDrivePercent(speed);
 }
 
 void SwerveDrive::GoToTheDon(float speed, float direction, float distance, float gyro) {
