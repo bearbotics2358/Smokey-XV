@@ -164,8 +164,13 @@ int JrimmyGyro::GetTemp() {
     return temperature;
 }
 
-double JrimmyGyro::GetAngle(int xyz) {
+double JrimmyGyro::GetAxisAngle(int xyz) {
     return angle[xyz];
+}
+
+double JrimmyGyro::getAngle() {
+    // update this depending on how the gyro is mounted
+    return angle[2];
 }
 
 void JrimmyGyro::Zero() {

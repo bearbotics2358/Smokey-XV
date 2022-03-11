@@ -1,6 +1,6 @@
 #pragma once
 
-// binary buttons on operator xbox controller
+/** Buttons on the Xbox controller. */
 class OperatorButton {
     public:
         constexpr static int A = 1;
@@ -15,7 +15,7 @@ class OperatorButton {
         constexpr static int RightJoystick = 10;
 };
 
-// analog input joysticks on operator xbox controller
+/** Analog input joysticks on the Xbox controller. */
 class OperatorJoystick {
     public:
         constexpr static int LeftXAxis = 0;
@@ -26,7 +26,7 @@ class OperatorJoystick {
         constexpr static int RightYAxis = 5;
 };
 
-// binary buttons on driver joystick
+/** Buttons on the driver joystick. */
 class DriverButton {
     public:
         constexpr static int Trigger = 1;
@@ -43,7 +43,7 @@ class DriverButton {
         constexpr static int Button12 = 12;
 };
 
-// analog input joysticks on driver xbox controller
+/** Analog input joysticks on the driver joystick. */
 class DriverJoystick {
     public:
         constexpr static int XAxis = 0;

@@ -59,7 +59,7 @@ void Robot::RobotPeriodic() {
     // handler.update();
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
-    frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.GetAngle(0));
+    frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
     // a_canHandler.update();
@@ -186,7 +186,7 @@ void Robot::TeleopPeriodic() {
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.GetAngle(2);
+    float gyro = a_Gyro.getAngle();
 
     if (fabs(x) < 0.10) {
         x = 0;
@@ -259,7 +259,7 @@ void Robot::TestPeriodic() {
     float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.GetAngle(0);
+    float gyro = a_Gyro.getAngle();
 
     if (fabs(x) < 0.10) {
         x = 0;

@@ -46,7 +46,9 @@ class JrimmyGyro : public frc::I2C {
         virtual double GetY();
         virtual double GetZ();
         virtual int GetTemp();
-        double GetAngle(int axis = 1);
+        double GetAxisAngle(int axis = 1);
+        // only use this method to get angle
+        double getAngle();
         void Zero();
 
         virtual std::string GetSmartDashboardType();

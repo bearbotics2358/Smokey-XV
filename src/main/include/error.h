@@ -4,28 +4,35 @@
 #include <string>
 #include <string_view>
 
+/** The type of error that has occurred. */
 enum class ErrorType : int {
+    /** No error has occured. */
     Ok = 0,
-    // an internal error occured
+    /** An internal error occured. */
     Internal = 1,
-    // a library returned an error and the cause is unknown
+    /** A library returned an error and the cause is unknown. */
     Library = 2,
-    // an unknown erorr occured
+    /** An unknown erorr occured. */
     Unknown = 3,
-    // the requested operation was not valid
+    /** The requested operation was not valid. */
     InvalidOperation = 4,
-    // invalid argumens passed to function
+    /** Invalid arguments passed to function. */
     InvalidArgs = 5,
-    // failed to open a certain resource
+    /** Failed to open a certain resource. */
     ResourceUnavailable = 6,
-    // error with the network connection
+    /** Error with the network connection. */
     Network = 7,
-    // out of memory
+    /** Out of memory. */
     OutOfMem = 8,
 };
 
+/** Returns the string message for the given error. */
 const char *error_type_to_string(ErrorType type);
-// returns none if the int is not a valid error type
+
+/** Converts an integer into an error type.
+ *  @param n the integer to convert to an error.
+ *  @return the error wrapped in an optional. If the input number was invalid, returns none.
+ */
 std::optional<ErrorType> error_type_from_int(int n);
 
 #define ERROR_CONSTRUCTOR_DEFS(ctor_name, error_type)                                                \
@@ -53,8 +60,14 @@ class [[nodiscard]] Error {
         ERROR_CONSTRUCTOR_DEFS(network, ErrorType::Network)
         ERROR_CONSTRUCTOR_DEFS(memory, ErrorType::OutOfMem)
 
-        // string serialization used to send errors across mqtt
+        /** Serializes the error into a string.
+         *  @return the serialized string.
+         */
         std::string serialize() const;
+
+        /** Deserializes an error from the given string.
+         *  @param string the input string to be deserialized.
+         */
         static std::optional<Error> deserialize(const std::string& string);
 
         // make a string to be displayed to the user

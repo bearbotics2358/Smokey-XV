@@ -318,7 +318,7 @@ void Autonomous::AutonomousPeriodic2() {
 
 void Autonomous::IDontLikeExercise() {
 
-    a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->GetAngle(0), true);
+    a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
     a_BallShooter->setSpeed(0);
@@ -359,7 +359,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 
 
     } else {
-        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->GetAngle(0), true);
+        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -378,14 +378,14 @@ bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is 
 
 bool Autonomous::TurnToAngle(float angle) {
 
-    if (fabs(a_Gyro->GetAngle(0) - angle) >= 1) {
-        a_SwerveDrive->turnToAngle(a_Gyro->GetAngle(0), angle);
+    if (fabs(a_Gyro->getAngle() - angle) >= 1) {
+        a_SwerveDrive->turnToAngle(a_Gyro->getAngle(), angle);
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
 
 
     } else {
-        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->GetAngle(0), true);
+        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -406,17 +406,17 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
 
         if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))) {
-            a_SwerveDrive->goToTheDon(speed / 2, dir, dist, a_Gyro->GetAngle(0));
+            a_SwerveDrive->goToTheDon(speed / 2, dir, dist, a_Gyro->getAngle());
             a_BallShooter->setSpeed(AUTO_SHOOT_VELOCITY);
         } else {
-            a_SwerveDrive->goToTheDon(speed, dir, dist, a_Gyro->GetAngle(0));
+            a_SwerveDrive->goToTheDon(speed, dir, dist, a_Gyro->getAngle());
             a_BallShooter->setSpeed(0);
         }
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
 
     } else {
-        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->GetAngle(0), true);
+        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
