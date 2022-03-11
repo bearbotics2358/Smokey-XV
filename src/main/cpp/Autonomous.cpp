@@ -401,8 +401,8 @@ bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to dete
     }
 }
 
-bool Autonomous::DriveDirection(double distance, double angle){
-    a_SwerveDrive->driveDistance(distance, angle);
+bool Autonomous::DriveDirection(float speed, float angle){
+    a_SwerveDrive->driveDistance(speed, angle);
 }
 
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
