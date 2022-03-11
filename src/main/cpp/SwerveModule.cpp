@@ -29,8 +29,7 @@ steerPID(0, 0, 0) {
 }
 
 float SwerveModule::getDistance() {
-    float ret = driveEnc.GetIntegratedSensorPosition();
-    return ret;
+    motorTicksToInches(driveEnc.GetIntegratedSensorPosition());
 }
 
 void SwerveModule::resetDriveEncoder() {
@@ -63,17 +62,15 @@ float SwerveModule::getAbsAngleDegrees() {
     return absSteerEnc.getRotations() * -360.0;
 }
 
-void SwerveModule::goToPosition(float setpoint) {
-    float ticks = SwerveModule::inchesToMotorTicks(setpoint);
+void SwerveModule::goToPosition(float inches) {
+    float ticks = SwerveModule::inchesToMotorTicks(inches);
     driveMotor.Set(TalonFXControlMode::Position, ticks);
 }
 
-void SwerveModule::steerToAng(float setpoint) // the twO
-{
-    float speed = std::clamp(steerPID.Calculate(getAngle(), setpoint) / 270.0, -0.5, 0.5);
+void SwerveModule::steerToAng(float degrees) {
+    float speed = std::clamp(steerPID.Calculate(getAngle(), degrees) / 270.0, -0.5, 0.5);
     steerMotor.Set(speed);
 }
-
 
 void SwerveModule::setDrivePercent(float percent) {
     driveMotor.Set(TalonFXControlMode::PercentOutput, percent);
@@ -162,9 +159,11 @@ double SwerveModule::inchesToMotorTicks(double inches) {
     return ticks * SWERVE_DRIVE_MOTOR_GEAR_RATIO;
 }
 
-/*
-    steer module to given angle
-    - return boolean (do we need to change the speed or not?)
-        o specify wether or not the direction need to be reversed
-        o still move even if angle doesn't need to be adjusted
-*/
+double SwerveModule::motorTicksToInches(double motorTicks) {
+    // like ticks of the wheel
+    double scaledTicks = motorTicks / SWERVE_DRIVE_MOTOR_GEAR_RATIO;
+    double rotations = (scaledTicks / FALCON_UNITS_PER_REV);
+    // angular position in radians
+    double angularPosition = rotations * 2 * M_PI;
+    return angularPosition * 0.5 * WHEEL_DIAMETER;
+}

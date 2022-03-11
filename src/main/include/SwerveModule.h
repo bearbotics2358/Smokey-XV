@@ -17,19 +17,22 @@ class SwerveModule // Handles steering and driving of each Swerve Module
     public:
         SwerveModule(int driveID, int steerID, AbsoluteEncoder&& absEncoder); // CAN IDs, analog port for steer encoder
 
-        float getDistance(); // Returns position of the distance encoder
-        void resetDriveEncoder(); // sets the drive encoder to 0 ticks
+        // Returns position of the distance encoder in inches
+        float getDistance();
+        // sets the drive encoder to 0 ticks
+        void resetDriveEncoder();
 
         // recalibrates the relative steering encoder using the absolute steering encoder
         void resetSteerEncoder();
 
-        float getAngle(); // scaled angle between 0 and 360
+        // scaled angle between 0 and 360
+        float getAngle();
         // TEMP
         // TODO: remove
         float getAbsAngleDegrees();
 
-        void goToPosition(float setpoint); // Position PID control, moves drive wheel to specified position
-        void steerToAng(float setpoint); // Angle PID control
+        void goToPosition(float inches); // Position PID control, moves drive wheel to specified position
+        void steerToAng(float degrees); // Angle PID control
 
         // sets drive speed in percent
         void setDrivePercent(float percent);
@@ -54,8 +57,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         void driveDirection(Vec2 direction);
 
     private:
+        // speed is inches per second
         static double wheelSpeedToRpm(double speed);
         static double inchesToMotorTicks(double inches);
+        static double motorTicksToInches(double motorTicks);
 
         // get angle from relative encoder in degrees, does not take into consideration currently set zero point
         double getRelativeAngle();

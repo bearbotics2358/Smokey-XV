@@ -106,6 +106,7 @@
 // ratio is drive motor rotations / wheel rotations
 #define SWERVE_DRIVE_MOTOR_GEAR_RATIO (18.0 / 1.0)
 
+// FIXME: this is wrong, must be in meters
 #define WHEEL_DIAMETER 4.0
 
 /* ============= AUTO VALUES 4 Jason yoyoyo =========== */

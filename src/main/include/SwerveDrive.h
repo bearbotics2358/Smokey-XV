@@ -51,48 +51,58 @@ class SwerveDrive {
 class SwerveDrive // Class to handle the kinematics of Swerve Drive
 {
     public:
-        SwerveDrive(SwerveModule *FL_Ptr, SwerveModule *FR_Ptr, SwerveModule *BL_Ptr, SwerveModule *BR_Ptr);
-        float lockZ(float gyro);
+        SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule);
 
-        void crabDriveUpdate(float xIn, float yIn, float gyroIn); // clutzy from club penguin
-
-
-
-        void swerveUpdate(float xIn, float yIn, float zIn, float gyroIn, bool fieldOriented); // Updates Swerve Modules for swerve drive
+        // crab drive is like swerve drive update, except it maintains a constant turn angle and is always field oriented
+        void crabDriveUpdate(float x, float y, float gyroDegrees);
+        void swerveUpdate(float x, float y, float z, float gyroDegrees, bool fieldOriented);
         /*
-            xIn = x asix on joystick
-            yIn = y axis on joystick
-            zIn =  z axis on joystick
-            gyroIn = sensor
-            fieldOriented = are you looking at the field head on or not?
+            x = x asix on joystick
+            y = y axis on joystick
+            z = z axis on joystick (rotation)
+            gyroDegrees = sensor
+            fieldOriented = if true, translation movement is relative to the field
+            if false, translational movement is relative to the front of the robot,
+            and it is affected by the robot's current turn angle
         */
 
-
-        void driveDistance(float dist, float direction); // dist in inches and angle 0-360
+        // resets steering and driving encoders
         void resetDrive();
-        float getAvgDistance(void); // baka-47
 
-        void turnToAngle(float gyro, float angle);
+        // dist in inches and angle 0-360
+        void driveDistance(float dist, float direction);
 
-        void makeShiftTurn(float speed);
+        // returns the average of the total distance of the drive encoders in all 4 modules
+        float getAvgDistance();
 
-        void GoToTheDon(float speed, float direction, float distance, float gyro);
+        // angle is in degrees
+        void turnToAngle(float gyroDegrees, float angle);
+
+        void goToTheDon(float speed, float direction, float distance, float gyro);
 
     private:
-        SwerveModule *FL_Module;
-        SwerveModule *FR_Module;
-        SwerveModule *BL_Module;
-        SwerveModule *BR_Module;
+        // called by both crabDriveUpdate and swerveUpdata
+        // does the bulk of the swerve drive work
+        // x and y are translation, z is rotation
+        void swerveUpdateInner(float x, float y, float z, float gyroDegrees, bool fieldOriented);
 
-        frc2::PIDController anglePID;
-        frc2::PIDController jenkinsTheCrabPID; // blame kordt
+        SwerveModule& flModule;
+        SwerveModule& frModule;
+        SwerveModule& blModule;
+        SwerveModule& brModule;
 
+        // pid when using turn to angle
+        frc2::PIDController turnAnglePid;
+
+        // pid when using crabDriveUpdate
+        frc2::PIDController crabAnglePid;
+
+        // if we're in crab drive mode
+        bool crab;
+        // angle to hold in crab drive mode
         float holdAngle;
-        bool crab; // if we're in crab drive mode
 
-        const float DRIVE_LENGTH = 29.75;
-        const float DRIVE_WIDTH = 29.75;
-
-        const float PI = M_PI;
+        constexpr static float DRIVE_LENGTH = 29.75;
+        constexpr static float DRIVE_WIDTH = 29.75;
 };
 #endif
