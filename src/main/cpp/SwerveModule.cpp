@@ -75,21 +75,15 @@ void SwerveModule::steerToAng(float setpoint) // the twO
 }
 
 
-void SwerveModule::setDriveSpeed(float target) {
-    driveMotor.Set(TalonFXControlMode::PercentOutput, target);
+void SwerveModule::setDrivePercent(float percent) {
+    driveMotor.Set(TalonFXControlMode::PercentOutput, percent);
 }
 
-void SwerveModule::setSteerSpeed(float target) {
-    steerMotor.Set(target);
+void SwerveModule::setSteerPercent(float percent) {
+    steerMotor.Set(percent);
 }
 
-float SwerveModule::getDriveSpeed() {
-    return driveEnc.GetIntegratedSensorVelocity();
-}
-
-float SwerveModule::setDriveVelocity(float percent) // the onE
-{
-    float speed = percent * DRIVE_VELOCITY;
+float SwerveModule::setDriveSpeed(float speed) {
     float rpm = SwerveModule::wheelSpeedToRpm(speed);
 
     driveMotor.Set(TalonFXControlMode::Velocity, misc::rpmToTalonVel(rpm));
@@ -97,13 +91,13 @@ float SwerveModule::setDriveVelocity(float percent) // the onE
     return speed;
 }
 
-void SwerveModule::updateDrivePID(double pNew, double iNew, double dNew) {
+void SwerveModule::setDrivePID(double pNew, double iNew, double dNew) {
     driveMotor.Config_kP(0, pNew);
     driveMotor.Config_kI(0, iNew);
     driveMotor.Config_kD(0, dNew);
 }
 
-void SwerveModule::updateSteerPID(double pNew, double iNew, double dNew) {
+void SwerveModule::setSteerPID(double pNew, double iNew, double dNew) {
     steerPID.SetP(pNew);
     steerPID.SetI(iNew);
     steerPID.SetD(dNew);
@@ -144,9 +138,9 @@ bool SwerveModule::adjustAngle(float targetAngle) {
 
 void SwerveModule::driveDirection(Vec2 direction) {
     if (adjustAngle(direction.angle())) {
-        setDriveSpeed(-direction.magnitude());
+        setDrivePercent(-direction.magnitude());
     } else {
-        setDriveSpeed(direction.magnitude());
+        setDrivePercent(direction.magnitude());
     }
 }
 
