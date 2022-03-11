@@ -27,7 +27,7 @@ a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSole
 }
 
 void Climber::setArmSpeed(double mmPerSecond) {
-    double value = (mmPerSecond * 0.1) * CLIMBER_TICKS_PER_MM; // 
+    double value = (mmPerSecond * 0.1) * CLIMBER_TICKS_PER_MM; // VelocityMode asks for ticks per 0.1 seconds, so we mupltiply mm/s by 0.1 
     a_climberArmMotor.Set(ControlMode::Velocity, value);
 }
 
@@ -37,7 +37,7 @@ void Climber::toggleSolenoid() {
 
 void Climber::resetClimber() {
     a_climberSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
-    a_climberArmMotor.GetSensorCollection().SetIntegratedSensorPosition(0, 0);
+    a_climberArmMotor.GetSensorCollection().SetIntegratedSensorPosition(0, 0); // reset arm motor encoder position to 0 
 }
 
 double Climber::getHeight() { // returns the height of the arm in millimeters

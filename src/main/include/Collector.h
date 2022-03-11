@@ -10,8 +10,8 @@ class Collector {
 
         void toggleSolenoid();
         void resetSolenoid();
-        void setCollectorMotorSpeed(double rpm);
-        void setIndexerMotorSpeed(double rpm);
+        void setCollectorMotorSpeed(double percent);
+        void setIndexerMotorSpeed(double percent);
         bool getValue();
 
 

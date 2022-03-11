@@ -14,7 +14,7 @@
 #define CLIMBER_MOTOR_ID 24
 #define CLIMBER_PUSH_SOLENOID_MODULE 10
 #define CLIMBER_PULL_SOLENOID_MODULE 11
-#define CLIMBER_MOTOR_SPEED 200 // the desired speed for the arm to rise (mm/s)
+#define CLIMBER_MOTOR_SPEED 1000 // the desired speed for the arm to rise (mm/s)
 #define CLIMBER_MM_PER_TICK 0.026 // how many mm the climber arm rises every motor tick
 #define CLIMBER_TICKS_PER_MM 3.8347 // how many ticks for every mm the climber arm rises
 
@@ -31,9 +31,9 @@
 #define COLLECTOR_MOTOR_ID 21
 #define INDEXER_MOTOR_ID 22
 #define SOLENOID_ID 10
-#define COLLECTOR_MOTOR_RPM 250
+#define COLLECTOR_MOTOR_PERCENT_POWER 0.5
 // NOTE: this is not actully the rpm it will go because of the gear ratio, but it goes the speed we want
-#define INDEXER_MOTOR_RPM 20
+#define INDEXER_MOTOR_PERCENT_POWER 0.2
 #define COLLECTOR_PUSH_SOLENOID_MODULE 8
 #define COLLECTOR_PULL_SOLENOID_MODULE 9
 
