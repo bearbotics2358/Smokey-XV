@@ -62,6 +62,8 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
+    frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());        
+
     // a_canHandler.update();
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
     frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
@@ -158,7 +160,7 @@ void Robot::TeleopPeriodic() {
         a_Shooter.setSpeed(SHOOTER_SPEED);
         // TODO: decrease margin of error when better pid tuned
         if (a_Shooter.getSpeed() >= 0.8 * SHOOTER_SPEED) {
-            a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
+            a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_POWER);
         }
     } else {
         a_Shooter.setSpeed(0);
@@ -171,12 +173,12 @@ void Robot::TeleopPeriodic() {
         a_Collector.toggleSolenoid();
     }
     if (a_XboxController.GetRawButton(OperatorButton::X)) {
-        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_RPM);
+        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
     } else {
         a_Collector.setCollectorMotorSpeed(0);
     }
     /*if (a_XboxController.GetRawButton(OperatorButton::Y)) {
-        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_RPM);
+        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_POWER);
     } else {
         a_Collector.setIndexerMotorSpeed(0);
     }*/
