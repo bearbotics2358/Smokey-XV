@@ -231,27 +231,27 @@ void SwerveDrive::swerveUpdateInner(float x, float y, float z, float gyroDegrees
 
     // update speeds and angles
     if (flModule.adjustAngle(flAngle)) {
-        // flModule.setDrivePercent(-flSpeed);
+        flModule.setDrivePercent(-flSpeed);
     } else {
-        // flModule.setDrivePercent(flSpeed);
+        flModule.setDrivePercent(flSpeed);
     }
 
     if (frModule.adjustAngle(frAngle)) {
-        // frModule.setDrivePercent(-frSpeed);
+        frModule.setDrivePercent(-frSpeed);
     } else {
-        // frModule.setDrivePercent(frSpeed);
+        frModule.setDrivePercent(frSpeed);
     }
 
     if (blModule.adjustAngle(blAngle)) {
-        // blModule.setDrivePercent(-blSpeed);
+        blModule.setDrivePercent(-blSpeed);
     } else {
-        // blModule.setDrivePercent(blSpeed);
+        blModule.setDrivePercent(blSpeed);
     }
 
     if (brModule.adjustAngle(brAngle)) {
-        // brModule.setDrivePercent(-brSpeed);
+        brModule.setDrivePercent(-brSpeed);
     } else {
-        // brModule.setDrivePercent(brSpeed);
+        brModule.setDrivePercent(brSpeed);
     }
 }
 

@@ -27,6 +27,8 @@ class SwerveModule // Handles steering and driving of each Swerve Module
 
         // scaled angle between 0 and 360
         float getAngle();
+        // get angle from relative encoder in degrees, does not take into consideration currently set zero point
+        double getRelativeAngle();
         // TEMP
         // TODO: remove
         float getAbsAngleDegrees();
@@ -56,18 +58,16 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // the magnitude of the vector is passed into setDrivePercent
         void driveDirection(Vec2 direction);
 
+        // TODO: put in private
+        // how many degrees away from the actual zero degrees
+        // that the relative encoder's zero point is
+        double encZeroPoint { 0.0 };
+
     private:
         // speed is inches per second
         static double wheelSpeedToRpm(double speed);
         static double inchesToMotorTicks(double inches);
         static double motorTicksToInches(double motorTicks);
-
-        // get angle from relative encoder in degrees, does not take into consideration currently set zero point
-        double getRelativeAngle();
-
-        // how many degrees away from the actual zero degrees
-        // that the relative encoder's zero point is
-        double encZeroPoint { 0.0 };
 
         TalonFX driveMotor;
         rev::CANSparkMax steerMotor;
