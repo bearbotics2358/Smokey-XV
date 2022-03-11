@@ -27,10 +27,14 @@ class AbsoluteEncoder {
          */
         AbsoluteEncoder(int port, double minVolts, double maxVolts, double offset);
 
-        /** Get the angle from the encoder in degrees. */
+        /** Get the angle from the encoder in degrees.
+         *  @return angle of encoder in degrees.
+         */
         double getAngle() const;
 
-        /** Get the angle from the encoder in rotations. */
+        /** Get the angle from the encoder in rotations.
+         *  @return angle of encoder in rotations.
+         */
         double getRotations() const;
 
     private:

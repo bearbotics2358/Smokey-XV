@@ -20,7 +20,9 @@ class BallShooter {
          */
         void setSpeed(double rpm);
 
-        /** Gets the current shooter speed in rpm. */
+        /** Gets the current shooter speed in rpm.
+         *  @return shooter speed in rpm.
+         */
         double getSpeed();
 
     private:
