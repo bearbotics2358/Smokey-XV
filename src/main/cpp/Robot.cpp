@@ -84,14 +84,13 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    // a_SwerveDrive.resetDrive();
+    a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
 void Robot::DisabledPeriodic() {
     a_Autonomous.DecidePath();
     frc::SmartDashboard::PutNumber("Selected Autonomous", a_Autonomous.GetCurrentPath());
-    a_SwerveDrive.resetDrive();
 }
 
 void Robot::EnabledInit() {
