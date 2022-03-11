@@ -59,7 +59,7 @@ float SwerveModule::getAngle() {
 }
 
 float SwerveModule::getAbsAngleDegrees() {
-    return absSteerEnc.getRotations() * -360.0;
+    return absSteerEnc.getRotations() * 360.0;
 }
 
 void SwerveModule::goToPosition(float inches) {
