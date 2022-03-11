@@ -78,10 +78,6 @@ void SwerveModule::setDriveSpeed(float target) {
     driveMotor.Set(TalonFXControlMode::PercentOutput, target);
 }
 
-void SwerveModule::setSteerSpeed(float target) {
-    steerMotor.Set(target);
-}
-
 float SwerveModule::getDriveSpeed() {
     return driveEnc.GetIntegratedSensorVelocity();
 }

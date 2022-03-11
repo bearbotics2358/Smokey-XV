@@ -7,6 +7,7 @@ class CompressorController {
     public:
         CompressorController();
         void update();
+        double getTankPressure();
 
     private:
         frc::Compressor a_Compressor;

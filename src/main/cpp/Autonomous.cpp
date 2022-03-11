@@ -384,7 +384,7 @@ bool Autonomous::IndexAndShoot(float speed){ //returns true if the shooter is ru
     a_BallShooter->setSpeed(speed);
 
     if(a_BallShooter->getSpeed() >= speed - 200) {
-        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_RPM);
+        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
         return true;
     }
     else if(a_BallShooter->getSpeed() < speed - 200) {

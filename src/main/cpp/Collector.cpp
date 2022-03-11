@@ -18,13 +18,11 @@ void Collector::resetSolenoid() {
     a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
-void Collector::setCollectorMotorSpeed(double rpm){
-    double value = misc::rpmToTalonVel(rpm);
-    a_collectorMotor.Set(ControlMode::Velocity, value);
+void Collector::setCollectorMotorSpeed(double percent){
+    a_collectorMotor.Set(ControlMode::PercentOutput, percent);
 }
-void Collector::setIndexerMotorSpeed(double rpm){
-    double value = misc::rpmToTalonVel(rpm);
-    a_indexerMotor.Set(ControlMode::Velocity, value);
+void Collector::setIndexerMotorSpeed(double percent){
+    a_indexerMotor.Set(ControlMode::PercentOutput, percent);
 }
 bool Collector::getValue(){
     return a_collectorSolenoid.Get();
