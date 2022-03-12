@@ -17,15 +17,15 @@ a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_
 a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
-a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector, &a_BeamBreak),
+a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
-a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
+a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE, CLIMBER_SWITCH_PORT),
 a_CompressorController(),
-a_BeamBreak(0), // I NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
+//NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("169.254.179.144", "1185", "data"),
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
 // a_canHandler(CanHandler::layout2022()),
@@ -70,6 +70,7 @@ void Robot::RobotPeriodic() {
 
     frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
+    frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", a_Climber.getTicks());
 
     frc::SmartDashboard::PutNumber("FL rel encoder", a_FLModule.getAngle());
     frc::SmartDashboard::PutNumber("FR rel encoder", a_FRModule.getAngle());
@@ -149,9 +150,9 @@ void Robot::TeleopPeriodic() {
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
     if (a_XboxController.GetRawButton(OperatorButton::LeftBumper)) {
-        a_Climber.setArmSpeed(CLIMBER_MOTOR_SPEED);
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT); // 100% power
     } else if (a_XboxController.GetRawButton(OperatorButton::RightBumper)) {
-        a_Climber.setArmSpeed(-CLIMBER_MOTOR_SPEED);
+        a_Climber.setArmSpeed(-CLIMBER_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Climber.setArmSpeed(0);
     }
@@ -188,7 +189,7 @@ void Robot::TeleopPeriodic() {
         a_Collector.toggleSolenoid();
     }
     if (a_XboxController.GetRawButton(OperatorButton::X)) {
-        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Collector.setCollectorMotorSpeed(0);
     }

@@ -2,14 +2,13 @@
 #include <math.h>
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
 a_Gyro(Gyro),
 a_Timer(Timer),
 a_Joystick(Joystick),
 a_SwerveDrive(SwerveDrive),
 a_BallShooter(BallShooter),
 a_Collector(Collector),
-a_BeamBreak(BeamBreak),
 a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
 a_AutoState2(kAutoIdle2)
@@ -238,16 +237,16 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (WaitForTime(2)) {
+            if (WaitForTime(4)) {
                 nextState = kAutoIdle1;
             } else {
-                DriveDirection(0.2, 180);
+                DriveDirection(0.25, 180);
             }
             break;
     }
     a_AutoState1 = nextState;
 }
-
+/*
 void Autonomous::AutonomousStart2() {
     a_AutoState2 = kCollectDown2;
     a_Gyro->Zero();
@@ -322,13 +321,12 @@ void Autonomous::AutonomousPeriodic2() {
     }
     a_AutoState2 = nextState;
 }
-
+*/
 void Autonomous::IDontLikeExercise() {
 
     a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
-    a_BallShooter->setSpeed(0);
 }
 
 void Autonomous::StartTimer() {
@@ -338,10 +336,9 @@ void Autonomous::StartTimer() {
 bool Autonomous::WaitForTime(double time) {
 
     //-----Another case must be written to use StartTimer, though this will handle stopping and resetting-----//
-
     if (a_Timer->Get().value() < time) {
         return false;
-    } else if (a_Timer->Get().value() >= time) {
+    } else {
         a_Timer->Stop();
         a_Timer->Reset();
         return true;
@@ -375,8 +372,8 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if (a_BallShooter->getSpeed() >= speed - 200) {
-        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+    if(a_BallShooter->getSpeed() >= speed - 200) {
+        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else if (a_BallShooter->getSpeed() < speed - 200) {
         return false;
@@ -397,7 +394,7 @@ bool Autonomous::TurnToAngle(float angle) {
         return true;
     }
 }
-
+/*
 bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to detect a shot being made
     // going to reimplement using beambreak soon
     if (a_BeamBreak->beamBroken()) {
@@ -407,7 +404,7 @@ bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to dete
         return false;
     }
 }
-
+*/
 bool Autonomous::DriveDirection(float speed, float angle) {
     a_SwerveDrive->driveDirection(speed, angle);
 }
@@ -434,9 +431,9 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
 }
 
 bool Autonomous::DriveWhileCollecting(double dist, double angle) {
-    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
     if (DriveDist(dist, angle)) {
-        a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+        a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else {
         return false;
