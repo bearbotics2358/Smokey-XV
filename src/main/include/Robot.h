@@ -54,7 +54,7 @@ class Robot : public frc::TimedRobot {
         frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
         frc::Joystick a_XboxController;
         frc::Timer a_Timer;
-
+        
         // Swerve Drive object
         SwerveDrive a_SwerveDrive;
 
@@ -70,7 +70,6 @@ class Robot : public frc::TimedRobot {
         // CanHandler a_canHandler;
 
         // stuff that autonomous needs
-        BeamBreak a_BeamBreak;
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;

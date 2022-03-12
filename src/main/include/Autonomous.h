@@ -4,7 +4,6 @@
 
 // #include <frc/WPILib.h>
 #include "BallShooter.h"
-#include "BeamBreak.h"
 #include "Collector.h"
 #include "SwerveDrive.h"
 #include <JrimmyGyro.h>
@@ -53,7 +52,7 @@ enum AutoState2 { // T.O.F and Encoders
 
 class Autonomous {
     public:
-        Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak);
+        Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
         void Init();
         // void UpdateGameData();
         void DecidePath();
@@ -110,7 +109,6 @@ class Autonomous {
         SwerveDrive *a_SwerveDrive;
         BallShooter *a_BallShooter;
         Collector *a_Collector;
-        BeamBreak *a_BeamBreak;
 
         AutoState0 a_AutoState0;
         AutoState1 a_AutoState1;

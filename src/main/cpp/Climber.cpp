@@ -3,9 +3,10 @@
 #include "misc.h"
 #include <iostream>
 
-Climber::Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule):
+Climber::Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule, int port):
 a_climberArmMotor(climberMotorId),
-a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule) {
+a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule),
+a_Switch(port) {
     // by default this selects the ingetrated sensor
     // do this to set kp value
     ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
@@ -50,4 +51,13 @@ double Climber::getHeight() { // returns the height of the arm in millimeters
 double Climber::getSpeed() { // returns the speed at which the climber arm is moving in millimeters per second
     double ticks = a_climberArmMotor.GetSensorCollection().GetIntegratedSensorVelocity();
     return ticks * CLIMBER_MM_PER_TICK * 10;
+}
+
+bool Climber::LifterZero() {
+    if(a_Switch.Get()){
+        return true;
+    }
+    else{
+        return false;
+    }
 }

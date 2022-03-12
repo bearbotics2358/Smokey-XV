@@ -2,14 +2,13 @@
 #include <math.h>
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector, BeamBreak *BeamBreak):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
 a_Gyro(Gyro),
 a_Timer(Timer),
 a_Joystick(Joystick),
 a_SwerveDrive(SwerveDrive),
 a_BallShooter(BallShooter),
 a_Collector(Collector),
-a_BeamBreak(BeamBreak),
 a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
 a_AutoState2(kAutoIdle2)
@@ -328,7 +327,6 @@ void Autonomous::IDontLikeExercise() {
     a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
-    a_BallShooter->setSpeed(0);
 }
 
 void Autonomous::StartTimer() {
@@ -338,10 +336,9 @@ void Autonomous::StartTimer() {
 bool Autonomous::WaitForTime(double time) {
 
     //-----Another case must be written to use StartTimer, though this will handle stopping and resetting-----//
-
     if (a_Timer->Get().value() < time) {
         return false;
-    } else if (a_Timer->Get().value() >= time) {
+    } else {
         a_Timer->Stop();
         a_Timer->Reset();
         return true;
@@ -397,7 +394,7 @@ bool Autonomous::TurnToAngle(float angle) {
         return true;
     }
 }
-
+/*
 bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to detect a shot being made
     // going to reimplement using beambreak soon
     if (a_BeamBreak->beamBroken()) {
@@ -407,7 +404,7 @@ bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to dete
         return false;
     }
 }
-
+*/
 bool Autonomous::DriveDirection(float speed, float angle) {
     a_SwerveDrive->driveDirection(speed, angle);
 }
