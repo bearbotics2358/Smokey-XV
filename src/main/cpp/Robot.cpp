@@ -36,13 +36,13 @@ a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
     }*/
 
     a_FLModule.setDrivePID(0.001, 0, 0);
-    a_FLModule.setSteerPID(2.0, 0, 0.02);
+    a_FLModule.setSteerPID(2.0, 0, 0.01);
 
     a_FRModule.setDrivePID(0.001, 0, 0);
-    a_FRModule.setSteerPID(2.2, 0, 0.002);
+    a_FRModule.setSteerPID(2.0, 0, 0.01);
 
     a_BLModule.setDrivePID(0.001, 0, 0);
-    a_BLModule.setSteerPID(2.0, 0, 0.002);
+    a_BLModule.setSteerPID(2.0, 0, 0.01);
 
     a_BRModule.setDrivePID(0.001, 0, 0);
     a_BRModule.setSteerPID(2.0, 0, 0.01);
