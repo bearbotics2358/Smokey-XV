@@ -84,6 +84,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // angle is in degrees
         void turnToAngle(float gyroDegrees, float angle);
 
+        // drives at a given speed (units uknown), in a given direction in degrees, for a given distance in meters
         void goToTheDon(float speed, float direction, float distance, float gyro);
 
     private:
