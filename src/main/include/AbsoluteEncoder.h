@@ -37,6 +37,10 @@ class AbsoluteEncoder {
          */
         double getRotations() const;
 
+        // TEMP
+        // TODO: remove
+        double getVolts() const;
+
     private:
         frc::AnalogInput m_encoder;
 

@@ -85,6 +85,11 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("FR raw rel encoder", a_FRModule.getRelativeAngle());
     frc::SmartDashboard::PutNumber("BL raw rel encoder", a_BLModule.getRelativeAngle());
     frc::SmartDashboard::PutNumber("BR raw rel encoder", a_BRModule.getRelativeAngle());
+    //
+    frc::SmartDashboard::PutNumber("FL volts", a_FLModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("FR volts", a_FRModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("BL volts", a_BLModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("BR volts", a_BRModule.getAbsEncoderVolts());
 
     frc::SmartDashboard::PutNumber("FL offset", a_FLModule.encZeroPoint);
     frc::SmartDashboard::PutNumber("FR offset", a_FRModule.encZeroPoint);
@@ -225,6 +230,11 @@ void Robot::TeleopPeriodic() {
     if (joystickOne.GetRawButton(DriverButton::Button5)) {
         a_Gyro.Cal();
         a_Gyro.Zero();
+    }
+
+    // recalibrates the relative encoders using the absolute encoders
+    if (joystickOne.GetRawButton(DriverButton::Button6)) {
+        a_SwerveDrive.resetDrive();
     }
 
     if (joystickOne.GetRawButton(DriverButton::Button4)) {
