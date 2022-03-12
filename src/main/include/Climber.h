@@ -6,7 +6,7 @@ class Climber {
     public:
         Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule);
         void setArmSpeed(double percent);
-        void toggleSolenoid();
+        void changeSolenoid(frc::DoubleSolenoid::Value position);
         void resetClimber();
         double getHeight();
         double getTicks();

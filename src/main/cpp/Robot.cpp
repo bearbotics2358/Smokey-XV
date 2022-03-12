@@ -149,15 +149,18 @@ void Robot::TeleopPeriodic() {
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (a_XboxController.GetRawButton(OperatorButton::LeftBumper)) {
-        a_Climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT); // 100% power
-    } else if (a_XboxController.GetRawButton(OperatorButton::RightBumper)) {
+    if (a_XboxController.GetRawButton(DriverButton::Button7)) {
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT);
+    } else if (a_XboxController.GetRawButton(DriverButton::Button8)) {
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Climber.setArmSpeed(0);
     }
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::Back)) {
-        a_Climber.toggleSolenoid();
+    if (a_XboxController.GetRawButtonPressed(DriverButton::Button6)) {
+        a_Climber.changeSolenoid(frc::DoubleSolenoid::Value::kReverse); // arms out
+    }
+    if (a_XboxController.GetRawButtonPressed(DriverButton::Button4)) {
+        a_Climber.changeSolenoid(frc::DoubleSolenoid::Value::kForward); // arms in
     }
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
