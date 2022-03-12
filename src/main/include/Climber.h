@@ -5,10 +5,11 @@
 class Climber {
     public:
         Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule);
-        void setArmSpeed(double rpm);
+        void setArmSpeed(double percent);
         void toggleSolenoid();
         void resetClimber();
         double getHeight();
+        double getTicks();
         double getSpeed();
 
     private:
