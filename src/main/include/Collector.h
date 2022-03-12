@@ -8,7 +8,7 @@ class Collector {
 
         Collector(int collectorMotorId, int indexerMotorId, int solenoidId, int pushSolenoidModule, int pullSolenoidModule);
 
-        void toggleSolenoid();
+        void setSolenoid(frc::DoubleSolenoid::Value position);
         void resetSolenoid();
         void setCollectorMotorSpeed(double percent);
         void setIndexerMotorSpeed(double percent);

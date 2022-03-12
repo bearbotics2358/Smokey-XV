@@ -73,7 +73,7 @@ class Autonomous {
         void AutonomousPeriodic1();
 
         void AutonomousStart2();
-        void AutonomousPeriodic2();
+        //void AutonomousPeriodic2();
 
         // ------------------Sub-Routines-------------------------//
 
@@ -85,7 +85,7 @@ class Autonomous {
         //      Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
         bool WaitForTime(double time); // Wait
-        void ToggleCollector();
+        void setCollector();
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 

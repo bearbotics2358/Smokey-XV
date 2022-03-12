@@ -7,6 +7,7 @@
 #include "Climber.h"
 #include "Collector.h"
 #include "CompressorController.h"
+#include "LimitSwitch.h"
 #include "JrimmyGyro.h" // Gyro wrapper class; takes in I2C port
 #include "SwerveDrive.h" // Swerve kinematics
 #include "SwerveModule.h" // Swerve modules
@@ -64,6 +65,8 @@ class Robot : public frc::TimedRobot {
         Collector a_Collector;
 
         Climber a_Climber;
+
+        LimitSwitch a_LimitSwitch;
 
         CompressorController a_CompressorController;
 

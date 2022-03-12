@@ -10,12 +10,12 @@ a_collectorSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSo
 
 }
 
-void Collector::toggleSolenoid() {
-    a_collectorSolenoid.Toggle();
+void Collector::setSolenoid(frc::DoubleSolenoid::Value position) {
+    a_collectorSolenoid.Set(position);
 }
 
 void Collector::resetSolenoid() {
-    a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kForward); // collecter in
 }
 
 void Collector::setCollectorMotorSpeed(double percent){

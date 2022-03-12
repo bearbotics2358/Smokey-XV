@@ -23,8 +23,9 @@ a_XboxController(XBOX_CONTROLLER),
 a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
-a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE, CLIMBER_SWITCH_PORT),
+a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
+a_LimitSwitch(CLIMBER_SWITCH_PORT),
 //NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 // handler("169.254.179.144", "1185", "data"),
 // handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
@@ -149,19 +150,28 @@ void Robot::TeleopPeriodic() {
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (a_XboxController.GetRawButton(DriverButton::Button7)) {
+    if (joystickOne.GetRawButton(DriverButton::Button8)) { // arms up
         a_Climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT);
-    } else if (a_XboxController.GetRawButton(DriverButton::Button8)) {
+    } else if (joystickOne.GetRawButton(DriverButton::Button7)) { // arms down
         a_Climber.setArmSpeed(-CLIMBER_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Climber.setArmSpeed(0);
     }
-    if (a_XboxController.GetRawButtonPressed(DriverButton::Button6)) {
-        a_Climber.changeSolenoid(frc::DoubleSolenoid::Value::kReverse); // arms out
+    if (joystickOne.GetRawButtonPressed(DriverButton::Button6)) {
+        a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kReverse); // arms out
     }
-    if (a_XboxController.GetRawButtonPressed(DriverButton::Button4)) {
-        a_Climber.changeSolenoid(frc::DoubleSolenoid::Value::kForward); // arms in
+    if (joystickOne.GetRawButtonPressed(DriverButton::Button4)) {
+        a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kForward); // arms in
     }
+
+
+    /* Limit Switch Automatic Climb
+
+    
+
+    if ()
+
+    */
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 
@@ -171,15 +181,17 @@ void Robot::TeleopPeriodic() {
     }
     if (a_XboxController.GetRawButton(OperatorButton::B)) {
         shooterDesiredSpeed -= 10.0;
-    }*/
+    }
 
-    // a_Shooter.setSpeed(shooterDesiredSpeed);
+    a_Shooter.setSpeed(shooterDesiredSpeed);
 
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::A)) {
+    */
+
+    if (joystickOne.GetRawButtonPressed(DriverButton::ThumbButton)) {
         a_Shooter.setSpeed(SHOOTER_SPEED);
         // TODO: decrease margin of error when better pid tuned
         if (a_Shooter.getSpeed() >= 0.8 * SHOOTER_SPEED) {
-            a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_POWER);
+            a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
         }
     } else {
         a_Shooter.setSpeed(0);
@@ -188,19 +200,17 @@ void Robot::TeleopPeriodic() {
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::Start)) {
-        a_Collector.toggleSolenoid();
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::LeftBumper)) {
+        a_Collector.setSolenoid(frc::DoubleSolenoid::Value::kForward); // collecter in
     }
-    if (a_XboxController.GetRawButton(OperatorButton::X)) {
+        if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)) {
+        a_Collector.setSolenoid(frc::DoubleSolenoid::Value::kReverse); // collecter out
+    }
+    if (a_XboxController.GetRawButton(OperatorButton::Y)) {
         a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Collector.setCollectorMotorSpeed(0);
     }
-    /*if (a_XboxController.GetRawButton(OperatorButton::Y)) {
-        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_POWER);
-    } else {
-        a_Collector.setIndexerMotorSpeed(0);
-    }*/
 
     /* =-=-=-=-=-=-=-=-=-=-= Swerve Controls =-=-=-=-=-=-=-=-=-=-= */
 
@@ -237,17 +247,17 @@ void Robot::TeleopPeriodic() {
     }
 
     // recalibrates the relative encoders using the absolute encoders
-    if (joystickOne.GetRawButton(DriverButton::Button6)) {
+    if (joystickOne.GetRawButton(DriverButton::Button11)) {
         a_SwerveDrive.resetDrive();
     }
 
-    if (joystickOne.GetRawButton(DriverButton::Button4)) {
+    if (joystickOne.GetRawButton(DriverButton::Button12)) {
         // vision led on
     } else {
         // vision led off
     }
 
-    if (joystickOne.GetRawButton(DriverButton::Button4)) /* && has target (todo once written) */ {
+    if (joystickOne.GetRawButton(DriverButton::Button12)) /* && has target (todo once written) */ {
         // track target with vision
     } else if (joystickOne.GetRawButton(DriverButton::Button3)) {
         if (!inDeadzone) {

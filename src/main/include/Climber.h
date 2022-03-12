@@ -5,9 +5,9 @@
 
 class Climber {
     public:
-        Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule, int port);
+        Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule);
         void setArmSpeed(double percent);
-        void changeSolenoid(frc::DoubleSolenoid::Value position);
+        void setSolenoid(frc::DoubleSolenoid::Value position);
         void resetClimber();
         double getHeight();
         double getTicks();
@@ -17,5 +17,5 @@ class Climber {
     private:
         TalonFX a_climberArmMotor;
         frc::DoubleSolenoid a_climberSolenoid;
-        frc::DigitalInput a_Switch;
+        //frc::DigitalInput a_Switch;
 };

@@ -19,7 +19,7 @@
 //12:1 gearbox between motor and thunderhex (winch)
 #define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
 #define CLIMBER_TICKS_PER_MM (3.8347 * 12.0) // how many ticks for every mm the climber arm rises
-#define CLIMBER_SWITCH_PORT 4
+#define CLIMBER_SWITCH_PORT 0
 
 /*======== SHOOTER CONSTANTS ========*/
 
@@ -36,7 +36,7 @@
 #define SOLENOID_ID 10
 #define COLLECTOR_MOTOR_PERCENT_OUTPUT 0.5
 // NOTE: this is not actully the rpm it will go because of the gear ratio, but it goes the speed we want
-#define INDEXER_MOTOR_PERCENT_POWER 0.2
+#define INDEXER_MOTOR_PERCENT_OUTPUT 0.2
 #define COLLECTOR_PUSH_SOLENOID_MODULE 8
 #define COLLECTOR_PULL_SOLENOID_MODULE 9
 

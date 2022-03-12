@@ -3,10 +3,10 @@
 #include "misc.h"
 #include <iostream>
 
-Climber::Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule, int port):
+Climber::Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule):
 a_climberArmMotor(climberMotorId),
-a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule),
-a_Switch(port) {
+a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule)
+{
     // by default this selects the ingetrated sensor
     // do this to set kp value
     ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
@@ -32,7 +32,7 @@ void Climber::setArmSpeed(double percent) {  // sets the power/speed of the clim
     a_climberArmMotor.Set(ControlMode::PercentOutput, percent);
 }
 
-void Climber::changeSolenoid(frc::DoubleSolenoid::Value position) {
+void Climber::setSolenoid(frc::DoubleSolenoid::Value position) {
     a_climberSolenoid.Set(position);
 }
 
@@ -52,7 +52,7 @@ double Climber::getSpeed() { // returns the speed at which the climber arm is mo
     double ticks = a_climberArmMotor.GetSensorCollection().GetIntegratedSensorVelocity();
     return ticks * CLIMBER_MM_PER_TICK * 10;
 }
-
+/*
 bool Climber::LifterZero() {
     if(a_Switch.Get()){
         return true;
@@ -61,3 +61,4 @@ bool Climber::LifterZero() {
         return false;
     }
 }
+*/

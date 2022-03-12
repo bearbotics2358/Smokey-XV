@@ -134,7 +134,7 @@ void Autonomous::PeriodicPathMaster() {
             break;
 
         case 2:
-            AutonomousPeriodic2();
+            //AutonomousPeriodic2();
 
             break;
     }
@@ -156,7 +156,7 @@ void Autonomous::PeriodicPathMaster(int path) {
             break;
 
         case 2:
-            AutonomousPeriodic2();
+            //AutonomousPeriodic2();
 
             break;
     }
@@ -251,6 +251,7 @@ void Autonomous::AutonomousStart2() {
     a_AutoState2 = kCollectDown2;
     a_Gyro->Zero();
 }
+/*
 
 void Autonomous::AutonomousPeriodic2() {
 
@@ -321,7 +322,7 @@ void Autonomous::AutonomousPeriodic2() {
     }
     a_AutoState2 = nextState;
 }
-
+*/
 void Autonomous::IDontLikeExercise() {
 
     a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
@@ -349,10 +350,11 @@ bool Autonomous::WaitForTime(double time) {
 void Autonomous::SpoolShooter(float speed) {
     a_BallShooter->setSpeed(speed);
 }
-
+/*
 void Autonomous::ToggleCollector() {
     a_Collector->toggleSolenoid();
 }
+*/
 
 bool Autonomous::DriveDist(double dist, double angle) { // true is done, false is not done
 
