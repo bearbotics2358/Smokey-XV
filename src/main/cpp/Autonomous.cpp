@@ -240,7 +240,7 @@ void Autonomous::AutonomousPeriodic1() {
             if (WaitForTime(4)) {
                 nextState = kAutoIdle1;
             } else {
-                DriveDirection(0.25, 180);
+                DriveDirection(2.4, 180, 0.25);
             }
             break;
     }
@@ -407,9 +407,6 @@ bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to dete
     }
 }
 */
-bool Autonomous::DriveDirection(float speed, float angle) {
-    a_SwerveDrive->driveDirection(speed, angle);
-}
 
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
 
@@ -432,12 +429,25 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
     }
 }
 
-bool Autonomous::DriveWhileCollecting(double dist, double angle) {
-    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
-    if (DriveDist(dist, angle)) {
-        a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
-        return true;
-    } else {
+bool Autonomous::DriveDirection(double dist, double angle, double speed){ // true is done, false is not done
+
+    if(fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)){
+
+        if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))){
+		    a_SwerveDrive->goToTheDon(speed / 2, 180, dist, a_Gyro->getAngle());
+
+		} else {
+            a_SwerveDrive->goToTheDon(speed, 180, dist, a_Gyro->getAngle());
+        }
+        frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
+
+    } else {
+        a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
+        frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
+        return true;
+
     }
+            
+
 }

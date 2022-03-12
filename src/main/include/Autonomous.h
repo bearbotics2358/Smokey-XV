@@ -89,7 +89,7 @@ class Autonomous {
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
-        bool DriveDirection(float speed, float angle); // implements driveDistance from SwerveDrive (drives distance @ angle)
+        bool DriveDirection(double dist, double angle, double speed); // implements driveDistance from SwerveDrive (drives distance @ angle)
 
         bool BallShot(float speed); // checks if a ball has been shot by measuring RPM values
 
@@ -97,7 +97,7 @@ class Autonomous {
 
         bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
 
-        bool DriveWhileCollecting(double dist, double angle); // Driving in a direction while collecting
+        bool DriveBackward(double dist, double speed); // Driving in a direction while collecting
 
         bool IndexAndShoot(float speed); // Shooting a ball when the shooter is spinning fast enough
 
