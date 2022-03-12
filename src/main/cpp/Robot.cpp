@@ -142,6 +142,7 @@ void Robot::TeleopInit() {
     if (a_doEnabledInit) {
         EnabledInit();
         a_doEnabledInit = false;
+        a_Shooter.setSpeed(SHOOT_FROM_WALL);
     }
 }
 
