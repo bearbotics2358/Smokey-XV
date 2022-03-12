@@ -201,6 +201,12 @@ void Robot::TeleopPeriodic() {
         a_Shooter.setSpeed(0);
         a_Collector.setIndexerMotorSpeed(0);
     }
+    if(joystickOne.GetRawButton(11)){
+        a_Shooter.setSpeed(0);
+    }
+    if(joystickOne.GetRawButton(12)){
+        a_Shooter.setSpeed(SHOOT_FROM_WALL);
+    }
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
 
