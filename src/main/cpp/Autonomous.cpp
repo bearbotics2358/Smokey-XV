@@ -237,16 +237,16 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (WaitForTime(2)) {
+            if (WaitForTime(4)) {
                 nextState = kAutoIdle1;
             } else {
-                DriveDirection(0.2, 180);
+                DriveDirection(0.25, 180);
             }
             break;
     }
     a_AutoState1 = nextState;
 }
-
+/*
 void Autonomous::AutonomousStart2() {
     a_AutoState2 = kCollectDown2;
     a_Gyro->Zero();
@@ -321,7 +321,7 @@ void Autonomous::AutonomousPeriodic2() {
     }
     a_AutoState2 = nextState;
 }
-
+*/
 void Autonomous::IDontLikeExercise() {
 
     a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
