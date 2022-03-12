@@ -43,6 +43,13 @@ void JrimmyGyro::WaitForValues() {
         now = frc::Timer::GetFPGATimestamp().value();
     } while ((((stat & 5) != 5) || (result == 0)) && ((now - start) < 0.100));
     // TODO: report errors/timeouts
+
+    // might be a required time delay - cmm, 3/12/22
+    // check this logic - it is very sketch (might need to test if the read failed before testing the stats) - cmm, 3/12/22
+    // https://www.sparkfun.com/datasheets/Sensors/Gyro/PS-ITG-3200-00-01.4.pdf
+    // https://first.wpi.edu/wpilib/allwpilib/docs/release/cpp/classfrc_1_1_i2_c.html#a329494a29c39976524e6414575515718
+
+    // also even if this logic is right please write it so it is more eligable 
 }
 
 void JrimmyGyro::Init() {
