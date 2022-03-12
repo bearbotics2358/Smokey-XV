@@ -14,7 +14,6 @@ class Collector {
         void setIndexerMotorSpeed(double percent);
         bool getValue();
 
-
     private:
 
         TalonSRX a_collectorMotor;

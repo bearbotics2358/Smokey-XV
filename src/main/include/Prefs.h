@@ -15,8 +15,10 @@
 #define CLIMBER_PUSH_SOLENOID_MODULE 10
 #define CLIMBER_PULL_SOLENOID_MODULE 11
 #define CLIMBER_MOTOR_SPEED 1000 // the desired speed for the arm to rise (mm/s)
-#define CLIMBER_MM_PER_TICK 0.026 // how many mm the climber arm rises every motor tick
-#define CLIMBER_TICKS_PER_MM 3.8347 // how many ticks for every mm the climber arm rises
+//12:1 gearbox between motor and thunderhex (winch)
+#define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
+#define CLIMBER_TICKS_PER_MM (3.8347 * 12.0) // how many ticks for every mm the climber arm rises
+#define CLIMBER_SWITCH_PORT 4
 
 /*======== SHOOTER CONSTANTS ========*/
 
