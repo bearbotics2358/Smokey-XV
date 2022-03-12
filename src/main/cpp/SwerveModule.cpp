@@ -37,7 +37,6 @@ void SwerveModule::resetDriveEncoder() {
 }
 
 void SwerveModule::resetSteerEncoder() {
-    steerEncNEO.SetPosition(0);
     // need to subtract from 1 because the encoders face oppoosite direction
     double absAngle = 360.0 * (1.0 - absSteerEnc.getRotations());
     float relAngle = getRelativeAngle();
