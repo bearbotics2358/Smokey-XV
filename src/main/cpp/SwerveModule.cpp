@@ -172,3 +172,7 @@ double SwerveModule::motorTicksToInches(double motorTicks) {
 double SwerveModule::getAbsEncoderVolts() const {
     return absSteerEnc.getVolts();
 }
+
+double SwerveModule::getAbsEncoderRawVolts() const {
+    return absSteerEnc.getRawVolts();
+}

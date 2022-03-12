@@ -85,11 +85,65 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("FR raw rel encoder", a_FRModule.getRelativeAngle());
     frc::SmartDashboard::PutNumber("BL raw rel encoder", a_BLModule.getRelativeAngle());
     frc::SmartDashboard::PutNumber("BR raw rel encoder", a_BRModule.getRelativeAngle());
-    //
+
     frc::SmartDashboard::PutNumber("FL volts", a_FLModule.getAbsEncoderVolts());
     frc::SmartDashboard::PutNumber("FR volts", a_FRModule.getAbsEncoderVolts());
     frc::SmartDashboard::PutNumber("BL volts", a_BLModule.getAbsEncoderVolts());
     frc::SmartDashboard::PutNumber("BR volts", a_BRModule.getAbsEncoderVolts());
+
+    frc::SmartDashboard::PutNumber("FL raw volts", a_FLModule.getAbsEncoderRawVolts());
+    frc::SmartDashboard::PutNumber("FR raw volts", a_FRModule.getAbsEncoderRawVolts());
+    frc::SmartDashboard::PutNumber("BL raw volts", a_BLModule.getAbsEncoderRawVolts());
+    frc::SmartDashboard::PutNumber("BR raw volts", a_BRModule.getAbsEncoderRawVolts());
+
+    auto voltsfl = a_FLModule.getAbsEncoderVolts();
+    auto voltsfr = a_FRModule.getAbsEncoderVolts();
+    auto voltsbl = a_BLModule.getAbsEncoderVolts();
+    auto voltsbr = a_BRModule.getAbsEncoderVolts();
+
+    static double minVoltsfl = 6.0;
+    static double maxVoltsfl = -1.0;
+    if (voltsfl > maxVoltsfl) {
+        maxVoltsfl = voltsfl;
+    } else if (voltsfl < minVoltsfl) {
+        minVoltsfl = voltsfl;
+    }
+    frc::SmartDashboard::PutNumber("Min volts FL", minVoltsfl);
+    frc::SmartDashboard::PutNumber("Max volts FL", maxVoltsfl);
+    frc::SmartDashboard::PutNumber("FL Volts", voltsfl);
+
+    static double minVoltsfr = 6.0;
+    static double maxVoltsfr = -1.0;
+    if (voltsfr > maxVoltsfr) {
+        maxVoltsfr = voltsfr;
+    } else if (voltsfr < minVoltsfr) {
+        minVoltsfr = voltsfr;
+    }
+    frc::SmartDashboard::PutNumber("Min volts FR", minVoltsfr);
+    frc::SmartDashboard::PutNumber("Max volts FR", maxVoltsfr);
+    frc::SmartDashboard::PutNumber("FR Volts", voltsfr);
+
+    static double minVoltsbl = 6.0;
+    static double maxVoltsbl = -1.0;
+    if (voltsbl > maxVoltsbl) {
+        maxVoltsbl = voltsbl;
+    } else if (voltsbl < minVoltsbl) {
+        minVoltsbl = voltsbl;
+    }
+    frc::SmartDashboard::PutNumber("Min volts BL", minVoltsbl);
+    frc::SmartDashboard::PutNumber("Max volts BL", maxVoltsbl);
+    frc::SmartDashboard::PutNumber("BL Volts", voltsbl);
+
+    static double minVoltsbr = 6.0;
+    static double maxVoltsbr = -1.0;
+    if (voltsbr > maxVoltsbr) {
+        maxVoltsbr = voltsbr;
+    } else if (voltsbr < minVoltsbr) {
+        minVoltsbr = voltsbr;
+    }
+    frc::SmartDashboard::PutNumber("Min volts BR", minVoltsbr);
+    frc::SmartDashboard::PutNumber("Max volts BR", maxVoltsbr);
+    frc::SmartDashboard::PutNumber("BR Volts", voltsbr);
 
     frc::SmartDashboard::PutNumber("FL offset", a_FLModule.encZeroPoint);
     frc::SmartDashboard::PutNumber("FR offset", a_FRModule.encZeroPoint);

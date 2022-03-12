@@ -59,9 +59,9 @@
 
 // swerve drive absolute encoder analog ports
 #define FL_SWERVE_ABS_ENC_PORT 0
-#define FR_SWERVE_ABS_ENC_PORT 3
+#define FR_SWERVE_ABS_ENC_PORT 2
 #define BL_SWERVE_ABS_ENC_PORT 1
-#define BR_SWERVE_ABS_ENC_PORT 2
+#define BR_SWERVE_ABS_ENC_PORT 3
 
 // min and max voltage of absolute encoders on swerve drives
 #define FL_SWERVE_ABS_ENC_MIN_VOLTS 0.014076
@@ -81,10 +81,10 @@
 //#define FR_SWERVE_ABS_ENC_OFFSET 85.76
 //#define BL_SWERVE_ABS_ENC_OFFSET 0.22
 //#define BR_SWERVE_ABS_ENC_OFFSET 179.77
-#define FL_SWERVE_ABS_ENC_OFFSET 342.33
-#define FR_SWERVE_ABS_ENC_OFFSET 276.11
-#define BL_SWERVE_ABS_ENC_OFFSET 0.0
-#define BR_SWERVE_ABS_ENC_OFFSET 0.0
+#define FL_SWERVE_ABS_ENC_OFFSET 344.25
+#define FR_SWERVE_ABS_ENC_OFFSET 288.92
+#define BL_SWERVE_ABS_ENC_OFFSET 274.73
+#define BR_SWERVE_ABS_ENC_OFFSET 359.83
 
 
 /* ========== Joystick Ports ========= */

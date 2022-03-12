@@ -40,6 +40,7 @@ class AbsoluteEncoder {
         // TEMP
         // TODO: remove
         double getVolts() const;
+        double getRawVolts() const;
 
     private:
         frc::AnalogInput m_encoder;

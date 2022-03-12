@@ -61,6 +61,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // temp
         // TODO: remove
         double getAbsEncoderVolts() const;
+        double getAbsEncoderRawVolts() const;
 
         // TODO: put in private
         // how many degrees away from the actual zero degrees

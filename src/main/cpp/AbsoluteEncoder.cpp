@@ -20,7 +20,6 @@ double AbsoluteEncoder::getAngle() const {
 }
 
 double AbsoluteEncoder::getRotations() const {
-    // the encoder outputs volts in a range of 0 to 5, scaling linearly with how rotated it is
     double volts = m_encoder.GetVoltage();
 
     // convert volts to rotations
@@ -30,4 +29,8 @@ double AbsoluteEncoder::getRotations() const {
 
 double AbsoluteEncoder::getVolts() const {
     return m_encoder.GetVoltage();
+}
+
+double AbsoluteEncoder::getRawVolts() const {
+    return m_encoder.GetValue();
 }
