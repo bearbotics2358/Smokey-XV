@@ -29,7 +29,7 @@ steerPID(0, 0, 0) {
 }
 
 float SwerveModule::getDistance() {
-    motorTicksToInches(driveEnc.GetIntegratedSensorPosition());
+    motorTicksToMeters(driveEnc.GetIntegratedSensorPosition());
 }
 
 void SwerveModule::resetDriveEncoder() {
@@ -63,8 +63,8 @@ float SwerveModule::getAbsAngleDegrees() {
     return absSteerEnc.getRotations() * 360.0;
 }
 
-void SwerveModule::goToPosition(float inches) {
-    float ticks = SwerveModule::inchesToMotorTicks(inches);
+void SwerveModule::goToPosition(float meters) {
+    float ticks = SwerveModule::metersToMotorTicks(meters);
     driveMotor.Set(TalonFXControlMode::Position, ticks);
 }
 
@@ -151,16 +151,16 @@ double SwerveModule::wheelSpeedToRpm(double speed) {
     return rpm * SWERVE_DRIVE_MOTOR_GEAR_RATIO;
 }
 
-double SwerveModule::inchesToMotorTicks(double inches) {
+double SwerveModule::metersToMotorTicks(double meters) {
     // angular position in radians
-    double angularPosition = inches / (0.5 * WHEEL_DIAMETER);
+    double angularPosition = meters / (0.5 * WHEEL_DIAMETER);
     // convert to encoder ticks
     double ticks = (FALCON_UNITS_PER_REV * angularPosition) / (2 * M_PI);
     // scale by gear ratio
     return ticks * SWERVE_DRIVE_MOTOR_GEAR_RATIO;
 }
 
-double SwerveModule::motorTicksToInches(double motorTicks) {
+double SwerveModule::motorTicksToMeters(double motorTicks) {
     // like ticks of the wheel
     double scaledTicks = motorTicks / SWERVE_DRIVE_MOTOR_GEAR_RATIO;
     double rotations = (scaledTicks / FALCON_UNITS_PER_REV);

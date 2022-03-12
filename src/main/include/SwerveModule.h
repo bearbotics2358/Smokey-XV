@@ -17,7 +17,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
     public:
         SwerveModule(int driveID, int steerID, AbsoluteEncoder&& absEncoder); // CAN IDs, analog port for steer encoder
 
-        // Returns position of the distance encoder in inches
+        // Returns position of the distance encoder in meters
         float getDistance();
         // sets the drive encoder to 0 ticks
         void resetDriveEncoder();
@@ -33,7 +33,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // TODO: remove
         float getAbsAngleDegrees();
 
-        void goToPosition(float inches); // Position PID control, moves drive wheel to specified position
+        void goToPosition(float meters); // Position PID control, moves drive wheel to specified position
         void steerToAng(float degrees); // Angle PID control
 
         // sets drive speed in percent
@@ -41,8 +41,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // sets steer speed in percent
         void setSteerPercent(float percent);
 
-        // set wheel speed in inches per second
-        // TODO: this is a stupid unit, use meters / second
+        // set wheel speed in meters per second
         float setDriveSpeed(float speed);
 
         // sets drive and steer p, i, and d values for pid
@@ -68,10 +67,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         double encZeroPoint { 0.0 };
 
     private:
-        // speed is inches per second
+        // speed is meters per second
         static double wheelSpeedToRpm(double speed);
-        static double inchesToMotorTicks(double inches);
-        static double motorTicksToInches(double motorTicks);
+        static double metersToMotorTicks(double meters);
+        static double motorTicksToMeters(double motorTicks);
 
         TalonFX driveMotor;
         rev::CANSparkMax steerMotor;

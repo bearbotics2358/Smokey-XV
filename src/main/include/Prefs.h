@@ -16,7 +16,7 @@
 #define CLIMBER_PULL_SOLENOID_MODULE 11
 #define CLIMBER_MOTOR_PERCENT_OUTPUT 0.8
 #define CLIMBER_MOTOR_SPEED 1000 // the desired speed for the arm to rise (mm/s)
-//12:1 gearbox between motor and thunderhex (winch)
+// 12:1 gearbox between motor and thunderhex (winch)
 #define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
 #define CLIMBER_TICKS_PER_MM (3.8347 * 12.0) // how many ticks for every mm the climber arm rises
 #define CLIMBER_SWITCH_PORT 0
@@ -102,6 +102,7 @@
 //   <====[-<('-'<)
 
 #define LIGHT_RING_CONTROLLER_ADDRESS 0x4
+
 /* ============ GEAR RATIOS ======== */
 // drive motor -> wheel = 10:1 (10 drive rotations for one wheel rotation)
 // radius of wheel = 2 inches
@@ -111,10 +112,10 @@
 
 // TODO: figure out what this actually is
 // ratio is drive motor rotations / wheel rotations
-#define SWERVE_DRIVE_MOTOR_GEAR_RATIO (18.0 / 1.0)
+#define SWERVE_DRIVE_MOTOR_GEAR_RATIO (7.04 / 1.0)
 
-// FIXME: this is wrong, must be in meters
-#define WHEEL_DIAMETER 4.0
+// wheel diameter in meters
+#define WHEEL_DIAMETER 0.1016
 
 /* ============= AUTO VALUES 4 Jason yoyoyo =========== */
 #define TO_TRENCH_FROM_LINE 65 // inches
