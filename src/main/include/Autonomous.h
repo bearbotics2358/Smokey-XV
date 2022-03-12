@@ -24,10 +24,12 @@ enum AutoState0 { // Encoders
 enum AutoState1 { // Encoders
     kAutoIdle1 = 0,
     kShoot1,
-    kStartTimer1,
-    kWait1,
+    kStartTimer1_1,
+    kWait1_1,
     kDoneShooting1,
-    kTaxi1
+    kStartTimer2_1,
+    kTaxi1,
+    kWait2_1
 };
 
 enum AutoState2 { // T.O.F and Encoders
