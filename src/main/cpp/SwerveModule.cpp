@@ -33,13 +33,14 @@ float SwerveModule::getDistance() {
 }
 
 void SwerveModule::resetDriveEncoder() {
-    double absAngle = 360 * absSteerEnc.getRotations();
-    float relAngle = getRelativeAngle();
-    encZeroPoint = absAngle - relAngle;
+    driveEnc.SetIntegratedSensorPosition(0);
 }
 
 void SwerveModule::resetSteerEncoder() {
-    steerEncNEO.SetPosition(-absSteerEnc.getRotations());
+    // need to subtract from 1 because the encoders face oppoosite direction
+    double absAngle = 360.0 * (1.0 - absSteerEnc.getRotations());
+    float relAngle = getRelativeAngle();
+    encZeroPoint = absAngle - relAngle;
 }
 
 double SwerveModule::getRelativeAngle() {
@@ -166,4 +167,8 @@ double SwerveModule::motorTicksToInches(double motorTicks) {
     // angular position in radians
     double angularPosition = rotations * 2 * M_PI;
     return angularPosition * 0.5 * WHEEL_DIAMETER;
+}
+
+double SwerveModule::getAbsEncoderVolts() const {
+    return absSteerEnc.getVolts();
 }

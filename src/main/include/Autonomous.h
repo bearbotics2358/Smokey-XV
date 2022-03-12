@@ -24,9 +24,10 @@ enum AutoState0 { // Encoders
 enum AutoState1 { // Encoders
     kAutoIdle1 = 0,
     kShoot1,
-    kStartTimer1,
-    kWait1,
+    kStartTimer1_1,
+    kWait1_1,
     kDoneShooting1,
+    kStartTimer2_1,
     kTaxi1
 };
 
@@ -81,15 +82,15 @@ class Autonomous {
 
         void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
-        //Timer System
-        //     Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
+        // Timer System
+        //      Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
-		bool WaitForTime(double time); // Wait
-		void ToggleCollector();
+        bool WaitForTime(double time); // Wait
+        void ToggleCollector();
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
-        bool DriveDirection(float speed, float angle); //implements driveDistance from SwerveDrive (drives distance @ angle)
+        bool DriveDirection(float speed, float angle); // implements driveDistance from SwerveDrive (drives distance @ angle)
 
         bool BallShot(float speed); // checks if a ball has been shot by measuring RPM values
 

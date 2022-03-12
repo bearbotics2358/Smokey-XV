@@ -36,13 +36,13 @@ a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
     }*/
 
     a_FLModule.setDrivePID(0.001, 0, 0);
-    a_FLModule.setSteerPID(2.0, 0, 0.02);
+    a_FLModule.setSteerPID(2.0, 0, 0.01);
 
     a_FRModule.setDrivePID(0.001, 0, 0);
-    a_FRModule.setSteerPID(2.2, 0, 0.002);
+    a_FRModule.setSteerPID(2.0, 0, 0.01);
 
     a_BLModule.setDrivePID(0.001, 0, 0);
-    a_BLModule.setSteerPID(2.0, 0, 0.002);
+    a_BLModule.setSteerPID(2.0, 0, 0.01);
 
     a_BRModule.setDrivePID(0.001, 0, 0);
     a_BRModule.setSteerPID(2.0, 0, 0.01);
@@ -62,7 +62,7 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
-    frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());        
+    frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());
 
     // a_canHandler.update();
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
@@ -77,10 +77,25 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("BL rel encoder", a_BLModule.getAngle());
     frc::SmartDashboard::PutNumber("BR rel encoder", a_BRModule.getAngle());
 
-    frc::SmartDashboard::PutNumber("FL abs encoder", a_FLModule.getAbsAngleDegrees());
-    frc::SmartDashboard::PutNumber("FR abs encoder", a_FRModule.getAbsAngleDegrees());
-    frc::SmartDashboard::PutNumber("BL abs encoder", a_BLModule.getAbsAngleDegrees());
-    frc::SmartDashboard::PutNumber("BR abs encoder", a_BRModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("FL abs encoder", 360 - a_FLModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("FR abs encoder", 360 - a_FRModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("BL abs encoder", 360 - a_BLModule.getAbsAngleDegrees());
+    frc::SmartDashboard::PutNumber("BR abs encoder", 360 - a_BRModule.getAbsAngleDegrees());
+
+    frc::SmartDashboard::PutNumber("FL raw rel encoder", a_FLModule.getRelativeAngle());
+    frc::SmartDashboard::PutNumber("FR raw rel encoder", a_FRModule.getRelativeAngle());
+    frc::SmartDashboard::PutNumber("BL raw rel encoder", a_BLModule.getRelativeAngle());
+    frc::SmartDashboard::PutNumber("BR raw rel encoder", a_BRModule.getRelativeAngle());
+    //
+    frc::SmartDashboard::PutNumber("FL volts", a_FLModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("FR volts", a_FRModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("BL volts", a_BLModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("BR volts", a_BRModule.getAbsEncoderVolts());
+
+    frc::SmartDashboard::PutNumber("FL offset", a_FLModule.encZeroPoint);
+    frc::SmartDashboard::PutNumber("FR offset", a_FRModule.encZeroPoint);
+    frc::SmartDashboard::PutNumber("BL offset", a_BLModule.encZeroPoint);
+    frc::SmartDashboard::PutNumber("BR offset", a_BRModule.encZeroPoint);
 }
 
 void Robot::DisabledInit() {
@@ -218,11 +233,17 @@ void Robot::TeleopPeriodic() {
         a_Gyro.Zero();
     }
 
+    // recalibrates the relative encoders using the absolute encoders
+    if (joystickOne.GetRawButton(DriverButton::Button6)) {
+        a_SwerveDrive.resetDrive();
+    }
+
     if (joystickOne.GetRawButton(DriverButton::Button4)) {
         // vision led on
     } else {
         // vision led off
     }
+
     if (joystickOne.GetRawButton(DriverButton::Button4)) /* && has target (todo once written) */ {
         // track target with vision
     } else if (joystickOne.GetRawButton(DriverButton::Button3)) {

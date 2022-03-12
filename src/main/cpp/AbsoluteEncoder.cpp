@@ -27,3 +27,7 @@ double AbsoluteEncoder::getRotations() const {
     double out = ((volts - m_minVolts) / m_voltRange) - m_offset;
     return misc::clampRotations(out);
 }
+
+double AbsoluteEncoder::getVolts() const {
+    return m_encoder.GetVoltage();
+}

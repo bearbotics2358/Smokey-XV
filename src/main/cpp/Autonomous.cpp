@@ -211,16 +211,16 @@ void Autonomous::AutonomousPeriodic1() {
 
         case kShoot1:
             if (IndexAndShoot(SHOOT_FROM_WALL)) {
-                nextState = kStartTimer1;
+                nextState = kStartTimer1_1;
             }
             break;
 
-        case kStartTimer1:
+        case kStartTimer1_1:
             StartTimer();
-            nextState = kWait1;
+            nextState = kWait1_1;
             break;
 
-        case kWait1:
+        case kWait1_1:
             if (WaitForTime(1)) {
                 nextState = kDoneShooting1;
             }
@@ -229,12 +229,19 @@ void Autonomous::AutonomousPeriodic1() {
 
         case kDoneShooting1:
             IDontLikeExercise();
+            nextState = kStartTimer2_1;
+            break;
+
+        case kStartTimer2_1:
+            StartTimer();
             nextState = kTaxi1;
             break;
 
         case kTaxi1:
-            if (DriveDirection(0.1, 180)) {
+            if (WaitForTime(2)) {
                 nextState = kAutoIdle1;
+            } else {
+                DriveDirection(0.2, 180);
             }
             break;
     }
@@ -401,8 +408,8 @@ bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to dete
     }
 }
 
-bool Autonomous::DriveDirection(float speed, float angle){
-    a_SwerveDrive->driveDistance(speed, angle);
+bool Autonomous::DriveDirection(float speed, float angle) {
+    a_SwerveDrive->driveDirection(speed, angle);
 }
 
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
