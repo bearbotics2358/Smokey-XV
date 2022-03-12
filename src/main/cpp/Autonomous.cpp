@@ -238,13 +238,10 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            DriveDirection(0.2, 180);
-            nextState = kWait2_1;
-            break;
-
-        case kWait2_1:
-            if(WaitForTime(2)){
+            if (WaitForTime(2)) {
                 nextState = kAutoIdle1;
+            } else {
+                DriveDirection(0.2, 180);
             }
             break;
     }
@@ -378,7 +375,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if(a_BallShooter->getSpeed() >= speed - 200) {
+    if (a_BallShooter->getSpeed() >= speed - 200) {
         a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
         return true;
     } else if (a_BallShooter->getSpeed() < speed - 200) {
@@ -411,7 +408,7 @@ bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to dete
     }
 }
 
-bool Autonomous::DriveDirection(float speed, float angle){
+bool Autonomous::DriveDirection(float speed, float angle) {
     a_SwerveDrive->driveDirection(speed, angle);
 }
 

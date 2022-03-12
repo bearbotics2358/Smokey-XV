@@ -106,9 +106,9 @@ void SwerveDrive::driveDistance(float dist, float directionDegrees) {
 
 void SwerveDrive::driveDirection(float percent, float directionDegrees) {
     flModule.steerToAng(directionDegrees);
-    flModule.steerToAng(directionDegrees);
-    flModule.steerToAng(directionDegrees);
-    flModule.steerToAng(directionDegrees);
+    frModule.steerToAng(directionDegrees);
+    blModule.steerToAng(directionDegrees);
+    brModule.steerToAng(directionDegrees);
 
     flModule.setDrivePercent(percent);
     frModule.setDrivePercent(percent);
