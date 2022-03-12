@@ -92,16 +92,16 @@ void SwerveDrive::resetDrive() {
     brModule.resetSteerEncoder();
 }
 
-void SwerveDrive::driveDistance(float dist, float directionDegrees) {
+void SwerveDrive::driveDistance(float distMeters, float directionDegrees) {
     flModule.steerToAng(directionDegrees);
     frModule.steerToAng(directionDegrees);
     blModule.steerToAng(directionDegrees);
     brModule.steerToAng(directionDegrees);
 
-    flModule.goToPosition(dist);
-    frModule.goToPosition(dist);
-    blModule.goToPosition(dist);
-    brModule.goToPosition(dist);
+    flModule.goToPosition(distMeters);
+    frModule.goToPosition(distMeters);
+    blModule.goToPosition(distMeters);
+    brModule.goToPosition(distMeters);
 }
 
 void SwerveDrive::driveDirection(float percent, float directionDegrees) {
