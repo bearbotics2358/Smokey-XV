@@ -72,7 +72,7 @@ class Autonomous {
         void AutonomousStart1();
         void AutonomousPeriodic1();
 
-        void AutonomousStart2();
+        //void AutonomousStart2();
         //void AutonomousPeriodic2();
 
         // ------------------Sub-Routines-------------------------//

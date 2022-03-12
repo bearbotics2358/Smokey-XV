@@ -52,13 +52,4 @@ double Climber::getSpeed() { // returns the speed at which the climber arm is mo
     double ticks = a_climberArmMotor.GetSensorCollection().GetIntegratedSensorVelocity();
     return ticks * CLIMBER_MM_PER_TICK * 10;
 }
-/*
-bool Climber::LifterZero() {
-    if(a_Switch.Get()){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-*/
+

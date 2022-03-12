@@ -72,6 +72,7 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
     frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", a_Climber.getTicks());
+    frc::SmartDashboard::PutNumber("Climber Limit Switch Pressed", a_LimitSwitch.limitSwitchPressed());
 
     frc::SmartDashboard::PutNumber("FL rel encoder", a_FLModule.getAngle());
     frc::SmartDashboard::PutNumber("FR rel encoder", a_FRModule.getAngle());
@@ -101,7 +102,7 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    a_SwerveDrive.resetDrive();
+    //a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
@@ -167,11 +168,13 @@ void Robot::TeleopPeriodic() {
 
     /* Limit Switch Automatic Climb
 
+    if (a_LimitSwitch.limitSwitchPressed() == true){
+        a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kReverse);
+    }
     
-
-    if ()
-
     */
+
+    
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 

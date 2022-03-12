@@ -10,8 +10,8 @@ class LimitSwitch {
     public:
         LimitSwitch(int port);
         bool limitSwitchPressed();
-        bool isPressed = false;
 
     private:
         frc::DigitalInput a_Input;
+        bool isPressed = false;
 };
