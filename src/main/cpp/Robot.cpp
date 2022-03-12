@@ -70,6 +70,7 @@ void Robot::RobotPeriodic() {
 
     frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
+    frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", a_Climber.getTicks());
 
     frc::SmartDashboard::PutNumber("FL rel encoder", a_FLModule.getAngle());
     frc::SmartDashboard::PutNumber("FR rel encoder", a_FRModule.getAngle());
@@ -85,6 +86,11 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("FR raw rel encoder", a_FRModule.getRelativeAngle());
     frc::SmartDashboard::PutNumber("BL raw rel encoder", a_BLModule.getRelativeAngle());
     frc::SmartDashboard::PutNumber("BR raw rel encoder", a_BRModule.getRelativeAngle());
+    //
+    frc::SmartDashboard::PutNumber("FL volts", a_FLModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("FR volts", a_FRModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("BL volts", a_BLModule.getAbsEncoderVolts());
+    frc::SmartDashboard::PutNumber("BR volts", a_BRModule.getAbsEncoderVolts());
 
     frc::SmartDashboard::PutNumber("FL offset", a_FLModule.encZeroPoint);
     frc::SmartDashboard::PutNumber("FR offset", a_FRModule.encZeroPoint);
@@ -144,9 +150,9 @@ void Robot::TeleopPeriodic() {
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
     if (a_XboxController.GetRawButton(OperatorButton::LeftBumper)) {
-        a_Climber.setArmSpeed(CLIMBER_MOTOR_SPEED);
+        a_Climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT); // 100% power
     } else if (a_XboxController.GetRawButton(OperatorButton::RightBumper)) {
-        a_Climber.setArmSpeed(-CLIMBER_MOTOR_SPEED);
+        a_Climber.setArmSpeed(-CLIMBER_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Climber.setArmSpeed(0);
     }
@@ -183,7 +189,7 @@ void Robot::TeleopPeriodic() {
         a_Collector.toggleSolenoid();
     }
     if (a_XboxController.GetRawButton(OperatorButton::X)) {
-        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Collector.setCollectorMotorSpeed(0);
     }
@@ -225,6 +231,11 @@ void Robot::TeleopPeriodic() {
     if (joystickOne.GetRawButton(DriverButton::Button5)) {
         a_Gyro.Cal();
         a_Gyro.Zero();
+    }
+
+    // recalibrates the relative encoders using the absolute encoders
+    if (joystickOne.GetRawButton(DriverButton::Button6)) {
+        a_SwerveDrive.resetDrive();
     }
 
     if (joystickOne.GetRawButton(DriverButton::Button4)) {

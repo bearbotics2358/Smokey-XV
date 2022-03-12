@@ -58,6 +58,10 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // the magnitude of the vector is passed into setDrivePercent
         void driveDirection(Vec2 direction);
 
+        // temp
+        // TODO: remove
+        double getAbsEncoderVolts() const;
+
         // TODO: put in private
         // how many degrees away from the actual zero degrees
         // that the relative encoder's zero point is

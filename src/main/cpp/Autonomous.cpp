@@ -372,8 +372,8 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if (a_BallShooter->getSpeed() >= speed - 200) {
-        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+    if(a_BallShooter->getSpeed() >= speed - 200) {
+        a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else if (a_BallShooter->getSpeed() < speed - 200) {
         return false;
@@ -431,9 +431,9 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
 }
 
 bool Autonomous::DriveWhileCollecting(double dist, double angle) {
-    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
     if (DriveDist(dist, angle)) {
-        a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_POWER);
+        a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else {
         return false;

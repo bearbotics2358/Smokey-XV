@@ -14,11 +14,18 @@
 #define CLIMBER_MOTOR_ID 24
 #define CLIMBER_PUSH_SOLENOID_MODULE 10
 #define CLIMBER_PULL_SOLENOID_MODULE 11
+<<<<<<< HEAD
 #define CLIMBER_MOTOR_SPEED 1000 // the desired speed for the arm to rise (mm/s)
 //12:1 gearbox between motor and thunderhex (winch)
 #define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
 #define CLIMBER_TICKS_PER_MM (3.8347 * 12.0) // how many ticks for every mm the climber arm rises
 #define CLIMBER_SWITCH_PORT 4
+=======
+#define CLIMBER_MOTOR_SPEED 1000 // the desired speed for the arm to rise (mm/s), currently unused
+#define CLIMBER_MOTOR_PERCENT_OUTPUT 0.8
+#define CLIMBER_MM_PER_TICK 0.026 // how many mm the climber arm rises every motor tick: 3900 / 150000 = 0.026
+#define CLIMBER_TICKS_PER_MM 3.8347 // how many ticks for every mm the climber arm rises
+>>>>>>> 98d076d072b154ff4005cf2aaa096f163d0ad275
 
 /*======== SHOOTER CONSTANTS ========*/
 
@@ -33,7 +40,7 @@
 #define COLLECTOR_MOTOR_ID 21
 #define INDEXER_MOTOR_ID 22
 #define SOLENOID_ID 10
-#define COLLECTOR_MOTOR_PERCENT_POWER 0.5
+#define COLLECTOR_MOTOR_PERCENT_OUTPUT 0.5
 // NOTE: this is not actully the rpm it will go because of the gear ratio, but it goes the speed we want
 #define INDEXER_MOTOR_PERCENT_POWER 0.2
 #define COLLECTOR_PUSH_SOLENOID_MODULE 8
@@ -79,10 +86,14 @@
 #define BR_SWERVE_ABS_ENC_MAX_VOLTS 4.963378
 
 // offset from 0 of the absolute encders
-#define FL_SWERVE_ABS_ENC_OFFSET 16.24
-#define FR_SWERVE_ABS_ENC_OFFSET 85.76
-#define BL_SWERVE_ABS_ENC_OFFSET 0.22
-#define BR_SWERVE_ABS_ENC_OFFSET 179.77
+//#define FL_SWERVE_ABS_ENC_OFFSET 16.24
+//#define FR_SWERVE_ABS_ENC_OFFSET 85.76
+//#define BL_SWERVE_ABS_ENC_OFFSET 0.22
+//#define BR_SWERVE_ABS_ENC_OFFSET 179.77
+#define FL_SWERVE_ABS_ENC_OFFSET 342.33
+#define FR_SWERVE_ABS_ENC_OFFSET 276.11
+#define BL_SWERVE_ABS_ENC_OFFSET 0.0
+#define BR_SWERVE_ABS_ENC_OFFSET 0.0
 
 
 /* ========== Joystick Ports ========= */

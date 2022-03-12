@@ -168,3 +168,7 @@ double SwerveModule::motorTicksToInches(double motorTicks) {
     double angularPosition = rotations * 2 * M_PI;
     return angularPosition * 0.5 * WHEEL_DIAMETER;
 }
+
+double SwerveModule::getAbsEncoderVolts() const {
+    return absSteerEnc.getVolts();
+}
