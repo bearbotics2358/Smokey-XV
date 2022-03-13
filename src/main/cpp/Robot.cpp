@@ -196,6 +196,8 @@ void Robot::TeleopPeriodic() {
         // TODO: decrease margin of error when better pid tuned
         if (a_Shooter.getSpeed() >= 0.8 * SHOOTER_SPEED) {
             a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+        } else {
+            a_Collector.setIndexerMotorSpeed(0);
         }
     } else {
         a_Collector.setIndexerMotorSpeed(0);
