@@ -200,10 +200,10 @@ void Robot::TeleopPeriodic() {
     } else {
         a_Collector.setIndexerMotorSpeed(0);
     }
-    if (joystickOne.GetRawButton(11)) {
+    if (joystickOne.GetRawButton(DriverButton::Button11)) {
         a_Shooter.setSpeed(0);
     }
-    if (joystickOne.GetRawButton(12)) {
+    if (joystickOne.GetRawButton(DriverButton::Button12)) {
         a_Shooter.setSpeed(SHOOTER_SPEED);
     }
 
@@ -245,39 +245,25 @@ void Robot::TeleopPeriodic() {
         gyro = fmod(gyro, 360);
     }
 
-    bool fieldOreo = true; // field oriented? - yes
-
-    frc::SmartDashboard::PutNumber("Chase: ", z);
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
+    // turn field oriented mode off if button 3 is pressed
+    bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
+
+    // calibrate gyro
     if (joystickOne.GetRawButton(DriverButton::Button5)) {
         a_Gyro.Cal();
         a_Gyro.Zero();
     }
 
-    // recalibrates the relative encoders using the absolute encoders
-    if (joystickOne.GetRawButton(DriverButton::Button11)) {
-        a_SwerveDrive.resetDrive();
-    }
-
-    if (joystickOne.GetRawButton(DriverButton::Button12)) {
+    if (joystickOne.GetRawButton(DriverButton::Button9)) {
         // vision led on
     } else {
         // vision led off
     }
 
-    if (joystickOne.GetRawButton(DriverButton::Button12)) /* && has target (todo once written) */ {
+    if (joystickOne.GetRawButton(DriverButton::Button9)) /* && has target (todo once written) */ {
         // track target with vision
-    } else if (joystickOne.GetRawButton(DriverButton::Button3)) {
-        if (!inDeadzone) {
-            if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, false);
-            } else {
-                a_SwerveDrive.crabDriveUpdate(x, y, gyro);
-            }
-        } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, false);
-        }
     } else {
         if (!inDeadzone) {
             if (joystickOne.GetRawButton(DriverButton::Trigger)) {
@@ -324,33 +310,26 @@ void Robot::TestPeriodic() {
         gyro = fmod(gyro, 360);
     }
 
-    bool fieldOreo = true; // field oriented? - yes
-
-    frc::SmartDashboard::PutNumber("Chase: ", z);
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
+    // turn field oriented mode off if button 3 is pressed
+    bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
 
-    if (joystickOne.GetRawButton(DriverButton::Button3)) {
-        a_SwerveDrive.turnToAngle(gyro, 180.0);
-    } else if (!inDeadzone) {
+    // calibrate gyro
+    if (joystickOne.GetRawButton(DriverButton::Button5)) {
+        a_Gyro.Cal();
+        a_Gyro.Zero();
+    }
+
+    if (!inDeadzone) {
         if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-            if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
-                // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
-            } else {
-                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
-            }
+            a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
         } else {
             a_SwerveDrive.crabDriveUpdate(x, y, gyro);
         }
     } else {
-        if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
-            // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
-        } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
-        }
+        a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
     }
-
-    frc::SmartDashboard::PutNumber("Gyro: ", gyro);
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop
