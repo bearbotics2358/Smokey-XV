@@ -86,10 +86,10 @@ void SwerveDrive::resetDrive() {
     blModule.resetDriveEncoder();
     brModule.resetDriveEncoder();
 
-    flModule.resetSteerEncoder();
-    frModule.resetSteerEncoder();
-    blModule.resetSteerEncoder();
-    brModule.resetSteerEncoder();
+    // flModule.resetSteerEncoder();
+    // frModule.resetSteerEncoder();
+    // blModule.resetSteerEncoder();
+    // brModule.resetSteerEncoder();
 }
 
 void SwerveDrive::driveDistance(float distMeters, float directionDegrees) {
