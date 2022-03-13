@@ -26,15 +26,15 @@
 #define LEFT_SHOOTER_ID 26
 #define RIGHT_SHOOTER_ID 27
 #define SHOOTER_MOTOR_RPM 220
-#define SHOOTER_SPEED 2000
-#define SHOOT_FROM_WALL 1000
+#define SHOOTER_SPEED 2400
+#define SHOOT_FROM_WALL 2400
 
 /*======== COLLECTOR CONSTANTS ========*/
 
 #define COLLECTOR_MOTOR_ID 21
 #define INDEXER_MOTOR_ID 22
 #define SOLENOID_ID 10
-#define COLLECTOR_MOTOR_PERCENT_OUTPUT 0.5
+#define COLLECTOR_MOTOR_PERCENT_OUTPUT 0.75
 // NOTE: this is not actully the rpm it will go because of the gear ratio, but it goes the speed we want
 #define INDEXER_MOTOR_PERCENT_OUTPUT 0.2
 #define COLLECTOR_PUSH_SOLENOID_MODULE 8

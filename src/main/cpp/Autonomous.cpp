@@ -228,16 +228,11 @@ void Autonomous::AutonomousPeriodic1() {
 
         case kDoneShooting1:
             IDontLikeExercise();
-            nextState = kStartTimer2_1;
-            break;
-
-        case kStartTimer2_1:
-            StartTimer();
             nextState = kTaxi1;
             break;
 
         case kTaxi1:
-            if(DriveDirection(2.4, 180, 0.5)){
+            if(DriveDirection(2.4, 180, 0.25)){
                 nextState = kAutoIdle1;
             }
             break;
@@ -372,10 +367,10 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if (a_BallShooter->getSpeed() >= speed - 200) {
+    if (a_BallShooter->getSpeed() >= speed * 0.8) {
         a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
-    } else if (a_BallShooter->getSpeed() < speed - 200) {
+    } else {
         return false;
     }
 }

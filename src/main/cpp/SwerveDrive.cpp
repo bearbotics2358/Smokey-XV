@@ -204,7 +204,7 @@ void SwerveDrive::swerveUpdateInner(float x, float y, float z, float gyroDegrees
         brSpeed /= max;
     }
 
-    float scalar = 0.5; // scalar to adjust if speed is too high
+    float scalar = 1; // scalar to adjust if speed is too high
     flSpeed *= scalar;
     frSpeed *= scalar;
     blSpeed *= scalar;
