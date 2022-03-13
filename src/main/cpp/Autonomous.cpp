@@ -237,10 +237,8 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (WaitForTime(4)) {
+            if(DriveDirection(2.4, 180, 0.5)){
                 nextState = kAutoIdle1;
-            } else {
-                DriveDirection(2.4, 180, 0.25);
             }
             break;
     }
