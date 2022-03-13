@@ -82,7 +82,7 @@ void Autonomous::StartPathMaster() {
 
         case 2:
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
-            //AutonomousStart2();
+            // AutonomousStart2();
 
             break;
     }
@@ -112,7 +112,7 @@ void Autonomous::StartPathMaster(int path) {
 
         case 2:
             frc::SmartDashboard::PutBoolean("2-ball Taxi Started", true);
-            //AutonomousStart2();
+            // AutonomousStart2();
 
             break;
     }
@@ -134,7 +134,7 @@ void Autonomous::PeriodicPathMaster() {
             break;
 
         case 2:
-            //AutonomousPeriodic2();
+            // AutonomousPeriodic2();
 
             break;
     }
@@ -156,7 +156,7 @@ void Autonomous::PeriodicPathMaster(int path) {
             break;
 
         case 2:
-            //AutonomousPeriodic2();
+            // AutonomousPeriodic2();
 
             break;
     }
@@ -372,7 +372,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if(a_BallShooter->getSpeed() >= speed - 200) {
+    if (a_BallShooter->getSpeed() >= speed - 200) {
         a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else if (a_BallShooter->getSpeed() < speed - 200) {
@@ -427,9 +427,9 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
     }
 }
 
-bool Autonomous::DriveDirection(double dist, double angle, double speed){ // true is done, false is not done
+bool Autonomous::DriveDirection(double dist, double angle, double speed) { // true is done, false is not done
 
-    if(fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)){
+    if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
 
         if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))){
 		    a_SwerveDrive->goToTheDon(speed / 2, angle, dist, a_Gyro->getAngle());
@@ -444,8 +444,5 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed){ // tru
         a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
-
     }
-            
-
 }

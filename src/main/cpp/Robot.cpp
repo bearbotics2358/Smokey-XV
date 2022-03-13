@@ -26,10 +26,10 @@ a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SO
 a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
 a_LimitSwitch(CLIMBER_SWITCH_PORT),
-//NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
-// handler("169.254.179.144", "1185", "data"),
-// handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
-// a_canHandler(CanHandler::layout2022()),
+// NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
+//  handler("169.254.179.144", "1185", "data"),
+//  handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
+//  a_canHandler(CanHandler::layout2022()),
 a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
 a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
     /*if (!handler.ready()) {
@@ -102,7 +102,7 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
-    //a_SwerveDrive.resetDrive();
+    a_SwerveDrive.resetDrive();
     shooterDesiredSpeed = 0.0;
 }
 
@@ -172,10 +172,10 @@ void Robot::TeleopPeriodic() {
     if (a_LimitSwitch.limitSwitchPressed() == true){
         a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kReverse);
     }
-    
+
     */
 
-    
+
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 
@@ -201,10 +201,10 @@ void Robot::TeleopPeriodic() {
         a_Shooter.setSpeed(0);
         a_Collector.setIndexerMotorSpeed(0);
     }
-    if(joystickOne.GetRawButton(11)){
+    if (joystickOne.GetRawButton(11)) {
         a_Shooter.setSpeed(0);
     }
-    if(joystickOne.GetRawButton(12)){
+    if (joystickOne.GetRawButton(12)) {
         a_Shooter.setSpeed(SHOOT_FROM_WALL);
     }
 
@@ -213,7 +213,7 @@ void Robot::TeleopPeriodic() {
     if (a_XboxController.GetRawButtonPressed(OperatorButton::LeftBumper)) {
         a_Collector.setSolenoid(frc::DoubleSolenoid::Value::kForward); // collecter in
     }
-        if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)) {
+    if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)) {
         a_Collector.setSolenoid(frc::DoubleSolenoid::Value::kReverse); // collecter out
     }
     if (a_XboxController.GetRawButton(OperatorButton::Y)) {
