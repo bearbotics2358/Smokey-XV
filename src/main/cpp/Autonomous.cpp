@@ -434,10 +434,10 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed){ // tru
     if(fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)){
 
         if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))){
-		    a_SwerveDrive->goToTheDon(speed / 2, 180, dist, a_Gyro->getAngle());
+		    a_SwerveDrive->goToTheDon(speed / 2, angle, dist, a_Gyro->getAngle());
 
 		} else {
-            a_SwerveDrive->goToTheDon(speed, 180, dist, a_Gyro->getAngle());
+            a_SwerveDrive->goToTheDon(speed, angle, dist, a_Gyro->getAngle());
         }
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
