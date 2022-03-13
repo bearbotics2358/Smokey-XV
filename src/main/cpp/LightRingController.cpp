@@ -1,11 +1,8 @@
-
 #include <LightRingController.h>
-#include <Prefs.h>
 
-
-LightRingController::LightRingController():
-a_I2C(frc::I2C::kOnboard, LIGHT_RING_CONTROLLER_ADDRESS) {
-}
+// NOTE: prefs originally had controllerAddress as 0x4
+LightRingController::LightRingController(int controllerAddress):
+a_I2C(frc::I2C::kOnboard, controllerAddress) {}
 
 
 // Our current LRC's support light rings on pins 0, 1, and 2- don't try to set the color of other ones, please

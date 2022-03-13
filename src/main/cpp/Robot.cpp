@@ -22,7 +22,7 @@ joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
-a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
+a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
 a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
 a_LimitSwitch(CLIMBER_SWITCH_PORT),
@@ -143,7 +143,7 @@ void Robot::TeleopInit() {
         EnabledInit();
         a_doEnabledInit = false;
     }
-    a_Shooter.setSpeed(SHOOT_FROM_WALL);
+    a_Shooter.setSpeed(SHOOTER_SPEED);
 }
 
 // main loop
@@ -204,7 +204,7 @@ void Robot::TeleopPeriodic() {
         a_Shooter.setSpeed(0);
     }
     if (joystickOne.GetRawButton(12)) {
-        a_Shooter.setSpeed(SHOOT_FROM_WALL);
+        a_Shooter.setSpeed(SHOOTER_SPEED);
     }
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/

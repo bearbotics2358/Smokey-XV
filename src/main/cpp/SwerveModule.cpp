@@ -161,7 +161,6 @@ double SwerveModule::metersToMotorTicks(double meters) {
 }
 
 double SwerveModule::motorTicksToMeters(double motorTicks) {
-    frc::SmartDashboard::PutNumber("Motor ticks", motorTicks);
     // like ticks of the wheel
     double scaledTicks = motorTicks / SWERVE_DRIVE_MOTOR_GEAR_RATIO;
     double rotations = (scaledTicks / FALCON_UNITS_PER_REV);
