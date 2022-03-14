@@ -26,7 +26,6 @@ enum AutoState1 { // Encoders
     kStartTimer1_1,
     kWait1_1,
     kDoneShooting1,
-    kStartTimer2_1,
     kTaxi1
 };
 
@@ -72,8 +71,8 @@ class Autonomous {
         void AutonomousStart1();
         void AutonomousPeriodic1();
 
-        //void AutonomousStart2();
-        //void AutonomousPeriodic2();
+        // void AutonomousStart2();
+        // void AutonomousPeriodic2();
 
         // ------------------Sub-Routines-------------------------//
 

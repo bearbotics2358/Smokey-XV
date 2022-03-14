@@ -5,8 +5,7 @@
 
 class Collector {
     public:
-
-        Collector(int collectorMotorId, int indexerMotorId, int solenoidId, int pushSolenoidModule, int pullSolenoidModule);
+        Collector(int collectorMotorId, int indexerMotorId, int pushSolenoidModule, int pullSolenoidModule);
 
         void setSolenoid(frc::DoubleSolenoid::Value position);
         void resetSolenoid();
@@ -15,7 +14,6 @@ class Collector {
         bool getValue();
 
     private:
-
         TalonSRX a_collectorMotor;
         TalonSRX a_indexerMotor;
         frc::DoubleSolenoid a_collectorSolenoid;
@@ -23,5 +21,4 @@ class Collector {
 
         double alpha { 0.5 };
         double previousInput { 0.0 };
-
 };

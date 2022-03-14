@@ -19,29 +19,27 @@
 // 12:1 gearbox between motor and thunderhex (winch)
 #define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
 #define CLIMBER_TICKS_PER_MM (3.8347 * 12.0) // how many ticks for every mm the climber arm rises
+// port of the climber limit switch
 #define CLIMBER_SWITCH_PORT 0
 
 /*======== SHOOTER CONSTANTS ========*/
 
 #define LEFT_SHOOTER_ID 26
 #define RIGHT_SHOOTER_ID 27
-#define SHOOTER_MOTOR_RPM 220
+// desired shooter speed to shoot from the wall in rpm
 #define SHOOTER_SPEED 2400
-#define SHOOT_FROM_WALL 2400
 
 /*======== COLLECTOR CONSTANTS ========*/
 
 #define COLLECTOR_MOTOR_ID 21
 #define INDEXER_MOTOR_ID 22
-#define SOLENOID_ID 10
 #define COLLECTOR_MOTOR_PERCENT_OUTPUT 0.75
-// NOTE: this is not actully the rpm it will go because of the gear ratio, but it goes the speed we want
 #define INDEXER_MOTOR_PERCENT_OUTPUT 0.2
 #define COLLECTOR_PUSH_SOLENOID_MODULE 8
 #define COLLECTOR_PULL_SOLENOID_MODULE 9
 
 
-/*====== MOTOR CONTROLLER IDS ======*/
+/*====== SWERVE MOTOR CONTROLLER IDS ======*/
 #define FL_DRIVE_ID 1
 #define FL_STEER_ID 2
 
@@ -56,6 +54,9 @@
 
 
 /*======= ENCODER CONSTANTS =======*/
+
+// TODO: figure out what this constant means
+#define TICKS_STEERING 18.0 // roughly 18 "position" units per steering rotation
 
 // falcon encoder ticks per 1 revolution
 #define FALCON_UNITS_PER_REV 2048
@@ -96,74 +97,17 @@
 
 #define XBOX_CONTROLLER 5
 
-#define TICKS_STEERING 18.0 // roughly 18 "position" units per steering rotation
-
-/* ====== ASCII ART ======= */
-//   <====[-<('-'<)
-
-#define LIGHT_RING_CONTROLLER_ADDRESS 0x4
 
 /* ============ GEAR RATIOS ======== */
-// drive motor -> wheel = 10:1 (10 drive rotations for one wheel rotation)
-// radius of wheel = 2 inches
-// circumfrence = 4 Pi inches
-// 10 ticks = 4 Pi inches
-#define INCHES_PER_TICK (2.0 / 5) * M_PI // inches
-
-// TODO: figure out what this actually is
+// I have a feeling this might be wrong, since our distance measurents are sligtly off
 // ratio is drive motor rotations / wheel rotations
 #define SWERVE_DRIVE_MOTOR_GEAR_RATIO (7.04 / 1.0)
 
 // wheel diameter in meters
 #define WHEEL_DIAMETER 0.1016
 
-/* ============= AUTO VALUES 4 Jason yoyoyo =========== */
-#define TO_TRENCH_FROM_LINE 65 // inches
-#define TOF_TO_WALL 27.0 // inches
-#define LINE_TO_BALL_FAR 192.66 // inches
-#define TO_BALL2_FROM_LINE 160 // inches
 
-
-#define VOLTS_MAX 1.65 // Subject to change cause movement
-#define VOLTS_MIN 2.52 // Subject to change cause movement
-#define ANGLE_MAX 90
-#define ANGLE_MIN 24
-
-#define AUTO_START_BALL_NUM 3 // KNOWN FACT ITS WHAT WE START WITH!!!!!
-
-#define ARM_DEFAULT_POSITION 89 // degrees???? GOOD!
-#define AUTO_ARM_FINAL_POS 35 // degrees???? GOOD!
-#define AUTO_SHOOT_VELOCITY 463 // RPM, GOOOD!
-#define AUTO_SHOOT_VELOCITY5BALL 440 // could change
-#define AUTO_FEED_VAL 1000 // wowowowow
-#define AUTO_ANGLE_DRIVESTRAIGHT 180 // Degrees
-#define AUTO_DRIVE_SPEED .4
-
-
-
-
-/*----------------------------------------------*/
-
-#define SHOOT_VOLTS .7
-#define COLLECT_SPEED .5
-#define FEED_SPEED .23
-
-#define SHOOT_VELOCITY 462.5
-#define DRIVE_VELOCITY 500
-#define FEED_VELOCITY 1200 // velocity of the feeder stuff
-
-#define SHOOT_1 41
-#define SHOOT_2 42
-#define FEED_1 43
-#define FEED_2 44
-#define COLLECT 45
-#define PIVOT 46
-#define CLIMBER 47
-
-// int shoot1, int shoot2, int feed1, int feed2, int collect, int pivot
-
-
-/* ============= MqttHandler ============= */
+/* ============= MqttClient ============= */
 
 #define SEND_BUF_LEN 2048
 #define RECV_BUF_LEN 2048

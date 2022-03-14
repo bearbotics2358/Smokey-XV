@@ -17,15 +17,15 @@ a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_
 a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
+a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
 a_Autonomous(&a_Gyro, &a_Timer, &joystickOne, &a_SwerveDrive, &a_Shooter, &a_Collector),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
-a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
-a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, SOLENOID_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
+a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
+a_LimitSwitch(CLIMBER_SWITCH_PORT),
 a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 a_CompressorController(),
-a_LimitSwitch(CLIMBER_SWITCH_PORT),
 // NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
 //  handler("169.254.179.144", "1185", "data"),
 //  handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
@@ -114,7 +114,7 @@ void Robot::DisabledPeriodic() {
 void Robot::EnabledInit() {
     a_Collector.resetSolenoid();
     a_Climber.resetClimber();
-    a_Shooter.setSpeed(SHOOT_FROM_WALL);
+    a_Shooter.setSpeed(SHOOTER_SPEED);
 }
 
 void Robot::EnabledPeriodic() {
@@ -144,6 +144,7 @@ void Robot::TeleopInit() {
         EnabledInit();
         a_doEnabledInit = false;
     }
+    a_Shooter.setSpeed(SHOOTER_SPEED);
 }
 
 // main loop
@@ -196,6 +197,8 @@ void Robot::TeleopPeriodic() {
         // TODO: decrease margin of error when better pid tuned
         if (a_Shooter.getSpeed() >= 0.8 * SHOOTER_SPEED) {
             a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+        } else {
+            a_Collector.setIndexerMotorSpeed(0);
         }
     } else {
         a_Collector.setIndexerMotorSpeed(0);
@@ -204,7 +207,7 @@ void Robot::TeleopPeriodic() {
         a_Shooter.setSpeed(0);
     }
     if (joystickOne.GetRawButton(DriverButton::Button12)) {
-        a_Shooter.setSpeed(SHOOT_FROM_WALL);
+        a_Shooter.setSpeed(SHOOTER_SPEED);
     }
 
     /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
@@ -245,39 +248,25 @@ void Robot::TeleopPeriodic() {
         gyro = fmod(gyro, 360);
     }
 
-    bool fieldOreo = true; // field oriented? - yes
-
-    frc::SmartDashboard::PutNumber("Chase: ", z);
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
+    // turn field oriented mode off if button 3 is pressed
+    bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
+
+    // calibrate gyro
     if (joystickOne.GetRawButton(DriverButton::Button5)) {
         a_Gyro.Cal();
         a_Gyro.Zero();
     }
 
-    // recalibrates the relative encoders using the absolute encoders
-    if (joystickOne.GetRawButton(DriverButton::Button11)) {
-        a_SwerveDrive.resetDrive();
-    }
-
-    if (joystickOne.GetRawButton(DriverButton::Button12)) {
+    if (joystickOne.GetRawButton(DriverButton::Button9)) {
         // vision led on
     } else {
         // vision led off
     }
 
-    if (joystickOne.GetRawButton(DriverButton::Button12)) /* && has target (todo once written) */ {
+    if (joystickOne.GetRawButton(DriverButton::Button9)) /* && has target (todo once written) */ {
         // track target with vision
-    } else if (joystickOne.GetRawButton(DriverButton::Button3)) {
-        if (!inDeadzone) {
-            if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, false);
-            } else {
-                a_SwerveDrive.crabDriveUpdate(x, y, gyro);
-            }
-        } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, false);
-        }
     } else {
         if (!inDeadzone) {
             if (joystickOne.GetRawButton(DriverButton::Trigger)) {
@@ -324,33 +313,26 @@ void Robot::TestPeriodic() {
         gyro = fmod(gyro, 360);
     }
 
-    bool fieldOreo = true; // field oriented? - yes
-
-    frc::SmartDashboard::PutNumber("Chase: ", z);
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
+    // turn field oriented mode off if button 3 is pressed
+    bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
 
-    if (joystickOne.GetRawButton(DriverButton::Button3)) {
-        a_SwerveDrive.turnToAngle(gyro, 180.0);
-    } else if (!inDeadzone) {
+    // calibrate gyro
+    if (joystickOne.GetRawButton(DriverButton::Button5)) {
+        a_Gyro.Cal();
+        a_Gyro.Zero();
+    }
+
+    if (!inDeadzone) {
         if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-            if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
-                // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
-            } else {
-                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
-            }
+            a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
         } else {
             a_SwerveDrive.crabDriveUpdate(x, y, gyro);
         }
     } else {
-        if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
-            // a_swerveyDrive.makeShiftTurn(a_LimeyLight.calcZAxis());
-        } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
-        }
+        a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
     }
-
-    frc::SmartDashboard::PutNumber("Gyro: ", gyro);
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop
