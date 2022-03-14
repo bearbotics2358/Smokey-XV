@@ -82,7 +82,7 @@ void Autonomous::StartPathMaster() {
 
         case 2:
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
-            // AutonomousStart2();
+            AutonomousStart2();
 
             break;
     }
@@ -112,7 +112,7 @@ void Autonomous::StartPathMaster(int path) {
 
         case 2:
             frc::SmartDashboard::PutBoolean("2-ball Taxi Started", true);
-            // AutonomousStart2();
+            AutonomousStart2();
 
             break;
     }
@@ -134,7 +134,7 @@ void Autonomous::PeriodicPathMaster() {
             break;
 
         case 2:
-            // AutonomousPeriodic2();
+            AutonomousPeriodic2();
 
             break;
     }
@@ -156,7 +156,7 @@ void Autonomous::PeriodicPathMaster(int path) {
             break;
 
         case 2:
-            // AutonomousPeriodic2();
+            AutonomousPeriodic2();
 
             break;
     }
@@ -239,12 +239,12 @@ void Autonomous::AutonomousPeriodic1() {
     }
     a_AutoState1 = nextState;
 }
-/*
+
 void Autonomous::AutonomousStart2() {
     a_AutoState2 = kCollectDown2;
     a_Gyro->Zero();
 }
-/*
+
 
 void Autonomous::AutonomousPeriodic2() {
 
@@ -255,7 +255,7 @@ void Autonomous::AutonomousPeriodic2() {
             IDontLikeExercise();
 
             break;
-
+/*
         case kCollectDown2:
             ToggleCollector();
             nextState = kDriveBackThroughBall2;
@@ -271,7 +271,7 @@ void Autonomous::AutonomousPeriodic2() {
             ToggleCollector();
             nextState = kTurn2;
             break;
-
+*/
         case kTurn2:
             if (TurnToAngle(-159)) {
                 nextState = kSpool2;
@@ -315,7 +315,7 @@ void Autonomous::AutonomousPeriodic2() {
     }
     a_AutoState2 = nextState;
 }
-*/
+
 void Autonomous::IDontLikeExercise() {
 
     a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);

@@ -14,7 +14,7 @@
 #define CLIMBER_MOTOR_ID 24
 #define CLIMBER_PUSH_SOLENOID_MODULE 10
 #define CLIMBER_PULL_SOLENOID_MODULE 11
-#define CLIMBER_MOTOR_PERCENT_OUTPUT 0.8
+#define CLIMBER_MOTOR_PERCENT_OUTPUT 1.0
 #define CLIMBER_MOTOR_SPEED 1000 // the desired speed for the arm to rise (mm/s)
 // 12:1 gearbox between motor and thunderhex (winch)
 #define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
