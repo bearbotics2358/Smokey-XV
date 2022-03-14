@@ -114,6 +114,7 @@ void Robot::DisabledPeriodic() {
 void Robot::EnabledInit() {
     a_Collector.resetSolenoid();
     a_Climber.resetClimber();
+    a_Shooter.setSpeed(SHOOT_FROM_WALL);
 }
 
 void Robot::EnabledPeriodic() {
@@ -143,7 +144,6 @@ void Robot::TeleopInit() {
         EnabledInit();
         a_doEnabledInit = false;
     }
-    a_Shooter.setSpeed(SHOOT_FROM_WALL);
 }
 
 // main loop
@@ -200,10 +200,10 @@ void Robot::TeleopPeriodic() {
     } else {
         a_Collector.setIndexerMotorSpeed(0);
     }
-    if (joystickOne.GetRawButton(11)) {
+    if (joystickOne.GetRawButton(DriverButton::Button11)) {
         a_Shooter.setSpeed(0);
     }
-    if (joystickOne.GetRawButton(12)) {
+    if (joystickOne.GetRawButton(DriverButton::Button12)) {
         a_Shooter.setSpeed(SHOOT_FROM_WALL);
     }
 
