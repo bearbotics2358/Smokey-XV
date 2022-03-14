@@ -232,7 +232,7 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (DriveDirection(2.4, 180, 0.25)) {
+            if (DriveDirection(2.4, 180, 0.25, false)) {
                 nextState = kAutoIdle1;
             }
             break;
@@ -255,23 +255,23 @@ void Autonomous::AutonomousPeriodic2() {
             IDontLikeExercise();
 
             break;
-/*
-        case kCollectDown2:
-            ToggleCollector();
-            nextState = kDriveBackThroughBall2;
-            break;
+            /*
+                    case kCollectDown2:
+                        ToggleCollector();
+                        nextState = kDriveBackThroughBall2;
+                        break;
 
-        case kDriveBackThroughBall2:
-            if (DriveWhileCollecting(36, 0)) {
-                nextState = kLoad2;
-            }
-            break;
+                    case kDriveBackThroughBall2:
+                        if (DriveWhileCollecting(36, 0)) {
+                            nextState = kLoad2;
+                        }
+                        break;
 
-        case kLoad2:
-            ToggleCollector();
-            nextState = kTurn2;
-            break;
-*/
+                    case kLoad2:
+                        ToggleCollector();
+                        nextState = kTurn2;
+                        break;
+            */
         case kTurn2:
             if (TurnToAngle(-159)) {
                 nextState = kSpool2;
@@ -422,7 +422,7 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
     }
 }
 
-bool Autonomous::DriveDirection(double dist, double angle, double speed) { // true is done, false is not done
+bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fieldOriented) { // true is done, false is not done
 
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
 

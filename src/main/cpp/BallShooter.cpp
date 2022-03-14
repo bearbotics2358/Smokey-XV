@@ -27,11 +27,6 @@ a_shooterRight(rightId) {
 }
 
 void BallShooter::setSpeed(double rpm) {
-    // to stop the motor breaking from going to fast instantly
-    // smooths out desired rpm
-    // double input = (1 - alpha) * previousInput + alpha * rpm;
-    // previousInput = input;
-
     // with TalonFX::Set in VelocityMode, it wants a value which says
     // how many units to turn per 100 ms (0.1 sec)
     // there are 2048 of these units in 1 rotation
