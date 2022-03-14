@@ -241,7 +241,7 @@ void Autonomous::AutonomousPeriodic1() {
 }
 
 void Autonomous::AutonomousStart2() {
-    a_AutoState2 = kCollectDown2;
+    a_AutoState2 = kDriveBackThroughBall2;
     a_Gyro->Zero();
 }
 
@@ -255,52 +255,43 @@ void Autonomous::AutonomousPeriodic2() {
             IDontLikeExercise();
 
             break;
-/*
-        case kCollectDown2:
-            ToggleCollector();
-            nextState = kDriveBackThroughBall2;
-            break;
 
         case kDriveBackThroughBall2:
-            if (DriveWhileCollecting(36, 0)) {
-                nextState = kLoad2;
+            CollectorDown();
+            CollectorOn();
+            if (DriveDirection(1.0, 0, 0.25)) {
+                CollectorUp();
+                CollectorOff();
+                nextState = kTurn2;
             }
             break;
 
-        case kLoad2:
-            ToggleCollector();
-            nextState = kTurn2;
-            break;
-*/
         case kTurn2:
             if (TurnToAngle(-159)) {
-                nextState = kSpool2;
+                SpoolShooter(SHOOTER_SPEED);
+                nextState = kDriveToWall2;
             }
-            break;
-
-        case kSpool2:
-            SpoolShooter(SHOOTER_SPEED);
-            nextState = kDriveToWall2;
             break;
 
         case kDriveToWall2:
-            if (IHaveAProposal(0.3, 120, 0)) {
+            if (DriveDirection(3.0, 120, 0.25)) {
                 nextState = kShoot2;
             }
             break;
 
         case kShoot2:
             if (IndexAndShoot(SHOOTER_SPEED)) {
-                nextState = kWait1_2;
+                StartTimer();
+                nextState = kWait2;
             }
             break;
 
-        case kWait1_2:
-            if (WaitForTime(1)) {
-                nextState = kSecondShoot2;
+        case kWait2:
+            if (WaitForTime(5)) {
+                nextState = kAutoIdle2;
             }
             break;
-
+/*
         case kSecondShoot2:
             if (IndexAndShoot(SHOOTER_SPEED)) {
                 nextState = kWait2_2;
@@ -312,6 +303,7 @@ void Autonomous::AutonomousPeriodic2() {
                 nextState = kAutoIdle2;
             }
             break;
+*/
     }
     a_AutoState2 = nextState;
 }
@@ -343,11 +335,15 @@ bool Autonomous::WaitForTime(double time) {
 void Autonomous::SpoolShooter(float speed) {
     a_BallShooter->setSpeed(speed);
 }
-/*
-void Autonomous::ToggleCollector() {
-    a_Collector->toggleSolenoid();
+
+void Autonomous::CollectorDown() {
+    a_Collector->setSolenoid(frc::DoubleSolenoid::Value::kForward);
 }
-*/
+
+void Autonomous::CollectorUp() {
+    a_Collector->setSolenoid(frc::DoubleSolenoid::Value::kReverse);
+}
+
 
 bool Autonomous::DriveDist(double dist, double angle) { // true is done, false is not done
 
@@ -375,7 +371,7 @@ bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is 
     }
 }
 
-bool Autonomous::TurnToAngle(float angle) {
+bool Autonomous::TurnToAngle(float angle) { //rotates bot in place to specific angle
 
     if (fabs(a_Gyro->getAngle() - angle) >= 1) {
         a_SwerveDrive->turnToAngle(a_Gyro->getAngle(), angle);
@@ -389,17 +385,6 @@ bool Autonomous::TurnToAngle(float angle) {
         return true;
     }
 }
-/*
-bool Autonomous::BallShot(float speed) { // looks for a dip in RPM value to detect a shot being made
-    // going to reimplement using beambreak soon
-    if (a_BeamBreak->beamBroken()) {
-        a_Collector->setIndexerMotorSpeed(0);
-        return true;
-    } else if (a_BallShooter->getSpeed() >= speed) {
-        return false;
-    }
-}
-*/
 
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
 
@@ -420,6 +405,13 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
+}
+
+void Autonomous::CollectorOn() {
+    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
+}
+void Autonomous::CollectorOff() {
+    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
 }
 
 bool Autonomous::DriveDirection(double dist, double angle, double speed) { // true is done, false is not done

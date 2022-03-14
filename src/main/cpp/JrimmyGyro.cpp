@@ -180,10 +180,11 @@ double JrimmyGyro::getAngle() {
     return angle[2];
 }
 
-void JrimmyGyro::Zero() {
+void JrimmyGyro::Zero(double offsetAngle) {
     for (int i = 0; i < 3; i++) {
         angle[i] = 0;
     }
+    angle[2] = offsetAngle;
 }
 
 std::string JrimmyGyro::GetSmartDashboardType() {

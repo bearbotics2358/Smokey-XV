@@ -38,7 +38,7 @@ enum AutoState2 { // T.O.F and Encoders
     kSpool2,
     kDriveToWall2,
     kShoot2,
-    kWait1_2,
+    kWait2,
     kSecondShoot2,
     kCheckSecondShot2,
     kWait2_2
@@ -84,13 +84,20 @@ class Autonomous {
         //      Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
         bool WaitForTime(double time); // Wait
-        void setCollector();
+        
+        //changes solenoid implementation because of change in logic (down is deployed, up is retracted)
+        void CollectorDown();
+        void CollectorUp();
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
-        bool DriveDirection(double dist, double angle, double speed); // implements driveDistance from SwerveDrive (drives distance @ angle)
+        //activates or deactivates collector motor
+        void CollectorOn();
+        void CollectorOff();
 
-        bool BallShot(float speed); // checks if a ball has been shot by measuring RPM values
+// Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
+        bool DriveDirection(double dist, double angle, double speed); 
+    
 
         bool TurnToAngle(float angle); // turns to a specific angle
 
