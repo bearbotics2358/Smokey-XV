@@ -194,7 +194,7 @@ void Autonomous::AutonomousPeriodic0() {
 void Autonomous::AutonomousStart1() {
 
     a_AutoState1 = kShoot1;
-    a_Gyro->Zero();
+    a_Gyro->Zero(21);
 }
 
 
