@@ -17,24 +17,21 @@ a_shooterRight(rightId) {
 
     config.velocityMeasurementPeriod = ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_25Ms;
 
-    // FIXME: pid tune
-    config.slot0.kP = 0.4;
+    // TODO: pid tune more
+    config.slot0.kP = 0.6;
+    config.slot0.kI = 0.0005;
+    config.slot0.kD = 0.01;
 
     a_shooterLeft.ConfigAllSettings(config);
     a_shooterRight.ConfigAllSettings(config);
 }
 
 void BallShooter::setSpeed(double rpm) {
-    // to stop the motor breaking from going to fast instantly
-    // smooths out desired rpm
-    double input = (1 - alpha) * previousInput + alpha * rpm;
-    previousInput = input;
-
     // with TalonFX::Set in VelocityMode, it wants a value which says
     // how many units to turn per 100 ms (0.1 sec)
     // there are 2048 of these units in 1 rotation
     // these units may or may not be encoder ticks, I didn't look to see
-    double value = misc::rpmToTalonVel(input);
+    double value = misc::rpmToTalonVel(rpm);
 
     a_shooterLeft.Set(ControlMode::Velocity, value);
     a_shooterRight.Set(ControlMode::Velocity, -value);

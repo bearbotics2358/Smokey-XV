@@ -53,8 +53,8 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
     public:
         SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule);
 
-        // crab drive is like swerve drive update, except it maintains a constant turn angle and is always field oriented
-        void crabDriveUpdate(float x, float y, float gyroDegrees);
+        // crab drive is like swerve drive update, except it maintains a constant turn angle
+        void crabDriveUpdate(float x, float y, float gyroDegrees, bool fieldOriented = true);
         void swerveUpdate(float x, float y, float z, float gyroDegrees, bool fieldOriented);
         /*
             x = x asix on joystick
@@ -85,7 +85,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         void turnToAngle(float gyroDegrees, float angle);
 
         // drives at a given speed (units uknown), in a given direction in degrees, for a given distance in meters
-        void goToTheDon(float speed, float direction, float distance, float gyro);
+        void goToTheDon(float speed, float direction, float distance, float gyro, bool fieldOriented = true);
 
     private:
         // called by both crabDriveUpdate and swerveUpdata

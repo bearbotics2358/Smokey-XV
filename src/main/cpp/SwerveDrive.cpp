@@ -63,7 +63,7 @@ crabAnglePid(5, 0.0, 0.0) {
     crabAnglePid.EnableContinuousInput(0.0, 360.0);
 }
 
-void SwerveDrive::crabDriveUpdate(float x, float y, float gyroDegrees) {
+void SwerveDrive::crabDriveUpdate(float x, float y, float gyroDegrees, bool fieldOriented) {
     if (!crab) {
         holdAngle = gyroDegrees;
         crab = true;
@@ -71,7 +71,7 @@ void SwerveDrive::crabDriveUpdate(float x, float y, float gyroDegrees) {
 
     auto z = std::clamp(crabAnglePid.Calculate(gyroDegrees, holdAngle) / 270.0, -0.5, 0.5);
 
-    swerveUpdateInner(x, y, z, gyroDegrees, true);
+    swerveUpdateInner(x, y, z, gyroDegrees, fieldOriented);
 }
 
 void SwerveDrive::swerveUpdate(float x, float y, float z, float gyroDegrees, bool fieldOriented) {
@@ -135,7 +135,7 @@ void SwerveDrive::turnToAngle(float gyroDegrees, float angle) {
     brModule.setDrivePercent(speed);
 }
 
-void SwerveDrive::goToTheDon(float speed, float direction, float distance, float gyro) {
+void SwerveDrive::goToTheDon(float speed, float direction, float distance, float gyro, bool fieldOriented) {
     if (getAvgDistance() <= distance) {
         float radians = direction * M_PI / 180.0;
 
@@ -145,7 +145,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, float
         crab = true;
         holdAngle = 0;
 
-        crabDriveUpdate(x, y, gyro);
+        crabDriveUpdate(x, y, gyro, fieldOriented);
     } else {
         swerveUpdate(0, 0, 0, gyro, false);
     }

@@ -96,7 +96,7 @@ class Autonomous {
         void CollectorOff();
 
 // Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
-        bool DriveDirection(double dist, double angle, double speed); 
+        bool DriveDirection(double dist, double angle, double speed, bool fieldOriented); 
     
 
         bool TurnToAngle(float angle); // turns to a specific angle

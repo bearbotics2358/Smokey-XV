@@ -232,7 +232,7 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (DriveDirection(2.4, 180, 0.25)) {
+            if (DriveDirection(2.4, 180, 0.25, false)) {
                 nextState = kAutoIdle1;
             }
             break;
@@ -259,7 +259,7 @@ void Autonomous::AutonomousPeriodic2() {
         case kDriveBackThroughBall2:
             CollectorDown();
             CollectorOn();
-            if (DriveDirection(1.0, 0, 0.25)) {
+            if (DriveDirection(1.0, 0, 0.25, true)) {
                 CollectorUp();
                 CollectorOff();
                 nextState = kTurn2;
@@ -274,7 +274,7 @@ void Autonomous::AutonomousPeriodic2() {
             break;
 
         case kDriveToWall2:
-            if (DriveDirection(3.0, 120, 0.25)) {
+            if (DriveDirection(3.0, 120, 0.25, true)) {
                 nextState = kShoot2;
             }
             break;
@@ -414,7 +414,7 @@ void Autonomous::CollectorOff() {
     a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
 }
 
-bool Autonomous::DriveDirection(double dist, double angle, double speed) { // true is done, false is not done
+bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fieldOriented) { // true is done, false is not done
 
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
 
