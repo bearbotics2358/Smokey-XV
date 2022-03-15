@@ -194,7 +194,7 @@ void Autonomous::AutonomousPeriodic0() {
             break;
 
         case kDriveAway0:
-            if (DriveDist(36, 0)) {
+            if (DriveDirection(1.0, 0, 0.25, false)) {
                 nextState = kAutoIdle0;
             }
             break;
@@ -278,14 +278,14 @@ void Autonomous::AutonomousPeriodic2() {
             break;
 
         case kTurn2:
-            if (TurnToAngle(21)) {
+            if (TurnToAngle(-21)) {
                 SpoolShooter(SHOOTER_SPEED);
                 nextState = kDriveToWall2;
             }
             break;
 
         case kDriveToWall2:
-            if (DriveDirection(2.23, 37, 0.25, true)) {
+            if (DriveDirection(2.23, -37, 0.25, true)) {
                 nextState = kShoot2;
             }
             break;
@@ -422,7 +422,7 @@ void Autonomous::CollectorOn() {
     a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
 }
 void Autonomous::CollectorOff() {
-    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
+    a_Collector->setCollectorMotorSpeed(0);
 }
 
 bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fieldOriented) { // true is done, false is not done
