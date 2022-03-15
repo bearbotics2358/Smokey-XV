@@ -205,7 +205,7 @@ void Autonomous::AutonomousPeriodic0() {
 void Autonomous::AutonomousStart1() {
 
     a_AutoState1 = kShoot1;
-    a_Gyro->Zero(21);
+    a_Gyro->Zero(-21);
 }
 
 
@@ -374,7 +374,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if (a_BallShooter->getSpeed() >= speed * 0.8) {
+    if (a_BallShooter->getSpeed() >= speed * SHOOTER_TOLERANCE) {
         a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else {
@@ -430,16 +430,17 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
 
         if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))) {
-            a_SwerveDrive->goToTheDon(speed / 2, angle, dist, a_Gyro->getAngle());
+            a_SwerveDrive->goToTheDon(speed / 2, angle, dist, a_Gyro->getAngle(), fieldOriented);
 
         } else {
-            a_SwerveDrive->goToTheDon(speed, angle, dist, a_Gyro->getAngle());
+            a_SwerveDrive->goToTheDon(speed, angle, dist, a_Gyro->getAngle(), fieldOriented);
         }
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
 
     } else {
         a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
+        a_SwerveDrive->unsetHoldAngle();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }

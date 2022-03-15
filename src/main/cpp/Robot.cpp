@@ -114,7 +114,6 @@ void Robot::DisabledPeriodic() {
 void Robot::EnabledInit() {
     a_Collector.resetSolenoid();
     a_Climber.resetClimber();
-    a_Shooter.setSpeed(SHOOTER_SPEED);
 }
 
 void Robot::EnabledPeriodic() {
@@ -129,6 +128,7 @@ void Robot::AutonomousInit() {
         a_doEnabledInit = false;
     }
 
+    a_SwerveDrive.unsetHoldAngle();
     a_Autonomous.Init();
     a_Autonomous.StartPathMaster();
 }
@@ -194,7 +194,7 @@ void Robot::TeleopPeriodic() {
     if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
         a_Shooter.setSpeed(SHOOTER_SPEED);
         // TODO: decrease margin of error when better pid tuned
-        if (a_Shooter.getSpeed() >= 0.8 * SHOOTER_SPEED) {
+        if (a_Shooter.getSpeed() >= SHOOTER_TOLERANCE * SHOOTER_SPEED) {
             a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
         } else {
             a_Collector.setIndexerMotorSpeed(0);

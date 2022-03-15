@@ -27,7 +27,9 @@
 #define LEFT_SHOOTER_ID 26
 #define RIGHT_SHOOTER_ID 27
 // desired shooter speed to shoot from the wall in rpm
-#define SHOOTER_SPEED 2400
+#define SHOOTER_SPEED 2200
+// how close we have to be to shooter speed to start indexing in balls
+#define SHOOTER_TOLERANCE 0.98
 
 /*======== COLLECTOR CONSTANTS ========*/
 

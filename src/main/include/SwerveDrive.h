@@ -66,6 +66,9 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
             and it is affected by the robot's current turn angle
         */
 
+        // unsets the hold angle, so the next call to crabDriveUpdate will set the hold angle to the reading from the gyro
+        void unsetHoldAngle();
+
         // resets steering and driving encoders
         void resetDrive();
 

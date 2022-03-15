@@ -41,8 +41,8 @@ Error MqttClient::update() {
     return get_error(mqtt_sync(m_client.get()));
 }
 
-Error MqttClient::publish(const std::string& topic, const std::string& payload) {
-    return get_error(mqtt_publish(m_client.get(), topic.c_str(), (void *) payload.c_str(), payload.size(), MQTT_PUBLISH_QOS_0));
+Error MqttClient::publish(const std::string& topic, std::string_view payload) {
+    return get_error(mqtt_publish(m_client.get(), topic.c_str(), (void *) payload.data(), payload.size(), MQTT_PUBLISH_QOS_0));
 }
 
 void MqttClient::unsubscribe(const std::string& topic) {
