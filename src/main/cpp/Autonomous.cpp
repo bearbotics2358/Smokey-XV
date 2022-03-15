@@ -228,6 +228,7 @@ void Autonomous::AutonomousPeriodic1() {
 
         case kDoneShooting1:
             IDontLikeExercise();
+            a_SwerveDrive->unsetHoldAngle();
             nextState = kTaxi1;
             break;
 

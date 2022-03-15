@@ -79,6 +79,10 @@ void SwerveDrive::swerveUpdate(float x, float y, float z, float gyroDegrees, boo
     swerveUpdateInner(x, y, z, gyroDegrees, fieldOriented);
 }
 
+void SwerveDrive::unsetHoldAngle() {
+    crab = false;
+}
+
 void SwerveDrive::resetDrive() {
     flModule.resetDriveEncoder();
     frModule.resetDriveEncoder();
@@ -141,9 +145,6 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, float
 
         float x = -speed * sin(radians);
         float y = speed * cos(radians);
-
-        crab = true;
-        holdAngle = gyro;
 
         crabDriveUpdate(x, y, gyro, fieldOriented);
     } else {
