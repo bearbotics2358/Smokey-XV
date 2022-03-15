@@ -144,6 +144,7 @@ void Robot::TeleopInit() {
         EnabledInit();
         a_doEnabledInit = false;
     }
+    a_Shooter.stop();
 }
 
 // main loop
