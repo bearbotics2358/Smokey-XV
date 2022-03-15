@@ -114,7 +114,6 @@ void Robot::DisabledPeriodic() {
 void Robot::EnabledInit() {
     a_Collector.resetSolenoid();
     a_Climber.resetClimber();
-    a_Shooter.setSpeed(SHOOTER_SPEED);
 }
 
 void Robot::EnabledPeriodic() {

@@ -143,7 +143,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, float
         float y = speed * cos(radians);
 
         crab = true;
-        holdAngle = 0;
+        holdAngle = gyro;
 
         crabDriveUpdate(x, y, gyro, fieldOriented);
     } else {

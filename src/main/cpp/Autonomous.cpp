@@ -194,7 +194,7 @@ void Autonomous::AutonomousPeriodic0() {
 void Autonomous::AutonomousStart1() {
 
     a_AutoState1 = kShoot1;
-    a_Gyro->Zero(21);
+    a_Gyro->Zero(-21);
 }
 
 
@@ -419,10 +419,10 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
 
         if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))) {
-            a_SwerveDrive->goToTheDon(speed / 2, angle, dist, a_Gyro->getAngle());
+            a_SwerveDrive->goToTheDon(speed / 2, angle, dist, a_Gyro->getAngle(), fieldOriented);
 
         } else {
-            a_SwerveDrive->goToTheDon(speed, angle, dist, a_Gyro->getAngle());
+            a_SwerveDrive->goToTheDon(speed, angle, dist, a_Gyro->getAngle(), fieldOriented);
         }
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
