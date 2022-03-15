@@ -228,7 +228,6 @@ void Autonomous::AutonomousPeriodic1() {
 
         case kDoneShooting1:
             IDontLikeExercise();
-            a_SwerveDrive->unsetHoldAngle();
             nextState = kTaxi1;
             break;
 
@@ -364,7 +363,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
     a_BallShooter->setSpeed(speed);
 
-    if (a_BallShooter->getSpeed() >= speed * 0.8) {
+    if (a_BallShooter->getSpeed() >= speed * SHOOTER_TOLERANCE) {
         a_Collector->setIndexerMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
         return true;
     } else {
@@ -430,6 +429,7 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
 
     } else {
         a_SwerveDrive->swerveUpdate(0, 0, 0, a_Gyro->getAngle(), true);
+        a_SwerveDrive->unsetHoldAngle();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
