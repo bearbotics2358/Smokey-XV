@@ -31,17 +31,15 @@ enum AutoState1 { // Encoders
 
 enum AutoState2 { // T.O.F and Encoders
     kAutoIdle2 = 0,
-    kCollectDown2,
     kDriveBackThroughBall2,
-    kLoad2,
     kTurn2,
-    kSpool2,
     kDriveToWall2,
     kShoot2,
-    kWait2,
+    kWait2
+    /*
     kSecondShoot2,
     kCheckSecondShot2,
-    kWait2_2
+    kWait2_2*/
 };
 
 
@@ -57,7 +55,7 @@ class Autonomous {
         void DecidePath();
         void DecidePath(int intent);
 
-        int GetCurrentPath();
+        const char * GetCurrentPath();
 
         void StartPathMaster();
         void StartPathMaster(int path);
@@ -83,14 +81,13 @@ class Autonomous {
         // Timer System
         //      Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
-        bool WaitForTime(double time); // Wait
-        
-        //changes solenoid implementation because of change in logic (down is deployed, up is retracted)
-        void CollectorDown();
-        void CollectorUp();
+        bool WaitForTime(double time); // Wait for specified time
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
+        //changes solenoid implementation because of change in logic (down is deployed, up is retracted)
+        void CollectorDown();
+        void CollectorUp();
         //activates or deactivates collector motor
         void CollectorOn();
         void CollectorOff();
@@ -98,12 +95,9 @@ class Autonomous {
 // Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
         bool DriveDirection(double dist, double angle, double speed, bool fieldOriented); 
     
-
         bool TurnToAngle(float angle); // turns to a specific angle
 
         bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
-
-        bool DriveBackward(double dist, double speed); // Driving in a direction while collecting
 
         bool IndexAndShoot(float speed); // Shooting a ball when the shooter is spinning fast enough
 

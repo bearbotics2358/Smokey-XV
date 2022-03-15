@@ -108,7 +108,7 @@ void Robot::DisabledInit() {
 
 void Robot::DisabledPeriodic() {
     a_Autonomous.DecidePath();
-    frc::SmartDashboard::PutNumber("Selected Autonomous", a_Autonomous.GetCurrentPath());
+    frc::SmartDashboard::PutString("Selected Autonomous", a_Autonomous.GetCurrentPath());
 }
 
 void Robot::EnabledInit() {

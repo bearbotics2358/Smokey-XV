@@ -53,9 +53,20 @@ void Autonomous::DecidePath(int intent) {
     autoPathMaster = intent;
 }
 
-int Autonomous::GetCurrentPath() {
+const char * Autonomous::GetCurrentPath() {
 
-    return autoPathMaster;
+    if(autoPathMaster == 0){
+        return "0-ball taxi chosen";
+    }
+    else if(autoPathMaster == 1){
+        return "1-ball taxi chosen";
+    }
+    else if(autoPathMaster == 2){
+        return "2-ball taxi chosen";
+    }
+    else {
+        return "no auto chosen";
+    }
 }
 
 void Autonomous::StartPathMaster() {
