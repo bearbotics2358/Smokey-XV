@@ -9,6 +9,7 @@
 #include <JrimmyGyro.h>
 #include <Prefs.h>
 #include <frc/Joystick.h>
+#include <frc/XboxController.h>
 #include <frc/Timer.h>
 #include <units/math.h>
 
@@ -23,10 +24,19 @@ enum AutoState0 { // Encoders
 enum AutoState1 { // Encoders
     kAutoIdle1 = 0,
     kShoot1,
-    kStartTimer1_1,
-    kWait1_1,
+    kStartTimer1,
+    kWait1,
     kDoneShooting1,
     kTaxi1
+};
+
+enum AutoState1_1 { // Encoders
+    kAutoIdle1_1 = 0,
+    kShoot1_1,
+    kStartTimer1_1,
+    kWait1_1,
+    kDoneShooting1_1,
+    kTaxi1_1
 };
 
 enum AutoState2 { // T.O.F and Encoders
@@ -49,7 +59,7 @@ enum AutoState2 { // T.O.F and Encoders
 
 class Autonomous {
     public:
-        Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
+        Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
         void Init();
         // void UpdateGameData();
         void DecidePath();
@@ -68,6 +78,9 @@ class Autonomous {
 
         void AutonomousStart1();
         void AutonomousPeriodic1();
+
+        void AutonomousStart1_1();
+        void AutonomousPeriodic1_1();
 
         void AutonomousStart2();
         void AutonomousPeriodic2();
@@ -106,12 +119,14 @@ class Autonomous {
         JrimmyGyro *a_Gyro;
         frc::Timer *a_Timer;
         frc::Joystick *a_Joystick;
+        frc::Joystick *a_Xbox;
         SwerveDrive *a_SwerveDrive;
         BallShooter *a_BallShooter;
         Collector *a_Collector;
 
         AutoState0 a_AutoState0;
         AutoState1 a_AutoState1;
+        AutoState1_1 a_AutoState1_1;
         AutoState2 a_AutoState2;
 
         int autoPathMaster;

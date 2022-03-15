@@ -2,15 +2,17 @@
 #include <math.h>
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, frc::Joystick *Xbox_Controller, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
 a_Gyro(Gyro),
 a_Timer(Timer),
 a_Joystick(Joystick),
 a_SwerveDrive(SwerveDrive),
+a_Xbox(Xbox_Controller),
 a_BallShooter(BallShooter),
 a_Collector(Collector),
 a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
+a_AutoState1_1(kAutoIdle1_1),
 a_AutoState2(kAutoIdle2)
 
 {
@@ -29,20 +31,20 @@ void Autonomous::Init() {
 }
 
 void Autonomous::DecidePath() {
-
-    if (a_Joystick->GetRawButton(11)) {
-
-        autoPathMaster = 0;
-
-    } else if (a_Joystick->GetRawButton(10)) {
-
-        autoPathMaster = 1;
-
-    }
-
-    else if (a_Joystick->GetRawButton(12)) {
-
-        autoPathMaster = 2;
+    if(a_Xbox->GetTriggerPressed()){
+        if(a_Xbox->GetPOV() == 0){
+            autoPathMaster += 1;
+        }
+        if(a_Xbox->GetPOV() == 180){
+            autoPathMaster += 1;
+        }
+        //allows operator to cycle past normal range bound (which is [0,3]) and loop to other end
+        if(autoPathMaster < 0){
+            autoPathMaster = 3;
+        }
+        if(autoPathMaster > 3){
+            autoPathMaster = 0;
+        }
     }
 }
 
@@ -59,9 +61,12 @@ const char * Autonomous::GetCurrentPath() {
         return "0-ball taxi chosen";
     }
     else if(autoPathMaster == 1){
-        return "1-ball taxi chosen";
+        return "left 1-ball taxi chosen";
     }
     else if(autoPathMaster == 2){
+        return "right 1-ball taxi chosen";
+    }
+    else if(autoPathMaster == 3){
         return "2-ball taxi chosen";
     }
     else {
@@ -86,12 +91,16 @@ void Autonomous::StartPathMaster() {
             break;
 
         case 1:
-            frc::SmartDashboard::PutBoolean("1-ball Taxi started", true);
+            frc::SmartDashboard::PutBoolean("left 1-ball Taxi started", true);
             AutonomousStart1();
 
             break;
 
         case 2:
+            frc::SmartDashboard::PutBoolean("right 1-ball taxi started", true);
+            AutonomousStart1_1();
+
+        case 3:
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
             AutonomousStart2();
 
@@ -116,12 +125,16 @@ void Autonomous::StartPathMaster(int path) {
             break;
 
         case 1:
-            frc::SmartDashboard::PutBoolean("1-ball Taxi Started", true);
+            frc::SmartDashboard::PutBoolean("left 1-ball Taxi Started", true);
             AutonomousStart1();
 
             break;
 
         case 2:
+            frc::SmartDashboard::PutBoolean("right 1-ball taxi started", true);
+            AutonomousStart1_1();
+
+        case 3:
             frc::SmartDashboard::PutBoolean("2-ball Taxi Started", true);
             AutonomousStart2();
 
@@ -208,7 +221,6 @@ void Autonomous::AutonomousStart1() {
     a_Gyro->Zero(-21);
 }
 
-
 void Autonomous::AutonomousPeriodic1() {
 
     AutoState1 nextState = a_AutoState1;
@@ -221,16 +233,16 @@ void Autonomous::AutonomousPeriodic1() {
 
         case kShoot1:
             if (IndexAndShoot(SHOOTER_SPEED)) {
-                nextState = kStartTimer1_1;
+                nextState = kStartTimer1;
             }
             break;
 
-        case kStartTimer1_1:
+        case kStartTimer1:
             StartTimer();
-            nextState = kWait1_1;
+            nextState = kWait1;
             break;
 
-        case kWait1_1:
+        case kWait1:
             if (WaitForTime(1)) {
                 nextState = kDoneShooting1;
             }
@@ -243,12 +255,59 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (DriveDirection(2.4, 180, 0.25, false)) {
+            if (DriveDirection(2.4, 159, 0.25, false)) {
                 nextState = kAutoIdle1;
             }
             break;
     }
     a_AutoState1 = nextState;
+}
+
+void Autonomous::AutonomousStart1_1() {
+    a_AutoState1_1 = kShoot1_1;
+    a_Gyro->Zero(69);
+}
+
+void Autonomous::AutonomousPeriodic1_1() {
+
+    AutoState1_1 nextState = a_AutoState1_1;
+
+    switch (a_AutoState1) {
+
+        case kAutoIdle1_1:
+            IDontLikeExercise();
+            break;
+
+        case kShoot1_1:
+            if (IndexAndShoot(SHOOTER_SPEED)) {
+                nextState = kStartTimer1_1;
+            }
+            break;
+
+        case kStartTimer1_1:
+            StartTimer();
+            nextState = kWait1_1;
+            break;
+
+        case kWait1_1:
+            if (WaitForTime(1)) {
+                nextState = kDoneShooting1_1;
+            }
+
+            break;
+
+        case kDoneShooting1_1:
+            IDontLikeExercise();
+            nextState = kTaxi1_1;
+            break;
+
+        case kTaxi1_1:
+            if (DriveDirection(2.4, 111, 0.25, false)) {
+                nextState = kAutoIdle1_1;
+            }
+            break;
+    }
+    a_AutoState1_1 = nextState;
 }
 
 void Autonomous::AutonomousStart2() {
