@@ -37,6 +37,11 @@ void BallShooter::setSpeed(double rpm) {
     a_shooterRight.Set(ControlMode::Velocity, -value);
 }
 
+void BallShooter::stop() {
+    a_shooterLeft.Set(ControlMode::PercentOutput, 0.0);
+    a_shooterRight.Set(ControlMode::PercentOutput, 0.0);
+}
+
 double BallShooter::getSpeed() {
     // NOTE: avergaing probably isn't necessary
     double leftValue = a_shooterLeft.GetSelectedSensorVelocity();

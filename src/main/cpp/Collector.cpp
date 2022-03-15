@@ -7,8 +7,12 @@ a_collectorMotor(collectorMotorId),
 a_indexerMotor(indexerMotorId),
 a_collectorSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule) {}
 
-void Collector::setSolenoid(frc::DoubleSolenoid::Value position) {
-    a_collectorSolenoid.Set(position);
+void Collector::setSolenoid(bool deployed) {
+    if (deployed) {
+        a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    } else {
+        a_collectorSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    }
 }
 
 void Collector::resetSolenoid() {

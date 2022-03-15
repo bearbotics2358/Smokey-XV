@@ -7,7 +7,8 @@ class Collector {
     public:
         Collector(int collectorMotorId, int indexerMotorId, int pushSolenoidModule, int pullSolenoidModule);
 
-        void setSolenoid(frc::DoubleSolenoid::Value position);
+        // set to true to deploy collector
+        void setSolenoid(bool deployed);
         void resetSolenoid();
         void setCollectorMotorSpeed(double percent);
         void setIndexerMotorSpeed(double percent);

@@ -5,8 +5,7 @@
 
 Climber::Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule):
 a_climberArmMotor(climberMotorId),
-a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule)
-{
+a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSolenoidModule) {
     // by default this selects the ingetrated sensor
     // do this to set kp value
     ctre::phoenix::motorcontrol::can::TalonFXConfiguration config;
@@ -28,17 +27,21 @@ a_climberSolenoid(frc::PneumaticsModuleType::REVPH, pushSolenoidModule, pullSole
 }
 
 
-void Climber::setArmSpeed(double percent) {  // sets the power/speed of the climber arm by percent output mode
+void Climber::setArmSpeed(double percent) { // sets the power/speed of the climber arm by percent output mode
     a_climberArmMotor.Set(ControlMode::PercentOutput, percent);
 }
 
-void Climber::setSolenoid(frc::DoubleSolenoid::Value position) {
-    a_climberSolenoid.Set(position);
+void Climber::setSolenoid(bool deployed) {
+    if (deployed) {
+        a_climberSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    } else {
+        a_climberSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    }
 }
 
 void Climber::resetClimber() {
     a_climberSolenoid.Set(frc::DoubleSolenoid::Value::kForward); // kForward means the small arms are inside the robot frame, fReverse means they are extended
-    a_climberArmMotor.GetSensorCollection().SetIntegratedSensorPosition(0, 0); // reset arm motor encoder position to 0 
+    a_climberArmMotor.GetSensorCollection().SetIntegratedSensorPosition(0, 0); // reset arm motor encoder position to 0
 }
 double Climber::getTicks() {
     return a_climberArmMotor.GetSensorCollection().GetIntegratedSensorAbsolutePosition() * 0.1;
@@ -52,4 +55,3 @@ double Climber::getSpeed() { // returns the speed at which the climber arm is mo
     double ticks = a_climberArmMotor.GetSensorCollection().GetIntegratedSensorVelocity();
     return ticks * CLIMBER_MM_PER_TICK * 10;
 }
-

@@ -291,19 +291,19 @@ void Autonomous::AutonomousPeriodic2() {
                 nextState = kAutoIdle2;
             }
             break;
-/*
-        case kSecondShoot2:
-            if (IndexAndShoot(SHOOTER_SPEED)) {
-                nextState = kWait2_2;
-            }
-            break;
+            /*
+                    case kSecondShoot2:
+                        if (IndexAndShoot(SHOOTER_SPEED)) {
+                            nextState = kWait2_2;
+                        }
+                        break;
 
-        case kWait2_2:
-            if (WaitForTime(1)) {
-                nextState = kAutoIdle2;
-            }
-            break;
-*/
+                    case kWait2_2:
+                        if (WaitForTime(1)) {
+                            nextState = kAutoIdle2;
+                        }
+                        break;
+            */
     }
     a_AutoState2 = nextState;
 }
@@ -337,11 +337,11 @@ void Autonomous::SpoolShooter(float speed) {
 }
 
 void Autonomous::CollectorDown() {
-    a_Collector->setSolenoid(frc::DoubleSolenoid::Value::kForward);
+    a_Collector->setSolenoid(true);
 }
 
 void Autonomous::CollectorUp() {
-    a_Collector->setSolenoid(frc::DoubleSolenoid::Value::kReverse);
+    a_Collector->setSolenoid(false);
 }
 
 
@@ -371,7 +371,7 @@ bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is 
     }
 }
 
-bool Autonomous::TurnToAngle(float angle) { //rotates bot in place to specific angle
+bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific angle
 
     if (fabs(a_Gyro->getAngle() - angle) >= 1) {
         a_SwerveDrive->turnToAngle(a_Gyro->getAngle(), angle);
@@ -395,7 +395,7 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
             a_BallShooter->setSpeed(SHOOTER_SPEED);
         } else {
             a_SwerveDrive->goToTheDon(speed, dir, dist, a_Gyro->getAngle());
-            a_BallShooter->setSpeed(0);
+            a_BallShooter->stop();
         }
         frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;

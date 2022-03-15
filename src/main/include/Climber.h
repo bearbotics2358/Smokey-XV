@@ -1,13 +1,14 @@
 #pragma once
 #include <ctre/Phoenix.h>
-#include <frc/DoubleSolenoid.h>
 #include <frc/DigitalInput.h>
+#include <frc/DoubleSolenoid.h>
 
 class Climber {
     public:
         Climber(int climberMotorId, int pushSolenoidModule, int pullSolenoidModule);
         void setArmSpeed(double percent);
-        void setSolenoid(frc::DoubleSolenoid::Value position);
+        // true for arms extended, false for arms retracted
+        void setSolenoid(bool deployed);
         void resetClimber();
         double getHeight();
         double getTicks();
@@ -17,5 +18,5 @@ class Climber {
     private:
         TalonFX a_climberArmMotor;
         frc::DoubleSolenoid a_climberSolenoid;
-        //frc::DigitalInput a_Switch;
+        // frc::DigitalInput a_Switch;
 };

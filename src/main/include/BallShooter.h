@@ -14,11 +14,16 @@ class BallShooter {
         BallShooter(int leftId, int rightId);
 
         /** Set shooter speed in rpm.
-         *  The requested input is slowly scaled up to match the input rpm, which avoids damaging the motor if it spools up too fast.
-         *  Change the private member alpha to effect how fast this speeds up.
          *  @param rpm desired shooter speed in rpm.
          */
         void setSpeed(double rpm);
+
+        /** Stops the shooter.
+         *  Prefer this to setSpeed(0) because that causes the shooter to try and maintain 0 rpm,
+         *  which causes the gears to grind.
+         *  This one sets the percent output to 0.
+         */
+        void stop();
 
         /** Gets the current shooter speed in rpm.
          *  @return shooter speed in rpm.
@@ -28,9 +33,4 @@ class BallShooter {
     private:
         TalonFX a_shooterLeft;
         TalonFX a_shooterRight;
-
-        // alpha and previous input are used to slowly scale the requested input to the desired speed,
-        // instead of immedeately changing the requested value for the shooter, which could be a problem due to the heavy flywheels.
-        double alpha { 0.5 };
-        double previousInput { 0.0 };
 };

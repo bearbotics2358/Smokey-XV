@@ -144,7 +144,6 @@ void Robot::TeleopInit() {
         EnabledInit();
         a_doEnabledInit = false;
     }
-    a_Shooter.setSpeed(SHOOTER_SPEED);
 }
 
 // main loop
@@ -161,10 +160,10 @@ void Robot::TeleopPeriodic() {
         a_Climber.setArmSpeed(0);
     }
     if (joystickOne.GetRawButtonPressed(DriverButton::Button6)) {
-        a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kReverse); // arms out
+        a_Climber.setSolenoid(true); // arms out
     }
     if (joystickOne.GetRawButtonPressed(DriverButton::Button4)) {
-        a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kForward); // arms in
+        a_Climber.setSolenoid(false); // arms in
     }
 
 
@@ -204,19 +203,19 @@ void Robot::TeleopPeriodic() {
         a_Collector.setIndexerMotorSpeed(0);
     }
     if (joystickOne.GetRawButton(DriverButton::Button11)) {
-        a_Shooter.setSpeed(0);
+        a_Shooter.stop();
     }
     if (joystickOne.GetRawButton(DriverButton::Button12)) {
         a_Shooter.setSpeed(SHOOTER_SPEED);
     }
 
-    /*=-=-=-=-=-=-=-=- Testing Collector Controls -=-=-=-=-=-=-=-=*/
+    /* =-=-=-=-=-=-=-=-=-=- Collector Controls -=-=-=-=-=-=-=-=-=-= */
 
     if (a_XboxController.GetRawButtonPressed(OperatorButton::LeftBumper)) {
-        a_Collector.setSolenoid(frc::DoubleSolenoid::Value::kForward); // collecter in
+        a_Collector.setSolenoid(false); // collecter in
     }
     if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)) {
-        a_Collector.setSolenoid(frc::DoubleSolenoid::Value::kReverse); // collecter out
+        a_Collector.setSolenoid(true); // collecter out
     }
     if (a_XboxController.GetRawButton(OperatorButton::Y)) {
         a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
