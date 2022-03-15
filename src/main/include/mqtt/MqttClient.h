@@ -45,7 +45,7 @@ class MqttClient {
 
         Error update();
 
-        Error publish(const std::string& topic, const std::string& payload);
+        Error publish(const std::string& topic, std::string_view payload);
 
         // calback takes in a string_view of the message and a pointer to the passed in object
         template<typename T>
