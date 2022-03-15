@@ -242,7 +242,7 @@ void Autonomous::AutonomousPeriodic1() {
 
 void Autonomous::AutonomousStart2() {
     a_AutoState2 = kDriveBackThroughBall2;
-    a_Gyro->Zero();
+    a_Gyro->Zero(137);
 }
 
 
@@ -259,7 +259,7 @@ void Autonomous::AutonomousPeriodic2() {
         case kDriveBackThroughBall2:
             CollectorDown();
             CollectorOn();
-            if (DriveDirection(1.0, 0, 0.25, true)) {
+            if (DriveDirection(1.32, 137, 0.25, true)) {
                 CollectorUp();
                 CollectorOff();
                 nextState = kTurn2;
@@ -267,14 +267,14 @@ void Autonomous::AutonomousPeriodic2() {
             break;
 
         case kTurn2:
-            if (TurnToAngle(-159)) {
+            if (TurnToAngle(21)) {
                 SpoolShooter(SHOOTER_SPEED);
                 nextState = kDriveToWall2;
             }
             break;
 
         case kDriveToWall2:
-            if (DriveDirection(3.0, 120, 0.25, true)) {
+            if (DriveDirection(2.23, 37, 0.25, true)) {
                 nextState = kShoot2;
             }
             break;
@@ -287,7 +287,7 @@ void Autonomous::AutonomousPeriodic2() {
             break;
 
         case kWait2:
-            if (WaitForTime(5)) {
+            if (WaitForTime(3)) {
                 nextState = kAutoIdle2;
             }
             break;
