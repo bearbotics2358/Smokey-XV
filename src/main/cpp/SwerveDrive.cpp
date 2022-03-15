@@ -143,7 +143,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, float
     if (getAvgDistance() <= distance) {
         float radians = direction * M_PI / 180.0;
 
-        float x = -speed * sin(radians);
+        float x = speed * sin(radians);
         float y = speed * cos(radians);
 
         crabDriveUpdate(x, y, gyro, fieldOriented);

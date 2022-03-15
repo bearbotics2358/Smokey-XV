@@ -69,6 +69,9 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
     frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
 
+    frc::SmartDashboard::PutNumber("Joystick X", joystickOne.GetRawAxis(DriverJoystick::XAxis));
+    frc::SmartDashboard::PutNumber("Joystick Y", joystickOne.GetRawAxis(DriverJoystick::YAxis));
+
     frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
     frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", a_Climber.getTicks());

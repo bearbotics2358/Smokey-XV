@@ -17,7 +17,7 @@ a_AutoState2(kAutoIdle2)
 
 {
 
-    autoPathMaster = 1;
+    autoPathMaster = 3;
     BallsShot = 0;
     prevbeam = false;
     currbeam = true;
@@ -39,12 +39,14 @@ void Autonomous::DecidePath() {
             autoPathMaster += 1;
         }
         //allows operator to cycle past normal range bound (which is [0,3]) and loop to other end
+        /*
         if(autoPathMaster < 0){
             autoPathMaster = 3;
         }
         if(autoPathMaster > 3){
             autoPathMaster = 0;
         }
+        */
     }
 }
 
@@ -158,6 +160,10 @@ void Autonomous::PeriodicPathMaster() {
             break;
 
         case 2:
+            AutonomousPeriodic1_1();
+            break;
+
+        case 3:
             AutonomousPeriodic2();
 
             break;
@@ -312,7 +318,7 @@ void Autonomous::AutonomousPeriodic1_1() {
 
 void Autonomous::AutonomousStart2() {
     a_AutoState2 = kDriveBackThroughBall2;
-    a_Gyro->Zero(137);
+    a_Gyro->Zero(133);
 }
 
 
@@ -329,7 +335,7 @@ void Autonomous::AutonomousPeriodic2() {
         case kDriveBackThroughBall2:
             CollectorDown();
             CollectorOn();
-            if (DriveDirection(1.32, 137, 0.25, true)) {
+            if (DriveDirection(1.32, 133, 0.25, true)) {
                 CollectorUp();
                 CollectorOff();
                 nextState = kTurn2;
