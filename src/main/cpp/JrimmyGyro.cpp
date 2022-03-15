@@ -180,7 +180,7 @@ double JrimmyGyro::getAngle() {
     return angle[2];
 }
 
-void JrimmyGyro::Zero(double offsetAngle) {
+void JrimmyGyro::Zero(double offsetAngle) { //takes offsetAngle, defaults to zero if none provided. CCW is +
     for (int i = 0; i < 3; i++) {
         angle[i] = 0;
     }
