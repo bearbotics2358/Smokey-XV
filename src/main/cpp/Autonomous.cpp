@@ -350,7 +350,7 @@ void Autonomous::AutonomousPeriodic2() {
             break;
 
         case kDriveToWall2:
-            if (DriveDirection(2.23, -37, 0.25, true)) {
+            if (DriveDirection(1.72, -37, 0.25, true)) {
                 nextState = kShoot2;
             }
             break;
@@ -462,6 +462,8 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
     }
 }
 
+/* NOT REALLY NEEDED, WE HAVE DRIVEDIRECTION AND THIS IS NEVER USED
+
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
 
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
@@ -481,7 +483,7 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
-}
+}*/
 
 void Autonomous::CollectorOn() {
     a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);

@@ -52,6 +52,18 @@ enum AutoState2 { // T.O.F and Encoders
     kWait2_2*/
 };
 
+enum AutoState2_1 { // T.O.F and Encoders
+    kAutoIdle2_1 = 0,
+    kDriveBackThroughBall2_1,
+    kTurn2_1,
+    kDriveToWall2_1,
+    kShoot2_1,
+    kWait2_1
+    /*
+    kSecondShoot2,
+    kCheckSecondShot2,
+    kWait2_2*/
+};
 
 
 // add more vision versions later
@@ -84,6 +96,9 @@ class Autonomous {
 
         void AutonomousStart2();
         void AutonomousPeriodic2();
+        
+        void AutonomousStart2_1();
+        void AutonomousPeriodic2_1();
 
         // ------------------Sub-Routines-------------------------//
 
@@ -128,6 +143,7 @@ class Autonomous {
         AutoState1 a_AutoState1;
         AutoState1_1 a_AutoState1_1;
         AutoState2 a_AutoState2;
+        AutoState2_1 a_AutoState2_1;
 
         int autoPathMaster;
         int BallsShot;
