@@ -1,4 +1,5 @@
 #include "Autonomous.h"
+#include "buttons.h"
 #include <math.h>
 
 
@@ -31,14 +32,22 @@ void Autonomous::Init() {
 }
 
 void Autonomous::DecidePath() {
-    if(a_Xbox->GetTriggerPressed()){
-        if(a_Xbox->GetPOV() == 0){
-            autoPathMaster += 1;
+    if (a_Xbox->GetRawAxis(OperatorJoystick::LeftTrigger) > 0.5) {
+        if (a_Xbox->GetPOV() == 0) {
+            if (autoPathMaster == 0) {
+                autoPathMaster = MAX_AUTO;
+            } else {
+                autoPathMaster -= 1;
+            }
         }
-        if(a_Xbox->GetPOV() == 180){
-            autoPathMaster += 1;
+        if (a_Xbox->GetPOV() == 180) {
+            if (autoPathMaster == MAX_AUTO) {
+                autoPathMaster = 0;
+            } else {
+                autoPathMaster += 1;
+            }
         }
-        //allows operator to cycle past normal range bound (which is [0,3]) and loop to other end
+        // allows operator to cycle past normal range bound (which is [0,3]) and loop to other end
         /*
         if(autoPathMaster < 0){
             autoPathMaster = 3;
@@ -57,21 +66,17 @@ void Autonomous::DecidePath(int intent) {
     autoPathMaster = intent;
 }
 
-const char * Autonomous::GetCurrentPath() {
+const char *Autonomous::GetCurrentPath() {
 
-    if(autoPathMaster == 0){
+    if (autoPathMaster == 0) {
         return "0-ball taxi chosen";
-    }
-    else if(autoPathMaster == 1){
+    } else if (autoPathMaster == 1) {
         return "left 1-ball taxi chosen";
-    }
-    else if(autoPathMaster == 2){
+    } else if (autoPathMaster == 2) {
         return "right 1-ball taxi chosen";
-    }
-    else if(autoPathMaster == 3){
+    } else if (autoPathMaster == 3) {
         return "2-ball taxi chosen";
-    }
-    else {
+    } else {
         return "no auto chosen";
     }
 }

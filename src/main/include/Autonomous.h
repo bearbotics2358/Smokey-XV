@@ -130,6 +130,7 @@ class Autonomous {
         AutoState2 a_AutoState2;
 
         int autoPathMaster;
+        constexpr static int MAX_AUTO = 3;
         int BallsShot;
         bool prevbeam;
         bool currbeam;
