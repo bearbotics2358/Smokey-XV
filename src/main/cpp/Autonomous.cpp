@@ -33,14 +33,14 @@ void Autonomous::Init() {
 
 void Autonomous::DecidePath() {
     if (a_Xbox->GetRawAxis(OperatorJoystick::LeftTrigger) > 0.5) {
-        if (a_Xbox->GetPOV() == 0) {
+        if (a_Xbox->GetRawButtonPressed(OperatorButton::Y)) {
             if (autoPathMaster == 0) {
                 autoPathMaster = MAX_AUTO;
             } else {
                 autoPathMaster -= 1;
             }
         }
-        if (a_Xbox->GetPOV() == 180) {
+        if (a_Xbox->GetRawButtonPressed(OperatorButton::A)) {
             if (autoPathMaster == MAX_AUTO) {
                 autoPathMaster = 0;
             } else {
