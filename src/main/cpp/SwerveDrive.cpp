@@ -58,7 +58,7 @@ frModule(frModule),
 blModule(blModule),
 brModule(brModule),
 turnAnglePid(0.014, 0.0, 0.0),
-crabAnglePid(5, 0.0, 0.0) {
+crabAnglePid(1.5, 0.0, 0.01) {
     turnAnglePid.EnableContinuousInput(0.0, 360.0);
     crabAnglePid.EnableContinuousInput(0.0, 360.0);
 }

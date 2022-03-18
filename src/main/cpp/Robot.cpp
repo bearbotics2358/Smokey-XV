@@ -195,12 +195,14 @@ void Robot::TeleopPeriodic() {
 
     */
 
-    if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
+    if (joystickOne.GetRawButton(DriverButton::Button10)) {
+        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+    } else if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
         a_Shooter.setSpeed(SHOOTER_SPEED);
         // TODO: decrease margin of error when better pid tuned
         if (a_Shooter.getSpeed() >= SHOOTER_TOLERANCE * SHOOTER_SPEED) {
             a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
-        } else {
+        } else if (!joystickOne.GetRawButton(DriverButton::Button10)) {
             a_Collector.setIndexerMotorSpeed(0);
         }
     } else {

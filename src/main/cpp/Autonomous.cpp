@@ -361,11 +361,15 @@ void Autonomous::AutonomousPeriodic2() {
             break;
 
         case kShoot2:
-            if (IndexAndShoot(SHOOTER_SPEED)) {
+            a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+            StartTimer();
+            nextState = kWait2;
+            break;
+            /*if (IndexAndShoot(SHOOTER_SPEED)) {
                 StartTimer();
                 nextState = kWait2;
             }
-            break;
+            break;*/
 
         case kWait2:
             if (WaitForTime(3)) {
