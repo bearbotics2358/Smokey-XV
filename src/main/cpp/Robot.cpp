@@ -274,6 +274,24 @@ void Robot::TeleopPeriodic() {
             a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
         }
     }
+
+    /* =-=-=-=-=-=-=-=-=-=-= Drive Back Distance =-=-=-=-=-=-=-=-=-=-= */
+    if (joystickOne.GetRawButtonPressed(DriverButton::Button10) && driveBack == false) {
+        driveBack = true;
+        driveBackStartDist = a_SwerveDrive.getAvgDistance();
+    }
+    if (joystickOne.GetRawButtonReleased(DriverButton::Button10)) {
+        a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, false);
+        driveBack = false;
+    }
+    // just in case
+    if (driveBack && joystickOne.GetRawButton(DriverButton::Button10)) {
+        if (a_SwerveDrive.getAvgDistance() > (driveBackStartDist + 0.6)) {
+            driveBack = false;
+        } else {
+            a_SwerveDrive.goToTheDon(0.5, 180, driveBackStartDist + 0.6, gyro, false);
+        }
+    }
 }
 
 void Robot::TestInit() {
@@ -286,49 +304,6 @@ void Robot::TestInit() {
 
 void Robot::TestPeriodic() {
     EnabledPeriodic();
-
-    float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
-    float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
-    float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.getAngle();
-
-    if (fabs(x) < 0.10) {
-        x = 0;
-    }
-    if (fabs(y) < 0.10) {
-        y = 0;
-    }
-    if (fabs(z) < 0.10) {
-        z = 0;
-    }
-
-    if (gyro < 0) {
-        gyro = fmod(gyro, -360);
-        gyro += 360;
-    } else {
-        gyro = fmod(gyro, 360);
-    }
-
-    bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
-
-    // turn field oriented mode off if button 3 is pressed
-    bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
-
-    // calibrate gyro
-    if (joystickOne.GetRawButton(DriverButton::Button5)) {
-        a_Gyro.Cal();
-        a_Gyro.Zero();
-    }
-
-    if (!inDeadzone) {
-        if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-            a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
-        } else {
-            a_SwerveDrive.crabDriveUpdate(x, y, gyro);
-        }
-    } else {
-        a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
-    }
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop

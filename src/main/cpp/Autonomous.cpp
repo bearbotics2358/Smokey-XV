@@ -13,7 +13,6 @@ a_BallShooter(BallShooter),
 a_Collector(Collector),
 a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
-a_AutoState1_1(kAutoIdle1_1),
 a_AutoState2(kAutoIdle2)
 
 {
@@ -106,43 +105,10 @@ void Autonomous::StartPathMaster() {
         case 2:
             frc::SmartDashboard::PutBoolean("right 1-ball taxi started", true);
             AutonomousStart1_1();
+            break;
 
         case 3:
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
-            AutonomousStart2();
-
-            break;
-    }
-}
-
-void Autonomous::StartPathMaster(int path) {
-
-    switch (path) {
-
-        case -1:
-            // Error!
-            frc::SmartDashboard::PutBoolean("Auto Failed", false);
-
-            break;
-
-        case 0:
-            frc::SmartDashboard::PutBoolean("0-ball Taxi Started", true);
-            AutonomousStart0();
-
-            break;
-
-        case 1:
-            frc::SmartDashboard::PutBoolean("left 1-ball Taxi Started", true);
-            AutonomousStart1();
-
-            break;
-
-        case 2:
-            frc::SmartDashboard::PutBoolean("right 1-ball taxi started", true);
-            AutonomousStart1_1();
-
-        case 3:
-            frc::SmartDashboard::PutBoolean("2-ball Taxi Started", true);
             AutonomousStart2();
 
             break;
@@ -165,7 +131,7 @@ void Autonomous::PeriodicPathMaster() {
             break;
 
         case 2:
-            AutonomousPeriodic1_1();
+            AutonomousPeriodic1();
             break;
 
         case 3:
@@ -174,29 +140,6 @@ void Autonomous::PeriodicPathMaster() {
             break;
     }
 }
-
-void Autonomous::PeriodicPathMaster(int path) {
-    switch (path) {
-        case -1:
-            // Error!
-            break;
-        case 0:
-            AutonomousPeriodic0();
-
-            break;
-
-        case 1:
-            AutonomousPeriodic1();
-
-            break;
-
-        case 2:
-            AutonomousPeriodic2();
-
-            break;
-    }
-}
-
 
 // ----------------------------------AUTONOMOUS ROUTINES---------------------------------------- //
 
@@ -227,9 +170,14 @@ void Autonomous::AutonomousPeriodic0() {
 }
 
 void Autonomous::AutonomousStart1() {
-
-    a_AutoState1 = kShoot1;
+    a_AutoState1 = kStartShooter1;
     a_Gyro->Zero(-21);
+}
+
+
+void Autonomous::AutonomousStart1_1() {
+    a_AutoState1 = kStartShooter1;
+    a_Gyro->Zero(69);
 }
 
 void Autonomous::AutonomousPeriodic1() {
@@ -242,10 +190,21 @@ void Autonomous::AutonomousPeriodic1() {
             IDontLikeExercise();
             break;
 
-        case kShoot1:
-            if (IndexAndShoot(SHOOTER_SPEED)) {
-                nextState = kStartTimer1;
+        case kStartShooter1:
+            SpoolShooter(SHOOTER_SPEED);
+            StartTimer();
+            nextState = kWaitShooter1;
+            break;
+        
+        case kWaitShooter1:
+            if (WaitForTime(2)) {
+                nextState = kShoot1;
             }
+            break;
+
+        case kShoot1:
+            a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+            nextState = kStartTimer1;
             break;
 
         case kStartTimer1:
@@ -266,59 +225,12 @@ void Autonomous::AutonomousPeriodic1() {
             break;
 
         case kTaxi1:
-            if (DriveDirection(2.4, 159, 0.25, false)) {
+            if (DriveDirection(2.4, 180, 0.25, false)) {
                 nextState = kAutoIdle1;
             }
             break;
     }
     a_AutoState1 = nextState;
-}
-
-void Autonomous::AutonomousStart1_1() {
-    a_AutoState1_1 = kShoot1_1;
-    a_Gyro->Zero(69);
-}
-
-void Autonomous::AutonomousPeriodic1_1() {
-
-    AutoState1_1 nextState = a_AutoState1_1;
-
-    switch (a_AutoState1) {
-
-        case kAutoIdle1_1:
-            IDontLikeExercise();
-            break;
-
-        case kShoot1_1:
-            if (IndexAndShoot(SHOOTER_SPEED)) {
-                nextState = kStartTimer1_1;
-            }
-            break;
-
-        case kStartTimer1_1:
-            StartTimer();
-            nextState = kWait1_1;
-            break;
-
-        case kWait1_1:
-            if (WaitForTime(1)) {
-                nextState = kDoneShooting1_1;
-            }
-
-            break;
-
-        case kDoneShooting1_1:
-            IDontLikeExercise();
-            nextState = kTaxi1_1;
-            break;
-
-        case kTaxi1_1:
-            if (DriveDirection(2.4, 111, 0.25, false)) {
-                nextState = kAutoIdle1_1;
-            }
-            break;
-    }
-    a_AutoState1_1 = nextState;
 }
 
 void Autonomous::AutonomousStart2() {

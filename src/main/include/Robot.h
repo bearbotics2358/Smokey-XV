@@ -16,6 +16,12 @@
 #include <frc/TimedRobot.h> // "Timed Robot" template
 #include <frc/Timer.h>
 
+enum class DriveBackState {
+    Inactive,
+    Start,
+    Active,
+};
+
 class Robot : public frc::TimedRobot {
     public:
         Robot();
@@ -76,4 +82,7 @@ class Robot : public frc::TimedRobot {
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;
+
+        bool driveBack { false };
+        double driveBackStartDist { 0.0 };
 };
