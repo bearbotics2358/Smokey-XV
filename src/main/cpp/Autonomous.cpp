@@ -343,13 +343,13 @@ void Autonomous::AutonomousPeriodic2() {
             if (DriveDirection(1.32, 133, 0.25, true)) {
                 CollectorUp();
                 CollectorOff();
+                SpoolShooter(SHOOTER_SPEED);
                 nextState = kTurn2;
             }
             break;
 
         case kTurn2:
             if (TurnToAngle(-21)) {
-                SpoolShooter(SHOOTER_SPEED);
                 nextState = kDriveToWall2;
             }
             break;
@@ -374,6 +374,7 @@ void Autonomous::AutonomousPeriodic2() {
         case kWait2:
             if (WaitForTime(3)) {
                 nextState = kAutoIdle2;
+                a_Collector->setIndexerMotorSpeed(0);
             }
             break;
             /*
