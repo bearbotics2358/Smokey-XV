@@ -314,6 +314,7 @@ void Autonomous::IDontLikeExercise() {
 }
 
 void Autonomous::StartTimer() {
+    a_Timer->Reset();
     a_Timer->Start();
 }
 
@@ -324,7 +325,6 @@ bool Autonomous::WaitForTime(double time) {
         return false;
     } else {
         a_Timer->Stop();
-        a_Timer->Reset();
         return true;
     }
 }
