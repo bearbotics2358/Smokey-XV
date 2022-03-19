@@ -14,7 +14,13 @@
 #include <units/math.h>
 
 
-
+enum AutoType {
+    k0Ball = 0,
+    kLeft1Ball = 1,
+    kMiddle1Ball = 2,
+    kRight1Ball = 3,
+    k2Ball = 4,
+};
 
 enum AutoState0 { // Encoders
     kAutoIdle0 = 0,
@@ -64,15 +70,16 @@ class Autonomous {
 
         void PeriodicPathMaster();
 
-        void AutonomousStart0();
-        void AutonomousPeriodic0();
+        void Start0Ball();
+        void Periodic0Ball();
 
-        void AutonomousStart1();
-        void AutonomousStart1_1();
-        void AutonomousPeriodic1();
+        void StartLeft1Ball();
+        void StartMiddle1Ball();
+        void StartRight1Ball();
+        void Periodic1Ball();
 
-        void AutonomousStart2();
-        void AutonomousPeriodic2();
+        void Start2Ball();
+        void Periodic2Ball();
 
         // ------------------Sub-Routines-------------------------//
 
@@ -117,8 +124,7 @@ class Autonomous {
         AutoState1 a_AutoState1;
         AutoState2 a_AutoState2;
 
-        int autoPathMaster;
-        constexpr static int MAX_AUTO = 3;
+        AutoType autoPathMaster;
         int BallsShot;
         bool prevbeam;
         bool currbeam;

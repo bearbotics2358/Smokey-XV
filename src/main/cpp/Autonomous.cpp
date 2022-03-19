@@ -13,11 +13,8 @@ a_BallShooter(BallShooter),
 a_Collector(Collector),
 a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
-a_AutoState2(kAutoIdle2)
-
-{
-
-    autoPathMaster = 3;
+a_AutoState2(kAutoIdle2) {
+    autoPathMaster = k2Ball;
     BallsShot = 0;
     prevbeam = false;
     currbeam = true;
@@ -33,123 +30,88 @@ void Autonomous::Init() {
 void Autonomous::DecidePath() {
     if (a_Xbox->GetRawAxis(OperatorJoystick::LeftTrigger) > 0.5) {
         if (a_Xbox->GetRawButtonPressed(OperatorButton::Y)) {
-            if (autoPathMaster == 0) {
-                autoPathMaster = MAX_AUTO;
+            if (autoPathMaster == k0Ball) {
+                autoPathMaster = k2Ball;
             } else {
-                autoPathMaster -= 1;
+                autoPathMaster = (AutoType) (autoPathMaster - 1);
             }
         }
         if (a_Xbox->GetRawButtonPressed(OperatorButton::A)) {
-            if (autoPathMaster == MAX_AUTO) {
-                autoPathMaster = 0;
+            if (autoPathMaster == k2Ball) {
+                autoPathMaster = k0Ball;
             } else {
-                autoPathMaster += 1;
+                autoPathMaster = (AutoType) (autoPathMaster + 1);
             }
         }
-        // allows operator to cycle past normal range bound (which is [0,3]) and loop to other end
-        /*
-        if(autoPathMaster < 0){
-            autoPathMaster = 3;
-        }
-        if(autoPathMaster > 3){
-            autoPathMaster = 0;
-        }
-        */
     }
 }
 
-
-
-void Autonomous::DecidePath(int intent) {
-
-    autoPathMaster = intent;
-}
-
 const char *Autonomous::GetCurrentPath() {
-
-    if (autoPathMaster == 0) {
-        return "0-ball taxi chosen";
-    } else if (autoPathMaster == 1) {
-        return "left 1-ball taxi chosen";
-    } else if (autoPathMaster == 2) {
-        return "right 1-ball taxi chosen";
-    } else if (autoPathMaster == 3) {
-        return "2-ball taxi chosen";
-    } else {
-        return "no auto chosen";
+    switch (autoPathMaster) {
+        case k0Ball:
+            return "0-ball taxi chosen";
+        case kLeft1Ball:
+            return "left 1-ball taxi chosen";
+        case kMiddle1Ball:
+            return "middle 1-ball taxi chosen";
+        case kRight1Ball:
+            return "right 1-ball taxi chosen";
+        case k2Ball:
+            return "2-ball taxi chosen";
+        default:
+            return "no autonous selected, this shouldn't happen";
     }
 }
 
 void Autonomous::StartPathMaster() {
-
     switch (autoPathMaster) {
-
-        case -1:
-            // Error!
-            frc::SmartDashboard::PutBoolean("Auto Failed", false);
-
-            break;
-
-        case 0:
+        case k0Ball:
             frc::SmartDashboard::PutBoolean("0-ball Taxi started", true);
-            AutonomousStart0();
-
+            Start0Ball();
             break;
-
-        case 1:
+        case kLeft1Ball:
             frc::SmartDashboard::PutBoolean("left 1-ball Taxi started", true);
-            AutonomousStart1();
-
+            StartLeft1Ball();
             break;
-
-        case 2:
+        case kMiddle1Ball:
+            frc::SmartDashboard::PutBoolean("middle 1-ball Taxi started", true);
+            StartMiddle1Ball();
+            break;
+        case kRight1Ball:
             frc::SmartDashboard::PutBoolean("right 1-ball taxi started", true);
-            AutonomousStart1_1();
+            StartRight1Ball();
             break;
-
-        case 3:
+        case k2Ball:
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
-            AutonomousStart2();
-
+            Start2Ball();
             break;
     }
 }
 
 void Autonomous::PeriodicPathMaster() {
     switch (autoPathMaster) {
-        case -1:
-            // Error!
+        case k0Ball:
+            Periodic0Ball();
             break;
-        case 0:
-            AutonomousPeriodic0();
-
+        case kLeft1Ball:
+        case kMiddle1Ball:
+        case kRight1Ball:
+            Periodic1Ball();
             break;
-
-        case 1:
-            AutonomousPeriodic1();
-
-            break;
-
-        case 2:
-            AutonomousPeriodic1();
-            break;
-
-        case 3:
-            AutonomousPeriodic2();
-
+        case k2Ball:
+            Periodic2Ball();
             break;
     }
 }
 
 // ----------------------------------AUTONOMOUS ROUTINES---------------------------------------- //
 
-void Autonomous::AutonomousStart0() {
-
+void Autonomous::Start0Ball() {
     a_AutoState0 = kDriveAway0;
     a_Gyro->Zero();
 }
 
-void Autonomous::AutonomousPeriodic0() {
+void Autonomous::Periodic0Ball() {
 
     AutoState0 nextState = a_AutoState0;
 
@@ -169,18 +131,22 @@ void Autonomous::AutonomousPeriodic0() {
     a_AutoState0 = nextState;
 }
 
-void Autonomous::AutonomousStart1() {
+void Autonomous::StartLeft1Ball() {
     a_AutoState1 = kStartShooter1;
     a_Gyro->Zero(-21);
 }
 
+void Autonomous::StartMiddle1Ball() {
+    a_AutoState1 = kStartShooter1;
+    a_Gyro->Zero();
+}
 
-void Autonomous::AutonomousStart1_1() {
+void Autonomous::StartRight1Ball() {
     a_AutoState1 = kStartShooter1;
     a_Gyro->Zero(69);
 }
 
-void Autonomous::AutonomousPeriodic1() {
+void Autonomous::Periodic1Ball() {
 
     AutoState1 nextState = a_AutoState1;
 
@@ -233,13 +199,12 @@ void Autonomous::AutonomousPeriodic1() {
     a_AutoState1 = nextState;
 }
 
-void Autonomous::AutonomousStart2() {
+void Autonomous::Start2Ball() {
     a_AutoState2 = kDriveBackThroughBall2;
     a_Gyro->Zero(133);
 }
 
-
-void Autonomous::AutonomousPeriodic2() {
+void Autonomous::Periodic2Ball() {
 
     AutoState2 nextState = a_AutoState2;
 
