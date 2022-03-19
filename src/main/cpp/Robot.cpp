@@ -222,9 +222,22 @@ void Robot::TeleopPeriodic() {
 
     /* =-=-=-=-=-=-=-=-=-=-= Swerve Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
-    float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
-    float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
+    // dpad up for full speed,
+    // down for half speed
+    if (a_XboxController.GetPOV() == 0) {
+        a_slowSpeed = false;
+    } else if (a_XboxController.GetPOV() == 180) {
+        a_slowSpeed = true;
+    }
+
+    float multiplier = 1.0;
+    if (a_slowSpeed) {
+        multiplier = 0.5;
+    }
+
+    float x = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::XAxis);
+    float y = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::YAxis);
+    float z = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
     float gyro = a_Gyro.getAngle();
 
     if (fabs(x) < 0.10) {

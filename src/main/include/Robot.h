@@ -59,6 +59,9 @@ class Robot : public frc::TimedRobot {
         SwerveModule a_BRModule;
         SwerveDrive a_SwerveDrive;
 
+        // speed multiplier for driver controls for the swerve
+        bool a_slowSpeed { false };
+
         frc::Timer a_Timer {};
         Autonomous a_Autonomous;
 
