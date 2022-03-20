@@ -1,6 +1,7 @@
 #include "misc.h"
 #include "Prefs.h"
 #include <math.h>
+#include <chrono>
 
 double misc::rpmToTalonVel(double rpm) {
     return (rpm * FALCON_UNITS_PER_REV) / 600.0;
@@ -34,4 +35,9 @@ double misc::clampRotations(double rotations) {
     } else {
         return out;
     }
+}
+
+double misc::getSeconds() {
+    auto time_point = std::chrono::steady_clock::now();
+    return std::chrono::duration_cast<std::chrono::seconds>(time_point.time_since_epoch()).count();
 }

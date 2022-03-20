@@ -1,11 +1,11 @@
 #include "Autonomous.h"
 #include "buttons.h"
+#include "misc.h"
 #include <math.h>
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, frc::Joystick *Xbox_Controller, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, frc::Joystick *Xbox_Controller, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
 a_Gyro(Gyro),
-a_Timer(Timer),
 a_Joystick(Joystick),
 a_SwerveDrive(SwerveDrive),
 a_Xbox(Xbox_Controller),
@@ -182,7 +182,6 @@ void Autonomous::Periodic1Ball() {
             if (WaitForTime(1)) {
                 nextState = kDoneShooting1;
             }
-
             break;
 
         case kDoneShooting1:
@@ -242,11 +241,6 @@ void Autonomous::Periodic2Ball() {
             StartTimer();
             nextState = kWait2;
             break;
-            /*if (IndexAndShoot(SHOOTER_SPEED)) {
-                StartTimer();
-                nextState = kWait2;
-            }
-            break;*/
 
         case kWait2:
             if (WaitForTime(3)) {
@@ -254,19 +248,6 @@ void Autonomous::Periodic2Ball() {
                 a_Collector->setIndexerMotorSpeed(0);
             }
             break;
-            /*
-                    case kSecondShoot2:
-                        if (IndexAndShoot(SHOOTER_SPEED)) {
-                            nextState = kWait2_2;
-                        }
-                        break;
-
-                    case kWait2_2:
-                        if (WaitForTime(1)) {
-                            nextState = kAutoIdle2;
-                        }
-                        break;
-            */
     }
     a_AutoState2 = nextState;
 }
@@ -279,19 +260,11 @@ void Autonomous::IDontLikeExercise() {
 }
 
 void Autonomous::StartTimer() {
-    a_Timer->Reset();
-    a_Timer->Start();
+    waitTimeStart = misc::getSeconds();
 }
 
 bool Autonomous::WaitForTime(double time) {
-
-    //-----Another case must be written to use StartTimer, though this will handle stopping and resetting-----//
-    if (a_Timer->Get().value() < time) {
-        return false;
-    } else {
-        a_Timer->Stop();
-        return true;
-    }
+    return misc::getSeconds() > waitTimeStart + time;
 }
 
 

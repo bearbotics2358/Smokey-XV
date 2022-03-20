@@ -62,7 +62,6 @@ class Robot : public frc::TimedRobot {
         // speed multiplier for driver controls for the swerve
         bool a_slowSpeed { false };
 
-        frc::Timer a_Timer {};
         Autonomous a_Autonomous;
 
         frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)

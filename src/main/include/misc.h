@@ -21,4 +21,7 @@ double radToDeg(double radians);
 double clampDegrees(double degrees);
 
 double clampRotations(double rotations);
+
+// gets seconds elapsed since the epoch of the system clock
+double getSeconds();
 }

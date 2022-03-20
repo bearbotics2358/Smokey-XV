@@ -58,7 +58,7 @@ enum AutoState2 { // T.O.F and Encoders
 
 class Autonomous {
     public:
-        Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
+        Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
         void Init();
         // void UpdateGameData();
         void DecidePath();
@@ -113,7 +113,6 @@ class Autonomous {
 
     private:
         JrimmyGyro *a_Gyro;
-        frc::Timer *a_Timer;
         frc::Joystick *a_Joystick;
         SwerveDrive *a_SwerveDrive;
         frc::Joystick *a_Xbox;
@@ -131,4 +130,5 @@ class Autonomous {
         float limeangle;
         float drivestart;
         bool look;
+        double waitTimeStart { 0.0 };
 };
