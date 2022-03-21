@@ -288,12 +288,15 @@ void Autonomous::Periodic5Ball() {
         case A5::Shoot1:
             if (WaitForTime(1)) {
                 a_Collector->setIndexerMotorSpeed(0);
-                // FIXME: don't deploy when we are against the wall
-                CollectorDown();
+                StartTimer();
                 nextState = A5::Pickup2;
             }
             break;
         case A5::Pickup2:
+            // to avoid deploying collector against the wall
+            if (WaitForTime(0.1)) {
+                CollectorDown();
+            }
             if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
                 nextState = A5::Pickup3;
             }
@@ -314,12 +317,15 @@ void Autonomous::Periodic5Ball() {
         case A5::Shoot23:
             if (WaitForTime(1.5)) {
                 a_Collector->setIndexerMotorSpeed(0);
-                // FIXME: don't deploy when we are against the wall
-                CollectorDown();
+                StartTimer();
                 nextState = A5::Pickup4;
             }
             break;
         case A5::Pickup4:
+            // to avoid deploying collector against the wall
+            if (WaitForTime(0.1)) {
+                CollectorDown();
+            }
             if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
                 StartTimer();
                 nextState = A5::WaitPickup5;
