@@ -2,9 +2,9 @@
 
 #include <frc/controller/PIDController.h>
 
+#include "JrimmyGyro.h"
 #include "Prefs.h"
 #include "SwerveModule.h"
-#include "JrimmyGyro.h"
 #include "math/LinAlg.h"
 
 #ifdef NEW_SWERVE
@@ -67,11 +67,11 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
             and it is affected by the robot's current turn angle
         */
 
-       // stops the robot from moving
-       void stop();
+        // stops the robot from moving
+        void stop();
 
-       // sets the hold angle used by crab drive update
-       void setHoldAngle(float degrees);
+        // sets the hold angle used by crab drive update
+        void setHoldAngle(float degrees);
 
         // unsets the hold angle, so the next call to crabDriveUpdate will set the hold angle to the reading from the gyro
         void unsetHoldAngle();
@@ -119,6 +119,9 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         bool crab;
         // angle to hold in crab drive mode
         float holdAngle;
+
+        // current position of the robot
+        Vec2 position;
 
         constexpr static float DRIVE_LENGTH = 29.75;
         constexpr static float DRIVE_WIDTH = 29.75;
