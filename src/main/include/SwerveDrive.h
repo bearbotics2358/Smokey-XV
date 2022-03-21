@@ -4,6 +4,7 @@
 
 #include "Prefs.h"
 #include "SwerveModule.h"
+#include "JrimmyGyro.h"
 #include "math/LinAlg.h"
 
 #ifdef NEW_SWERVE
@@ -51,11 +52,11 @@ class SwerveDrive {
 class SwerveDrive // Class to handle the kinematics of Swerve Drive
 {
     public:
-        SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule);
+        SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule, JrimmyGyro& gyro);
 
         // crab drive is like swerve drive update, except it maintains a constant turn angle
-        void crabDriveUpdate(float x, float y, float gyroDegrees, bool fieldOriented = true);
-        void swerveUpdate(float x, float y, float z, float gyroDegrees, bool fieldOriented);
+        void crabDriveUpdate(float x, float y, bool fieldOriented = true);
+        void swerveUpdate(float x, float y, float z, bool fieldOriented);
         /*
             x = x asix on joystick
             y = y axis on joystick
@@ -65,6 +66,12 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
             if false, translational movement is relative to the front of the robot,
             and it is affected by the robot's current turn angle
         */
+
+       // stops the robot from moving
+       void stop();
+
+       // sets the hold angle used by crab drive update
+       void setHoldAngle(float degrees);
 
         // unsets the hold angle, so the next call to crabDriveUpdate will set the hold angle to the reading from the gyro
         void unsetHoldAngle();
@@ -85,10 +92,10 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         float getAvgDistance();
 
         // angle is in degrees
-        void turnToAngle(float gyroDegrees, float angle);
+        void turnToAngle(float angle);
 
         // drives at a given speed (units uknown), in a given direction in degrees, for a given distance in meters
-        void goToTheDon(float speed, float direction, float distance, float gyro, bool fieldOriented = true);
+        void goToTheDon(float speed, float direction, float distance, bool fieldOriented = true);
 
     private:
         // called by both crabDriveUpdate and swerveUpdata
@@ -100,6 +107,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         SwerveModule& frModule;
         SwerveModule& blModule;
         SwerveModule& brModule;
+        JrimmyGyro& a_gyro;
 
         // pid when using turn to angle
         frc2::PIDController turnAnglePid;

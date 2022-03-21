@@ -47,8 +47,10 @@ class JrimmyGyro : public frc::I2C {
         virtual double GetZ();
         virtual int GetTemp();
         double GetAxisAngle(int axis = 1);
-        // only use this method to get angle
-        double getAngle();
+        // only use this method to get angle, and getAngleClamped
+        double getAngle() const;
+        // returns the same angle as get angle, but clamped to be within 0 - 360 degrees
+        double getAngleClamped() const;
         void Zero(double offsetAngle = 0); //takes offsetAngle, defaults to zero if none provided. CCW is +
 
         virtual std::string GetSmartDashboardType();

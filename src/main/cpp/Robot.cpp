@@ -12,12 +12,12 @@
 
 /*~~ hi :) ~~ */
 Robot::Robot():
-a_Gyro(frc::I2C::kMXP), // 1
+a_Gyro(frc::I2C::kMXP),
 a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_SWERVE_ABS_ENC_MIN_VOLTS, FL_SWERVE_ABS_ENC_MAX_VOLTS, FL_SWERVE_ABS_ENC_OFFSET / 360)),
 a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
-a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule),
+a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule, a_Gyro),
 a_Autonomous(&a_Gyro, &joystickOne, &a_XboxController, &a_SwerveDrive, &a_Shooter, &a_Collector),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
@@ -238,7 +238,6 @@ void Robot::TeleopPeriodic() {
     float x = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
-    float gyro = a_Gyro.getAngle();
 
     if (fabs(x) < 0.10) {
         x = 0;
@@ -248,13 +247,6 @@ void Robot::TeleopPeriodic() {
     }
     if (fabs(z) < 0.10) {
         z = 0;
-    }
-
-    if (gyro < 0) {
-        gyro = fmod(gyro, -360);
-        gyro += 360;
-    } else {
-        gyro = fmod(gyro, 360);
     }
 
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
@@ -279,12 +271,12 @@ void Robot::TeleopPeriodic() {
     } else {
         if (!inDeadzone) {
             if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, gyro, fieldOreo);
+                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
             } else {
-                a_SwerveDrive.crabDriveUpdate(x, y, gyro);
+                a_SwerveDrive.crabDriveUpdate(x, y);
             }
         } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, fieldOreo);
+            a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
         }
     }
 
@@ -294,7 +286,7 @@ void Robot::TeleopPeriodic() {
         driveBackStartDist = a_SwerveDrive.getAvgDistance();
     }
     if (joystickOne.GetRawButtonReleased(DriverButton::Button10)) {
-        a_SwerveDrive.swerveUpdate(0, 0, 0, gyro, false);
+        a_SwerveDrive.swerveUpdate(0, 0, 0, false);
         driveBack = false;
     }
     // just in case
@@ -302,7 +294,7 @@ void Robot::TeleopPeriodic() {
         if (a_SwerveDrive.getAvgDistance() > (driveBackStartDist + 0.6)) {
             driveBack = false;
         } else {
-            a_SwerveDrive.goToTheDon(0.5, 180, driveBackStartDist + 0.6, gyro, false);
+            a_SwerveDrive.goToTheDon(0.5, 180, driveBackStartDist + 0.6, false);
         }
     }
 }
