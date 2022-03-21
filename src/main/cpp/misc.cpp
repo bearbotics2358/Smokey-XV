@@ -1,7 +1,7 @@
 #include "misc.h"
 #include "Prefs.h"
-#include <math.h>
 #include <chrono>
+#include <math.h>
 
 double misc::rpmToTalonVel(double rpm) {
     return (rpm * FALCON_UNITS_PER_REV) / 600.0;
@@ -34,6 +34,18 @@ double misc::clampRotations(double rotations) {
         return 1 + out;
     } else {
         return out;
+    }
+}
+
+double misc::degreesDiff(double a, double b) {
+    a = clampDegrees(a);
+    b = clampDegrees(b);
+
+    double diff = fabs(b - a);
+    if (diff > 180) {
+        return 360 - diff;
+    } else {
+        return diff;
     }
 }
 

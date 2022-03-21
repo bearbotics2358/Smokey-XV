@@ -54,8 +54,11 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
     public:
         SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule, JrimmyGyro& gyro);
 
+        // TODO: change the signs of x, because the positive is left thing is wierd
+        // TODO: use meters/second vector for crabUpdate and swerveUpdate, instead of x and y going from 0 to 1
+        // for crab drive update and swerve drive update, +y is forward, -y is backward, x is left, and -x is right
         // crab drive is like swerve drive update, except it maintains a constant turn angle
-        void crabDriveUpdate(float x, float y, bool fieldOriented = true);
+        void crabUpdate(float x, float y, bool fieldOriented = true);
         void swerveUpdate(float x, float y, float z, bool fieldOriented);
         /*
             x = x asix on joystick
@@ -73,7 +76,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // sets the hold angle used by crab drive update
         void setHoldAngle(float degrees);
 
-        // unsets the hold angle, so the next call to crabDriveUpdate will set the hold angle to the reading from the gyro
+        // unsets the hold angle, so the next call to crabUpdate will set the hold angle to the reading from the gyro
         void unsetHoldAngle();
 
         // resets steering and driving encoders
@@ -97,11 +100,27 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // drives at a given speed (units uknown), in a given direction in degrees, for a given distance in meters
         void goToTheDon(float speed, float direction, float distance, bool fieldOriented = true);
 
+        // goes to the specified position in meters and the specified angle in degrees at the specified percent speed
+        // returns true when it has reached the position and angle
+        bool goToPosition(Vec2 position, float degrees, float speed);
+
+        // updates the current position of the robot based on the change in the wheel positions
+        void updatePosition();
+
+        // gets the current position in meters
+        Vec2 getPosition() const;
+
+        // sets the current position in meters to the passed in value
+        void setPosition(Vec2 position);
+
     private:
-        // called by both crabDriveUpdate and swerveUpdata
+        // called by both crabUpdate and swerveUpdata
         // does the bulk of the swerve drive work
         // x and y are translation, z is rotation
         void swerveUpdateInner(float x, float y, float z, float gyroDegrees, bool fieldOriented);
+
+        // uses the crab pid to calulate the required z drive to get to the specified angle
+        float crabCalcZ(float angle, float gyroDegrees);
 
         SwerveModule& flModule;
         SwerveModule& frModule;
@@ -112,7 +131,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // pid when using turn to angle
         frc2::PIDController turnAnglePid;
 
-        // pid when using crabDriveUpdate
+        // pid when using crabUpdate
         frc2::PIDController crabAnglePid;
 
         // if we're in crab drive mode
@@ -121,9 +140,19 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         float holdAngle;
 
         // current position of the robot
-        Vec2 position;
+        Vec2 a_position { 0.0, 0.0 };
+        // last position of each drive wheel in meters
+        float flLastPos { 0.0 };
+        float frLastPos { 0.0 };
+        float blLastPos { 0.0 };
+        float brLastPos { 0.0 };
 
         constexpr static float DRIVE_LENGTH = 29.75;
         constexpr static float DRIVE_WIDTH = 29.75;
+
+        // for goToPosition, when the distance to the target position is within this amount, say that we are done (assuming angle is also close enough)
+        constexpr static float GO_TO_DIST_DONE = 0.1;
+        // for goToPosition, when the angle difference from the target angle is within this amount, say that we are done (assuming distance is also close enough)
+        constexpr static float GO_TO_ANGLE_DONE = 5.0;
 };
 #endif

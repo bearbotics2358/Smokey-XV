@@ -57,10 +57,13 @@ void Robot::RobotInit() {
 
 void Robot::RobotPeriodic() {
     a_Gyro.Update();
+    a_SwerveDrive.updatePosition();
     // handler.update();
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
+    frc::SmartDashboard::PutNumber("Robot x Position", a_SwerveDrive.getPosition().x());
+    frc::SmartDashboard::PutNumber("Robot y Position", a_SwerveDrive.getPosition().y());
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
     frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());
@@ -182,18 +185,6 @@ void Robot::TeleopPeriodic() {
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 
-
-    /*if (a_XboxController.GetRawButton(OperatorButton::A)) {
-        shooterDesiredSpeed += 10.0;
-    }
-    if (a_XboxController.GetRawButton(OperatorButton::B)) {
-        shooterDesiredSpeed -= 10.0;
-    }
-
-    a_Shooter.setSpeed(shooterDesiredSpeed);
-
-    */
-
     if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
         a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
     } else {
@@ -273,7 +264,7 @@ void Robot::TeleopPeriodic() {
             if (joystickOne.GetRawButton(DriverButton::Trigger)) {
                 a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
             } else {
-                a_SwerveDrive.crabDriveUpdate(x, y);
+                a_SwerveDrive.crabUpdate(x, y);
             }
         } else {
             a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
@@ -300,15 +291,14 @@ void Robot::TeleopPeriodic() {
 }
 
 void Robot::TestInit() {
-    if (a_doEnabledInit) {
-        EnabledInit();
-        a_doEnabledInit = false;
-    }
+    TeleopInit();
+    a_SwerveDrive.setPosition(Vec2(0.0, 0.0));
+    a_Shooter.stop();
 }
 
 
 void Robot::TestPeriodic() {
-    EnabledPeriodic();
+    TeleopPeriodic();
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop
