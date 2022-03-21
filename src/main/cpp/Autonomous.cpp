@@ -236,11 +236,13 @@ void Autonomous::Periodic2Ball() {
         case kTurn2:
             if (TurnToAngle(-21)) {
                 nextState = kDriveToWall2;
+                StartTimer();
             }
             break;
 
         case kDriveToWall2:
-            if (DriveDirection(2.23, -37, 0.25, true)) {
+            // we might be stuck on the wall, so move to the next state after some time
+            if (DriveDirection(2.23, -37, 0.25, true) || WaitForTime(5)) {
                 nextState = kShoot2;
             }
             break;
