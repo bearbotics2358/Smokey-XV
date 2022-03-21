@@ -55,6 +55,18 @@ enum AutoState2 { // T.O.F and Encoders
 // states for 5 ball auto
 enum class A5 {
     Idle,
+    SpoolShooter,
+    WaitShooter,
+    Shoot1,
+    Pickup2,
+    Pickup3,
+    GoToShoot23,
+    Shoot23,
+    Pickup4,
+    // TODO: use ball vision to pickup the 5th one from the driver station
+    WaitPickup5,
+    GoToShoot45,
+    Shoot45,
 };
 
 
@@ -103,12 +115,10 @@ class Autonomous {
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
-        // changes solenoid implementation because of change in logic (down is deployed, up is retracted)
+        // deploy collector and spool motoer
         void CollectorDown();
+        // raise collector and stop motor
         void CollectorUp();
-        // activates or deactivates collector motor
-        void CollectorOn();
-        void CollectorOff();
 
         // Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
         bool DriveDirection(double dist, double angle, double speed, bool fieldOriented);

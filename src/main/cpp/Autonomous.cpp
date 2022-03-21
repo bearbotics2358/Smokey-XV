@@ -224,10 +224,8 @@ void Autonomous::Periodic2Ball() {
 
         case kDriveBackThroughBall2:
             CollectorDown();
-            CollectorOn();
             if (DriveDirection(1.32, 133, 0.25, true)) {
                 CollectorUp();
-                CollectorOff();
                 SpoolShooter(SHOOTER_SPEED);
                 nextState = kTurn2;
             }
@@ -263,7 +261,10 @@ void Autonomous::Periodic2Ball() {
     a_AutoState2 = nextState;
 }
 
-void Autonomous::Start5Ball() {}
+void Autonomous::Start5Ball() {
+    a_AutoState5 = A5::SpoolShooter;
+    a_Gyro->Zero(133);
+}
 
 void Autonomous::Periodic5Ball() {
     A5 nextState = a_AutoState5;
@@ -271,6 +272,77 @@ void Autonomous::Periodic5Ball() {
     switch (nextState) {
         case A5::Idle:
             IDontLikeExercise();
+            break;
+        case A5::SpoolShooter:
+            SpoolShooter(SHOOTER_SPEED);
+            StartTimer();
+            nextState = A5::WaitShooter;
+            break;
+        case A5::WaitShooter:
+            if (WaitForTime(0.5)) {
+                StartTimer();
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A5::Shoot1;
+            }
+            break;
+        case A5::Shoot1:
+            if (WaitForTime(1)) {
+                a_Collector->setIndexerMotorSpeed(0);
+                // FIXME: don't deploy when we are against the wall
+                CollectorDown();
+                nextState = A5::Pickup2;
+            }
+            break;
+        case A5::Pickup2:
+            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+                nextState = A5::Pickup3;
+            }
+            break;
+        case A5::Pickup3:
+            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+                CollectorUp();
+                nextState = A5::GoToShoot23;
+            }
+            break;
+        case A5::GoToShoot23:
+            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+                StartTimer();
+                a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A5::Shoot23;
+            }
+            break;
+        case A5::Shoot23:
+            if (WaitForTime(1.5)) {
+                a_Collector->setIndexerMotorSpeed(0);
+                // FIXME: don't deploy when we are against the wall
+                CollectorDown();
+                nextState = A5::Pickup4;
+            }
+            break;
+        case A5::Pickup4:
+            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+                StartTimer();
+                nextState = A5::WaitPickup5;
+            }
+            break;
+        case A5::WaitPickup5:
+            // wait for the human player to put the ball out
+            if (WaitForTime(2)) {
+                CollectorUp();
+                nextState = A5::GoToShoot45;
+            }
+            break;
+        case A5::GoToShoot45:
+            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+                StartTimer();
+                a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A5::Shoot45;
+            }
+            break;
+        case A5::Shoot45:
+            if (WaitForTime(1.5)) {
+                nextState = A5::Idle;
+            }
             break;
     }
 
@@ -299,10 +371,12 @@ void Autonomous::SpoolShooter(float speed) {
 
 void Autonomous::CollectorDown() {
     a_Collector->setSolenoid(true);
+    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
 }
 
 void Autonomous::CollectorUp() {
     a_Collector->setSolenoid(false);
+    a_Collector->setCollectorMotorSpeed(0);
 }
 
 
@@ -366,13 +440,6 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
-}
-
-void Autonomous::CollectorOn() {
-    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
-}
-void Autonomous::CollectorOff() {
-    a_Collector->setCollectorMotorSpeed(0);
 }
 
 bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fieldOriented) { // true is done, false is not done
