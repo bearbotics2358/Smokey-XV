@@ -9,8 +9,8 @@
 #include <JrimmyGyro.h>
 #include <Prefs.h>
 #include <frc/Joystick.h>
-#include <frc/XboxController.h>
 #include <frc/Timer.h>
+#include <frc/XboxController.h>
 #include <units/math.h>
 
 
@@ -20,6 +20,7 @@ enum AutoType {
     kMiddle1Ball = 2,
     kRight1Ball = 3,
     k2Ball = 4,
+    k5Ball = 5,
 };
 
 enum AutoState0 { // Encoders
@@ -51,6 +52,11 @@ enum AutoState2 { // T.O.F and Encoders
     kWait2_2*/
 };
 
+// states for 5 ball auto
+enum class A5 {
+    Idle,
+};
+
 
 
 // add more vision versions later
@@ -64,7 +70,7 @@ class Autonomous {
         void DecidePath();
         void DecidePath(int intent);
 
-        const char * GetCurrentPath();
+        const char *GetCurrentPath();
 
         void StartPathMaster();
 
@@ -81,6 +87,9 @@ class Autonomous {
         void Start2Ball();
         void Periodic2Ball();
 
+        void Start5Ball();
+        void Periodic5Ball();
+
         // ------------------Sub-Routines-------------------------//
 
         void IDontLikeExercise(); // IDLE
@@ -94,16 +103,16 @@ class Autonomous {
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
-        //changes solenoid implementation because of change in logic (down is deployed, up is retracted)
+        // changes solenoid implementation because of change in logic (down is deployed, up is retracted)
         void CollectorDown();
         void CollectorUp();
-        //activates or deactivates collector motor
+        // activates or deactivates collector motor
         void CollectorOn();
         void CollectorOff();
 
-// Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
-        bool DriveDirection(double dist, double angle, double speed, bool fieldOriented); 
-    
+        // Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
+        bool DriveDirection(double dist, double angle, double speed, bool fieldOriented);
+
         bool TurnToAngle(float angle); // turns to a specific angle
 
         bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
@@ -122,6 +131,7 @@ class Autonomous {
         AutoState0 a_AutoState0;
         AutoState1 a_AutoState1;
         AutoState2 a_AutoState2;
+        A5 a_AutoState5;
 
         AutoType autoPathMaster;
         int BallsShot;

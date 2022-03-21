@@ -31,13 +31,13 @@ void Autonomous::DecidePath() {
     if (a_Xbox->GetRawAxis(OperatorJoystick::LeftTrigger) > 0.5) {
         if (a_Xbox->GetRawButtonPressed(OperatorButton::Y)) {
             if (autoPathMaster == k0Ball) {
-                autoPathMaster = k2Ball;
+                autoPathMaster = k5Ball;
             } else {
                 autoPathMaster = (AutoType) (autoPathMaster - 1);
             }
         }
         if (a_Xbox->GetRawButtonPressed(OperatorButton::A)) {
-            if (autoPathMaster == k2Ball) {
+            if (autoPathMaster == k5Ball) {
                 autoPathMaster = k0Ball;
             } else {
                 autoPathMaster = (AutoType) (autoPathMaster + 1);
@@ -58,6 +58,8 @@ const char *Autonomous::GetCurrentPath() {
             return "right 1-ball taxi chosen";
         case k2Ball:
             return "2-ball taxi chosen";
+        case k5Ball:
+            return "5-ball auto chosen";
         default:
             return "no autonous selected, this shouldn't happen";
     }
@@ -85,6 +87,10 @@ void Autonomous::StartPathMaster() {
             frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
             Start2Ball();
             break;
+        case k5Ball:
+            frc::SmartDashboard::PutBoolean("5-ball auto started", true);
+            Start5Ball();
+            break;
     }
 }
 
@@ -100,6 +106,9 @@ void Autonomous::PeriodicPathMaster() {
             break;
         case k2Ball:
             Periodic2Ball();
+            break;
+        case k5Ball:
+            Periodic5Ball();
             break;
     }
 }
@@ -161,7 +170,7 @@ void Autonomous::Periodic1Ball() {
             StartTimer();
             nextState = kWaitShooter1;
             break;
-        
+
         case kWaitShooter1:
             if (WaitForTime(2)) {
                 nextState = kShoot1;
@@ -250,6 +259,20 @@ void Autonomous::Periodic2Ball() {
             break;
     }
     a_AutoState2 = nextState;
+}
+
+void Autonomous::Start5Ball() {}
+
+void Autonomous::Periodic5Ball() {
+    A5 nextState = a_AutoState5;
+
+    switch (nextState) {
+        case A5::Idle:
+            IDontLikeExercise();
+            break;
+    }
+
+    a_AutoState5 = nextState;
 }
 
 void Autonomous::IDontLikeExercise() {
