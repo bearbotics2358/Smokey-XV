@@ -212,11 +212,11 @@ void SwerveDrive::updatePosition() {
     // angle does not need to be clamped for creating the vector
     float gyroDegrees = a_gyro.getAngle();
     // TODO: figure out if angle for swerve turn motors is clockwise our counterclockwise
-    // these angles are with 0 degrees pointing in the direction of positive y
-    float flAngle = flModule.getAngle() + gyroDegrees;
-    float frAngle = frModule.getAngle() + gyroDegrees;
-    float blAngle = blModule.getAngle() + gyroDegrees;
-    float brAngle = brModule.getAngle() + gyroDegrees;
+    // these angles are with 0 radians pointing in the direction of positive y, and they go counterclockwise
+    float flAngle = misc::degToRad(flModule.getAngle() + gyroDegrees);
+    float frAngle = misc::degToRad(frModule.getAngle() + gyroDegrees);
+    float blAngle = misc::degToRad(blModule.getAngle() + gyroDegrees);
+    float brAngle = misc::degToRad(brModule.getAngle() + gyroDegrees);
 
     // create unit vectors pointing in the direction of the wheels
     Vec2 flVec(-sin(flAngle), cos(flAngle));
