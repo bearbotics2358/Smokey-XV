@@ -357,7 +357,7 @@ void Autonomous::Periodic5Ball() {
 
 void Autonomous::IDontLikeExercise() {
 
-    a_SwerveDrive->stop();
+    a_SwerveDrive->coastStop();
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
 }
@@ -395,7 +395,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -421,7 +421,7 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
 
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -442,7 +442,7 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
         return false;
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -462,7 +462,7 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
         return false;
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         a_SwerveDrive->unsetHoldAngle();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;

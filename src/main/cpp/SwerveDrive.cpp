@@ -81,8 +81,16 @@ void SwerveDrive::swerveUpdate(float x, float y, float z, bool fieldOriented) {
     swerveUpdateInner(x, y, z, a_gyro.getAngleClamped(), fieldOriented);
 }
 
-void SwerveDrive::stop() {
-    swerveUpdateInner(0, 0, 0, 0, false);
+void SwerveDrive::coastStop() {
+    flModule.setDrivePercent(0.0);
+    frModule.setDrivePercent(0.0);
+    blModule.setDrivePercent(0.0);
+    brModule.setDrivePercent(0.0);
+
+    flModule.setSteerPercent(0.0);
+    frModule.setSteerPercent(0.0);
+    blModule.setSteerPercent(0.0);
+    brModule.setSteerPercent(0.0);
 }
 
 void SwerveDrive::setHoldAngle(float degrees) {
@@ -168,7 +176,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
     auto relPosVector = position - a_position;
 
     if (relPosVector.magnitude() < GO_TO_DIST_DONE && misc::degreesDiff(degrees, gyroDegrees) < GO_TO_ANGLE_DONE) {
-        stop();
+        coastStop();
         return true;
     }
 
