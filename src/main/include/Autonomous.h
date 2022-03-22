@@ -151,4 +151,10 @@ class Autonomous {
         float drivestart;
         bool look;
         double waitTimeStart { 0.0 };
+
+        // start position of robot during 5 ball auto relative to near left corner of field
+        // FIXME: this is a very innacurate guess, more so than the other measurements
+        constexpr static Vec2 AUTO5_START_POS { 4.942, 7.9 };
+        // speed to go during 5 ball auto
+        constexpr static float AUTO5_SPEED { 0.5 };
 };
