@@ -311,7 +311,7 @@ void Autonomous::Periodic5Ball() {
         case A5::GoToShoot23:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
                 StartTimer();
-                a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot23;
             }
             break;
@@ -342,7 +342,7 @@ void Autonomous::Periodic5Ball() {
         case A5::GoToShoot45:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
                 StartTimer();
-                a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot45;
             }
             break;
@@ -428,6 +428,8 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
     }
 }
 
+/* NOT REALLY NEEDED, WE HAVE DRIVEDIRECTION AND THIS IS NEVER USED
+
 bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
 
     if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
@@ -447,7 +449,7 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
-}
+}*/
 
 bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fieldOriented) { // true is done, false is not done
 
