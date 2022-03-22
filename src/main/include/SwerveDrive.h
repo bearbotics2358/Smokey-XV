@@ -73,6 +73,8 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // stops the robot from moving, just coasts
         void coastStop();
 
+        void brakeStop();
+
         // sets the hold angle used by crab drive update
         void setHoldAngle(float degrees);
 

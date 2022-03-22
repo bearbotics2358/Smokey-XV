@@ -93,6 +93,18 @@ void SwerveDrive::coastStop() {
     brModule.setSteerPercent(0.0);
 }
 
+void SwerveDrive::brakeStop() {
+    flModule.setDriveSpeed(0.0);
+    frModule.setDriveSpeed(0.0);
+    blModule.setDriveSpeed(0.0);
+    brModule.setDriveSpeed(0.0);
+
+    flModule.setSteerPercent(0.0);
+    frModule.setSteerPercent(0.0);
+    blModule.setSteerPercent(0.0);
+    brModule.setSteerPercent(0.0);
+}
+
 void SwerveDrive::setHoldAngle(float degrees) {
     crab = true;
     holdAngle = degrees;
@@ -167,7 +179,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, bool 
 
         crabUpdate(x, y, fieldOriented);
     } else {
-        swerveUpdate(0, 0, 0, false);
+        brakeStop();
     }
 }
 
@@ -186,6 +198,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
     directionVector *= speed;
 
     // flip sign of x because x is inverted for swerveUpdateInner
+    // TODO: slow down speed as we get closer
     swerveUpdateInner(-directionVector.x(), directionVector.y(), crabCalcZ(degrees, gyroDegrees), gyroDegrees, true);
 
     return false;

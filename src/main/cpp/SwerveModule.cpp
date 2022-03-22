@@ -143,8 +143,9 @@ void SwerveModule::driveDirection(Vec2 direction) {
 }
 
 double SwerveModule::wheelSpeedToRpm(double speed) {
+    double adjustedSpeed = speed / DISTANCE_ADJUSTMANT_FACTOR;
     // radians per second
-    double angularVelocity = speed / (0.5 * WHEEL_DIAMETER * DISTANCE_ADJUSTMANT_FACTOR);
+    double angularVelocity = adjustedSpeed / (0.5 * WHEEL_DIAMETER);
     // convert to rpm
     double rpm = (60.0 * angularVelocity) / (2 * M_PI);
     // convert from wheel rpm to motor rpm
@@ -152,8 +153,9 @@ double SwerveModule::wheelSpeedToRpm(double speed) {
 }
 
 double SwerveModule::metersToMotorTicks(double meters) {
+    double adjustedMeters = meters / DISTANCE_ADJUSTMANT_FACTOR;
     // angular position in radians
-    double angularPosition = meters / (0.5 * WHEEL_DIAMETER * DISTANCE_ADJUSTMANT_FACTOR);
+    double angularPosition = adjustedMeters / (0.5 * WHEEL_DIAMETER);
     // convert to encoder ticks
     double ticks = (FALCON_UNITS_PER_REV * angularPosition) / (2 * M_PI);
     // scale by gear ratio

@@ -198,7 +198,7 @@ void Robot::TeleopPeriodic() {
 
     float multiplier = 1.0;
     if (a_slowSpeed) {
-        multiplier = 0.5;
+        multiplier = 0.25;
     }
 
     float x = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::XAxis);
@@ -275,7 +275,7 @@ void Robot::TestInit() {
 void Robot::TestPeriodic() {
     TeleopPeriodic();
     if (a_XboxController.GetRawButton(OperatorButton::A)) {
-        a_SwerveDrive.goToTheDon(0.25, 20, 1.38);
+        a_SwerveDrive.goToTheDon(0.25, 0, 0.5);
     }
     if (a_XboxController.GetRawButton(OperatorButton::B)) {
         a_SwerveDrive.goToPosition(Vec2(1.8, 0.89), 270, 0.25);
