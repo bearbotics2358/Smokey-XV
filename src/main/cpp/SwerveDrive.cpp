@@ -81,8 +81,16 @@ void SwerveDrive::swerveUpdate(float x, float y, float z, bool fieldOriented) {
     swerveUpdateInner(x, y, z, a_gyro.getAngleClamped(), fieldOriented);
 }
 
-void SwerveDrive::stop() {
-    swerveUpdateInner(0, 0, 0, 0, false);
+void SwerveDrive::coastStop() {
+    flModule.setDrivePercent(0.0);
+    frModule.setDrivePercent(0.0);
+    blModule.setDrivePercent(0.0);
+    brModule.setDrivePercent(0.0);
+
+    flModule.setSteerPercent(0.0);
+    frModule.setSteerPercent(0.0);
+    blModule.setSteerPercent(0.0);
+    brModule.setSteerPercent(0.0);
 }
 
 void SwerveDrive::setHoldAngle(float degrees) {
@@ -168,7 +176,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
     auto relPosVector = position - a_position;
 
     if (relPosVector.magnitude() < GO_TO_DIST_DONE && misc::degreesDiff(degrees, gyroDegrees) < GO_TO_ANGLE_DONE) {
-        stop();
+        coastStop();
         return true;
     }
 
@@ -204,11 +212,11 @@ void SwerveDrive::updatePosition() {
     // angle does not need to be clamped for creating the vector
     float gyroDegrees = a_gyro.getAngle();
     // TODO: figure out if angle for swerve turn motors is clockwise our counterclockwise
-    // these angles are with 0 degrees pointing in the direction of positive y
-    float flAngle = flModule.getAngle() + gyroDegrees;
-    float frAngle = frModule.getAngle() + gyroDegrees;
-    float blAngle = blModule.getAngle() + gyroDegrees;
-    float brAngle = brModule.getAngle() + gyroDegrees;
+    // these angles are with 0 radians pointing in the direction of positive y, and they go counterclockwise
+    float flAngle = misc::degToRad(flModule.getAngle() + gyroDegrees);
+    float frAngle = misc::degToRad(frModule.getAngle() + gyroDegrees);
+    float blAngle = misc::degToRad(blModule.getAngle() + gyroDegrees);
+    float brAngle = misc::degToRad(brModule.getAngle() + gyroDegrees);
 
     // create unit vectors pointing in the direction of the wheels
     Vec2 flVec(-sin(flAngle), cos(flAngle));

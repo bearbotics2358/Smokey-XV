@@ -9,6 +9,7 @@
         "istream": "cpp",
         "ostream": "cpp",
         "streambuf": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "core": "cpp"
     }
 }

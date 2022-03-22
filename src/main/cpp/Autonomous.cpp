@@ -263,7 +263,8 @@ void Autonomous::Periodic2Ball() {
 
 void Autonomous::Start5Ball() {
     a_AutoState5 = A5::SpoolShooter;
-    a_Gyro->Zero(133);
+    a_Gyro->Zero(69);
+    a_SwerveDrive->setPosition(AUTO5_START_POS);
 }
 
 void Autonomous::Periodic5Ball() {
@@ -297,18 +298,18 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(7.945, 7.569), 260, AUTO5_SPEED)) {
                 nextState = A5::Pickup3;
             }
             break;
         case A5::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.365, 5.043), 155, AUTO5_SPEED)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
             break;
         case A5::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
                 StartTimer();
                 a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot23;
@@ -326,7 +327,7 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.812, 1.352), 225, AUTO5_SPEED)) {
                 StartTimer();
                 nextState = A5::WaitPickup5;
             }
@@ -339,7 +340,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot45:
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
                 StartTimer();
                 a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot45;
@@ -357,7 +358,7 @@ void Autonomous::Periodic5Ball() {
 
 void Autonomous::IDontLikeExercise() {
 
-    a_SwerveDrive->stop();
+    a_SwerveDrive->coastStop();
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
 }
@@ -395,7 +396,7 @@ bool Autonomous::DriveDist(double dist, double angle) { // true is done, false i
 
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -421,7 +422,7 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
 
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -444,7 +445,7 @@ bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is
         return false;
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
@@ -464,7 +465,7 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
         return false;
 
     } else {
-        a_SwerveDrive->stop();
+        a_SwerveDrive->coastStop();
         a_SwerveDrive->unsetHoldAngle();
         frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
