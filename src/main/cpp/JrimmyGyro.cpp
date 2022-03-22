@@ -1,5 +1,5 @@
-
 #include "JrimmyGyro.h"
+#include "misc.h"
 
 const uint8_t JrimmyGyro::kPowerMgmRegister;
 // const uint8_t JrimmyGyro::kDataFormatRegister;
@@ -175,9 +175,14 @@ double JrimmyGyro::GetAxisAngle(int xyz) {
     return angle[xyz];
 }
 
-double JrimmyGyro::getAngle() {
-    // update this depending on how the gyro is mounted
+double JrimmyGyro::getAngle() const {
+    // update this depending on how the gyro is mounted in future years
     return angle[2];
+}
+
+double JrimmyGyro::getAngleClamped() const {
+    // update this depending on how gyro is mounted in future years
+    return misc::clampDegrees(angle[2]);
 }
 
 void JrimmyGyro::Zero(double offsetAngle) { //takes offsetAngle, defaults to zero if none provided. CCW is +

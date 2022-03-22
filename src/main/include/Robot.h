@@ -16,6 +16,12 @@
 #include <frc/TimedRobot.h> // "Timed Robot" template
 #include <frc/Timer.h>
 
+enum class DriveBackState {
+    Inactive,
+    Start,
+    Active,
+};
+
 class Robot : public frc::TimedRobot {
     public:
         Robot();
@@ -53,7 +59,9 @@ class Robot : public frc::TimedRobot {
         SwerveModule a_BRModule;
         SwerveDrive a_SwerveDrive;
 
-        frc::Timer a_Timer {};
+        // speed multiplier for driver controls for the swerve
+        bool a_slowSpeed { false };
+
         Autonomous a_Autonomous;
 
         frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
@@ -76,4 +84,7 @@ class Robot : public frc::TimedRobot {
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;
+
+        bool driveBack { false };
+        double driveBackStartDist { 0.0 };
 };

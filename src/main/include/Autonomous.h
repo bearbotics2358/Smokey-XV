@@ -9,12 +9,19 @@
 #include <JrimmyGyro.h>
 #include <Prefs.h>
 #include <frc/Joystick.h>
-#include <frc/XboxController.h>
 #include <frc/Timer.h>
+#include <frc/XboxController.h>
 #include <units/math.h>
 
 
-
+enum AutoType {
+    k0Ball = 0,
+    kLeft1Ball = 1,
+    kMiddle1Ball = 2,
+    kRight1Ball = 3,
+    k2Ball = 4,
+    k5Ball = 5,
+};
 
 enum AutoState0 { // Encoders
     kAutoIdle0 = 0,
@@ -23,20 +30,13 @@ enum AutoState0 { // Encoders
 
 enum AutoState1 { // Encoders
     kAutoIdle1 = 0,
+    kStartShooter1,
+    kWaitShooter1,
     kShoot1,
     kStartTimer1,
     kWait1,
     kDoneShooting1,
     kTaxi1
-};
-
-enum AutoState1_1 { // Encoders
-    kAutoIdle1_1 = 0,
-    kShoot1_1,
-    kStartTimer1_1,
-    kWait1_1,
-    kDoneShooting1_1,
-    kTaxi1_1
 };
 
 enum AutoState2 { // T.O.F and Encoders
@@ -52,18 +52,23 @@ enum AutoState2 { // T.O.F and Encoders
     kWait2_2*/
 };
 
-enum AutoState2_1 { // T.O.F and Encoders
-    kAutoIdle2_1 = 0,
-    kDriveBackThroughBall2_1,
-    kTurn2_1,
-    kDriveToWall2_1,
-    kShoot2_1,
-    kWait2_1
-    /*
-    kSecondShoot2,
-    kCheckSecondShot2,
-    kWait2_2*/
+// states for 5 ball auto
+enum class A5 {
+    Idle,
+    SpoolShooter,
+    WaitShooter,
+    Shoot1,
+    Pickup2,
+    Pickup3,
+    GoToShoot23,
+    Shoot23,
+    Pickup4,
+    // TODO: use ball vision to pickup the 5th one from the driver station
+    WaitPickup5,
+    GoToShoot45,
+    Shoot45,
 };
+
 
 
 // add more vision versions later
@@ -71,34 +76,31 @@ enum AutoState2_1 { // T.O.F and Encoders
 
 class Autonomous {
     public:
-        Autonomous(JrimmyGyro *Gyro, frc::Timer *Timer, frc::Joystick *Joystick, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
+        Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
         void Init();
         // void UpdateGameData();
         void DecidePath();
         void DecidePath(int intent);
 
-        const char * GetCurrentPath();
+        const char *GetCurrentPath();
 
         void StartPathMaster();
-        void StartPathMaster(int path);
 
         void PeriodicPathMaster();
-        void PeriodicPathMaster(int path);
 
-        void AutonomousStart0();
-        void AutonomousPeriodic0();
+        void Start0Ball();
+        void Periodic0Ball();
 
-        void AutonomousStart1();
-        void AutonomousPeriodic1();
+        void StartLeft1Ball();
+        void StartMiddle1Ball();
+        void StartRight1Ball();
+        void Periodic1Ball();
 
-        void AutonomousStart1_1();
-        void AutonomousPeriodic1_1();
+        void Start2Ball();
+        void Periodic2Ball();
 
-        void AutonomousStart2();
-        void AutonomousPeriodic2();
-        
-        void AutonomousStart2_1();
-        void AutonomousPeriodic2_1();
+        void Start5Ball();
+        void Periodic5Ball();
 
         // ------------------Sub-Routines-------------------------//
 
@@ -113,16 +115,14 @@ class Autonomous {
 
         bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
-        //changes solenoid implementation because of change in logic (down is deployed, up is retracted)
+        // deploy collector and spool motoer
         void CollectorDown();
+        // raise collector and stop motor
         void CollectorUp();
-        //activates or deactivates collector motor
-        void CollectorOn();
-        void CollectorOff();
 
-// Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
-        bool DriveDirection(double dist, double angle, double speed, bool fieldOriented); 
-    
+        // Drives in direction at speed for distance. If going straight backwards, set angle to 180, not dist as a negative
+        bool DriveDirection(double dist, double angle, double speed, bool fieldOriented);
+
         bool TurnToAngle(float angle); // turns to a specific angle
 
         bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
@@ -132,24 +132,23 @@ class Autonomous {
 
     private:
         JrimmyGyro *a_Gyro;
-        frc::Timer *a_Timer;
         frc::Joystick *a_Joystick;
-        frc::Joystick *a_Xbox;
         SwerveDrive *a_SwerveDrive;
+        frc::Joystick *a_Xbox;
         BallShooter *a_BallShooter;
         Collector *a_Collector;
 
         AutoState0 a_AutoState0;
         AutoState1 a_AutoState1;
-        AutoState1_1 a_AutoState1_1;
         AutoState2 a_AutoState2;
-        AutoState2_1 a_AutoState2_1;
+        A5 a_AutoState5;
 
-        int autoPathMaster;
+        AutoType autoPathMaster;
         int BallsShot;
         bool prevbeam;
         bool currbeam;
         float limeangle;
         float drivestart;
         bool look;
+        double waitTimeStart { 0.0 };
 };

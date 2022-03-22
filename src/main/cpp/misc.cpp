@@ -1,5 +1,6 @@
 #include "misc.h"
 #include "Prefs.h"
+#include <chrono>
 #include <math.h>
 
 double misc::rpmToTalonVel(double rpm) {
@@ -34,4 +35,21 @@ double misc::clampRotations(double rotations) {
     } else {
         return out;
     }
+}
+
+double misc::degreesDiff(double a, double b) {
+    a = clampDegrees(a);
+    b = clampDegrees(b);
+
+    double diff = fabs(b - a);
+    if (diff > 180) {
+        return 360 - diff;
+    } else {
+        return diff;
+    }
+}
+
+double misc::getSeconds() {
+    auto time_point = std::chrono::steady_clock::now();
+    return std::chrono::duration_cast<std::chrono::seconds>(time_point.time_since_epoch()).count();
 }

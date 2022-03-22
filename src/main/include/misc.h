@@ -21,4 +21,11 @@ double radToDeg(double radians);
 double clampDegrees(double degrees);
 
 double clampRotations(double rotations);
+
+// returns the physical difference in degrees between angle a and angle b
+// always returns positive value
+double degreesDiff(double a, double b);
+
+// gets seconds elapsed since the epoch of the system clock
+double getSeconds();
 }
