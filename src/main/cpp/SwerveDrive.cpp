@@ -188,7 +188,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
     auto relPosVector = position - a_position;
 
     if (relPosVector.magnitude() < GO_TO_DIST_DONE && misc::degreesDiff(degrees, gyroDegrees) < GO_TO_ANGLE_DONE) {
-        coastStop();
+        brakeStop();
         return true;
     }
 
