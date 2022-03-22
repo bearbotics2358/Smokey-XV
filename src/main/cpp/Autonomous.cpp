@@ -311,7 +311,7 @@ void Autonomous::Periodic5Ball() {
         case A5::GoToShoot23:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
                 StartTimer();
-                a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot23;
             }
             break;
@@ -342,7 +342,7 @@ void Autonomous::Periodic5Ball() {
         case A5::GoToShoot45:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
                 StartTimer();
-                a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot45;
             }
             break;
