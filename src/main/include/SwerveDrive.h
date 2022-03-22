@@ -124,6 +124,9 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // uses the crab pid to calulate the required z drive to get to the specified angle
         float crabCalcZ(float angle, float gyroDegrees);
 
+        // uses the turn pid to calculate the required z drive
+        float turnCalcZ(float angle, float gyroDegrees);
+
         SwerveModule& flModule;
         SwerveModule& frModule;
         SwerveModule& blModule;

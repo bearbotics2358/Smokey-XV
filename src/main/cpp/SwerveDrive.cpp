@@ -157,7 +157,7 @@ float SwerveDrive::getAvgDistance() {
 void SwerveDrive::turnToAngle(float angle) {
     float gyroDegrees = a_gyro.getAngleClamped();
     // calculates a speed we need to go based off our current sensor and target position
-    float speed = std::clamp(turnAnglePid.Calculate(gyroDegrees, angle), -0.2, 0.2);
+    float speed = turnCalcZ(angle, gyroDegrees);
 
     flModule.steerToAng(135);
     frModule.steerToAng(45);
@@ -199,7 +199,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
 
     // flip sign of x because x is inverted for swerveUpdateInner
     // TODO: slow down speed as we get closer
-    swerveUpdateInner(-directionVector.x(), directionVector.y(), crabCalcZ(degrees, gyroDegrees), gyroDegrees, true);
+    swerveUpdateInner(-directionVector.x(), directionVector.y(), turnCalcZ(degrees, gyroDegrees), gyroDegrees, true);
 
     return false;
 }
@@ -363,6 +363,10 @@ void SwerveDrive::swerveUpdateInner(float x, float y, float z, float gyroDegrees
 
 float SwerveDrive::crabCalcZ(float angle, float gyroDegrees) {
     return std::clamp(crabAnglePid.Calculate(gyroDegrees, angle) / 270.0, -0.5, 0.5);
+}
+
+float SwerveDrive::turnCalcZ(float angle, float gyroDegrees) {
+    return std::clamp(turnAnglePid.Calculate(gyroDegrees, angle), -0.2, 0.2);
 }
 
 #endif
