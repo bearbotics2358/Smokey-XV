@@ -297,18 +297,18 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(0.0, 0.0), 0, 0.5)) {
                 nextState = A5::Pickup3;
             }
             break;
         case A5::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(0.0, 0.0), 0, 0.5)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
             break;
         case A5::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(0.0, 0.0), 0, 0.5)) {
                 StartTimer();
                 a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot23;
@@ -326,7 +326,7 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(0.0, 0.0), 0, 0.5)) {
                 StartTimer();
                 nextState = A5::WaitPickup5;
             }
@@ -339,7 +339,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot45:
-            if (a_SwerveDrive->goToPosition(Vec2(0, 0), 0, 0.5)) {
+            if (a_SwerveDrive->goToPosition(Vec2(0.0, 0.0), 0, 0.5)) {
                 StartTimer();
                 a_Collector->setCollectorMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot45;

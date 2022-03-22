@@ -79,31 +79,6 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
     frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", a_Climber.getTicks());
     frc::SmartDashboard::PutNumber("Climber Limit Switch Pressed", a_LimitSwitch.limitSwitchPressed());
-
-    frc::SmartDashboard::PutNumber("FL rel encoder", a_FLModule.getAngle());
-    frc::SmartDashboard::PutNumber("FR rel encoder", a_FRModule.getAngle());
-    frc::SmartDashboard::PutNumber("BL rel encoder", a_BLModule.getAngle());
-    frc::SmartDashboard::PutNumber("BR rel encoder", a_BRModule.getAngle());
-
-    frc::SmartDashboard::PutNumber("FL abs encoder", 360 - a_FLModule.getAbsAngleDegrees());
-    frc::SmartDashboard::PutNumber("FR abs encoder", 360 - a_FRModule.getAbsAngleDegrees());
-    frc::SmartDashboard::PutNumber("BL abs encoder", 360 - a_BLModule.getAbsAngleDegrees());
-    frc::SmartDashboard::PutNumber("BR abs encoder", 360 - a_BRModule.getAbsAngleDegrees());
-
-    frc::SmartDashboard::PutNumber("FL raw rel encoder", a_FLModule.getRelativeAngle());
-    frc::SmartDashboard::PutNumber("FR raw rel encoder", a_FRModule.getRelativeAngle());
-    frc::SmartDashboard::PutNumber("BL raw rel encoder", a_BLModule.getRelativeAngle());
-    frc::SmartDashboard::PutNumber("BR raw rel encoder", a_BRModule.getRelativeAngle());
-    //
-    frc::SmartDashboard::PutNumber("FL volts", a_FLModule.getAbsEncoderVolts());
-    frc::SmartDashboard::PutNumber("FR volts", a_FRModule.getAbsEncoderVolts());
-    frc::SmartDashboard::PutNumber("BL volts", a_BLModule.getAbsEncoderVolts());
-    frc::SmartDashboard::PutNumber("BR volts", a_BRModule.getAbsEncoderVolts());
-
-    frc::SmartDashboard::PutNumber("FL offset", a_FLModule.encZeroPoint);
-    frc::SmartDashboard::PutNumber("FR offset", a_FRModule.encZeroPoint);
-    frc::SmartDashboard::PutNumber("BL offset", a_BLModule.encZeroPoint);
-    frc::SmartDashboard::PutNumber("BR offset", a_BRModule.encZeroPoint);
 }
 
 void Robot::DisabledInit() {

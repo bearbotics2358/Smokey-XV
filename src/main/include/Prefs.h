@@ -57,6 +57,9 @@
 
 /*======= ENCODER CONSTANTS =======*/
 
+// the distance we were getting from the wheel was not quite right, so we multiply them by this constant to get the right distance
+#define DISTANCE_ADJUSTMANT_FACTOR 1.09789
+
 // TODO: figure out what this constant means
 #define TICKS_STEERING 18.0 // roughly 18 "position" units per steering rotation
 
