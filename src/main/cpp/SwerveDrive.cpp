@@ -59,9 +59,9 @@ frModule(frModule),
 blModule(blModule),
 brModule(brModule),
 a_gyro(gyro),
-turnAnglePid(0.014, 0.0, 0.0),
+turnAnglePid(0.02, 0.0, 0.0),
 crabAnglePid(1.5, 0.0, 0.01),
-distPid(0.5, 0.0, 0.0) {
+distPid(4.0, 0.0, 0.03) {
     turnAnglePid.EnableContinuousInput(0.0, 360.0);
     crabAnglePid.EnableContinuousInput(0.0, 360.0);
     distPid.SetSetpoint(0.0);
@@ -194,7 +194,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
     auto directionVector = relPosVector.as_normalized();
 
     // scale this vector by the requested speed, and slow down as we get closer to the target
-    directionVector *= speed * std::clamp(distPid.Calculate(remainingDistance), 0.0, 1.0);
+    directionVector *= speed * std::clamp(-distPid.Calculate(remainingDistance), 0.0, 1.0);
 
     // flip sign of x because x is inverted for swerveUpdateInner
     swerveUpdateInner(-directionVector.x(), directionVector.y(), turnCalcZ(degrees, gyroDegrees), gyroDegrees, true);
