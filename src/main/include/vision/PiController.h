@@ -7,10 +7,14 @@
 #include <string_view>
 #include <vector>
 
-enum class Team {
-    Red,
-    Blue,
+enum class TargetType : int {
+    None = 0x0,
+    Red = 0x1,
+    Blue = 0x2,
+    All = 0x3,
 };
+
+std::optional<TargetType> target_type_from_int(int n);
 
 enum class Mode {
     Vision,
@@ -22,9 +26,10 @@ enum class Mode {
 std::optional<Mode> string_to_mode(std::string_view str);
 
 struct Ball {
-        Team team;
+        TargetType type;
         double distance;
         double angle;
+        double score;
 };
 
 class PiData {
@@ -68,9 +73,7 @@ class PiController {
     private:
         PiController(MqttClient&& client, std::unique_ptr<PiData>&& data);
 
-        // TODO:
         static void data_callback(std::string_view msg, PiData *data);
-        // TODO:
         static void error_callback(std::string_view msg, PiData *data);
 
         MqttClient m_client;

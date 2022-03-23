@@ -32,14 +32,14 @@ bool TargetTracker::Mode::isBall() const {
 TargetTracker::TargetTracker(const std::string& cameraName, TargetTracker::Mode mode):
 m_camera(cameraName),
 m_mode(mode),
-m_team(Team::Red) {}
+m_team(TargetType::Red) {}
 
-TargetTracker::TargetTracker(const std::string& cameraName, TargetTracker::Mode mode, Team team):
+TargetTracker::TargetTracker(const std::string& cameraName, TargetTracker::Mode mode, TargetType team):
 m_camera(cameraName),
 m_mode(mode),
 m_team(team) {}
 
-void TargetTracker::setTeam(Team team) {
+void TargetTracker::setTeam(TargetType team) {
     // TODO: maybe switch pipelines if in ball mode
     m_team = team;
 }

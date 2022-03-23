@@ -1,9 +1,18 @@
 #include "vision/PiController.h"
 #include "logging.h"
+#include <sstream>
 
 static const std::string data_topic { "pi/cv/data" };
 static const std::string control_topic { "pi/cv/control" };
 static const std::string error_topic { "pi/cv/error" };
+
+std::optional<TargetType> target_type_from_int(int n) {
+    if (n > (int) TargetType::All) {
+        return {};
+    } else {
+        return (TargetType) n;
+    }
+}
 
 std::optional<Mode> string_to_mode(std::string_view str) {
     if (str == "vision") {
@@ -78,7 +87,26 @@ void PiController::clear_errors() {
 }
 
 void PiController::data_callback(std::string_view msg, PiData *data) {
-    // TODO: complete once vision is complete on pi
+    data->balls.clear();
+    std::istringstream iss = std::istringstream(std::string(msg));
+    int type;
+    double distance;
+    double angle;
+    double score;
+
+    while (iss >> type >> distance >> angle >> score) {
+        auto target_type = target_type_from_int(type);
+        if (!target_type.has_value()) {
+            data->errors.push_back(Error::internal("invalid target type recieved from pi"));
+            return;
+        }
+        data->balls.push_back(Ball {
+            .type = *target_type,
+            .distance = distance,
+            .angle = angle,
+            .score = score,
+        });
+    }
 }
 
 void PiController::error_callback(std::string_view msg, PiData *data) {

@@ -12,7 +12,7 @@ struct Target {
         float distance;
 };
 
-enum class Team {
+enum class TargetType {
     Red,
     Blue
 };
@@ -52,9 +52,9 @@ class TargetTracker {
         TargetTracker(const std::string& cameraName, TargetTracker::Mode mode);
 
         // this one takes in a team
-        TargetTracker(const std::string& cameraName, TargetTracker::Mode mode, Team team);
+        TargetTracker(const std::string& cameraName, TargetTracker::Mode mode, TargetType team);
 
-        void setTeam(Team team);
+        void setTeam(TargetType team);
         void setMode(TargetTracker::Mode mode);
 
         void update();
@@ -66,7 +66,7 @@ class TargetTracker {
     private:
         photonlib::PhotonCamera m_camera;
         TargetTracker::Mode m_mode;
-        Team m_team;
+        TargetType m_team;
 
         std::optional<Target> m_target {};
         std::vector<Target> m_balls {};
