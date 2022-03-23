@@ -161,7 +161,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         constexpr static float DRIVE_WIDTH = 29.75;
 
         // for goToPosition, when the distance to the target position is within this amount, say that we are done (assuming angle is also close enough)
-        constexpr static float GO_TO_DIST_DONE = 0.1;
+        constexpr static float GO_TO_DIST_DONE = 0.15;
         // for goToPosition, when the angle difference from the target angle is within this amount, say that we are done (assuming distance is also close enough)
         constexpr static float GO_TO_ANGLE_DONE = 5.0;
 };

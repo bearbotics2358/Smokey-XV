@@ -298,12 +298,12 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(7.945, 7.569), 260, AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(Vec2(7.94, 7.57), 260, AUTO5_SPEED)) {
                 nextState = A5::Pickup3;
             }
             break;
         case A5::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(6.365, 5.043), 155, AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, AUTO5_SPEED)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
