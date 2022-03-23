@@ -18,7 +18,7 @@ a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_
 a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
 a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
 a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule, a_Gyro),
-a_Autonomous(&a_Gyro, &joystickOne, &a_XboxController, &a_SwerveDrive, &a_Shooter, &a_Collector),
+a_Autonomous(&a_Gyro, &a_XboxController, &a_SwerveDrive, &a_Shooter, &a_Collector),
 joystickOne(JOYSTICK_PORT),
 a_XboxController(XBOX_CONTROLLER),
 a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),

@@ -4,9 +4,8 @@
 #include <math.h>
 
 
-Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, frc::Joystick *Xbox_Controller, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
+Autonomous::Autonomous(JrimmyGyro *Gyro, frc::Joystick *Xbox_Controller, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector):
 a_Gyro(Gyro),
-a_Joystick(Joystick),
 a_SwerveDrive(SwerveDrive),
 a_Xbox(Xbox_Controller),
 a_BallShooter(BallShooter),
@@ -15,12 +14,6 @@ a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
 a_AutoState2(kAutoIdle2) {
     autoPathMaster = k2Ball;
-    BallsShot = 0;
-    prevbeam = false;
-    currbeam = true;
-    limeangle = 0.0;
-    drivestart = 0.0;
-    look = true;
 }
 
 void Autonomous::Init() {

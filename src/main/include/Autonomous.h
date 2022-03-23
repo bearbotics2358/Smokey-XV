@@ -91,7 +91,7 @@ enum class A5V {
 
 class Autonomous {
     public:
-        Autonomous(JrimmyGyro *Gyro, frc::Joystick *Joystick, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
+        Autonomous(JrimmyGyro *Gyro, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);
         void Init();
         // void UpdateGameData();
         void DecidePath();
@@ -127,7 +127,7 @@ class Autonomous {
         // Timer System
         // Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
-        bool WaitForTime(double time); // Wait for specified time
+        bool WaitForTime(double time); // Wait for specified time in seconds
 
         // deploy collector and spool motoer
         void CollectorDown();
@@ -144,7 +144,6 @@ class Autonomous {
 
     private:
         JrimmyGyro *a_Gyro;
-        frc::Joystick *a_Joystick;
         SwerveDrive *a_SwerveDrive;
         frc::Joystick *a_Xbox;
         BallShooter *a_BallShooter;
@@ -157,12 +156,9 @@ class Autonomous {
         A5V a_AutoState5Vision;
 
         AutoType autoPathMaster;
-        int BallsShot;
-        bool prevbeam;
-        bool currbeam;
-        float limeangle;
-        float drivestart;
-        bool look;
+        float drivestart { 0.0 };
+
+        // used for waitForTime method
         double waitTimeStart { 0.0 };
 
         // start position of robot during 5 ball auto relative to near left corner of field
