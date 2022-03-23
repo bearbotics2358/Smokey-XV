@@ -21,6 +21,7 @@ enum AutoType {
     kRight1Ball = 3,
     k2Ball = 4,
     k5Ball = 5,
+    k5BallVision = 6,
 };
 
 enum AutoState0 { // Encoders
@@ -63,12 +64,26 @@ enum class A5 {
     GoToShoot23,
     Shoot23,
     Pickup4,
-    // TODO: use ball vision to pickup the 5th one from the driver station
     WaitPickup5,
     GoToShoot45,
     Shoot45,
 };
 
+// states for 5 ball auto with vision
+enum class A5V {
+    Idle,
+    SpoolShooter,
+    WaitShooter,
+    Shoot1,
+    Pickup2,
+    Pickup3,
+    GoToShoot23,
+    Shoot23,
+    Pickup4,
+    WaitPickup5,
+    GoToShoot45,
+    Shoot45,
+};
 
 
 // add more vision versions later
@@ -101,6 +116,7 @@ class Autonomous {
 
         void Start5Ball();
         void Periodic5Ball();
+        void Periodic5BallVision();
 
         // ------------------Sub-Routines-------------------------//
 
@@ -109,11 +125,9 @@ class Autonomous {
         void SpoolShooter(float speed); // Spools up shooter ahead of time to improve efficiency
 
         // Timer System
-        //      Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
+        // Note: you MUST have a separate case to start the timer, though WaitForTime handles stopping & resetting
         void StartTimer();
         bool WaitForTime(double time); // Wait for specified time
-
-        bool DriveDist(double dist, double angle); // Drive a distance based off encoders
 
         // deploy collector and spool motoer
         void CollectorDown();
@@ -124,8 +138,6 @@ class Autonomous {
         bool DriveDirection(double dist, double angle, double speed, bool fieldOriented);
 
         bool TurnToAngle(float angle); // turns to a specific angle
-
-        bool IHaveAProposal(float speed, float dir, float dist); /// drive to distance, at input speed and direction between 0-360
 
         bool IndexAndShoot(float speed); // Shooting a ball when the shooter is spinning fast enough
 
@@ -142,6 +154,7 @@ class Autonomous {
         AutoState1 a_AutoState1;
         AutoState2 a_AutoState2;
         A5 a_AutoState5;
+        A5V a_AutoState5Vision;
 
         AutoType autoPathMaster;
         int BallsShot;

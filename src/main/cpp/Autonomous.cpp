@@ -31,13 +31,13 @@ void Autonomous::DecidePath() {
     if (a_Xbox->GetRawAxis(OperatorJoystick::LeftTrigger) > 0.5) {
         if (a_Xbox->GetRawButtonPressed(OperatorButton::Y)) {
             if (autoPathMaster == k0Ball) {
-                autoPathMaster = k5Ball;
+                autoPathMaster = k5BallVision;
             } else {
                 autoPathMaster = (AutoType) (autoPathMaster - 1);
             }
         }
         if (a_Xbox->GetRawButtonPressed(OperatorButton::A)) {
-            if (autoPathMaster == k5Ball) {
+            if (autoPathMaster == k5BallVision) {
                 autoPathMaster = k0Ball;
             } else {
                 autoPathMaster = (AutoType) (autoPathMaster + 1);
@@ -49,17 +49,19 @@ void Autonomous::DecidePath() {
 const char *Autonomous::GetCurrentPath() {
     switch (autoPathMaster) {
         case k0Ball:
-            return "0-ball taxi chosen";
+            return "0 ball auto chosen";
         case kLeft1Ball:
-            return "left 1-ball taxi chosen";
+            return "left 1 ball auto chosen";
         case kMiddle1Ball:
-            return "middle 1-ball taxi chosen";
+            return "middle 1 ball auto chosen";
         case kRight1Ball:
-            return "right 1-ball taxi chosen";
+            return "right 1 ball auto chosen";
         case k2Ball:
-            return "2-ball taxi chosen";
+            return "2 ball auto chosen";
         case k5Ball:
-            return "5-ball auto chosen";
+            return "5 ball auto chosen";
+        case k5BallVision:
+            return "5 ball vision auto chosen";
         default:
             return "no autonous selected, this shouldn't happen";
     }
@@ -68,27 +70,22 @@ const char *Autonomous::GetCurrentPath() {
 void Autonomous::StartPathMaster() {
     switch (autoPathMaster) {
         case k0Ball:
-            frc::SmartDashboard::PutBoolean("0-ball Taxi started", true);
             Start0Ball();
             break;
         case kLeft1Ball:
-            frc::SmartDashboard::PutBoolean("left 1-ball Taxi started", true);
             StartLeft1Ball();
             break;
         case kMiddle1Ball:
-            frc::SmartDashboard::PutBoolean("middle 1-ball Taxi started", true);
             StartMiddle1Ball();
             break;
         case kRight1Ball:
-            frc::SmartDashboard::PutBoolean("right 1-ball taxi started", true);
             StartRight1Ball();
             break;
         case k2Ball:
-            frc::SmartDashboard::PutBoolean("2-ball Taxi started", true);
             Start2Ball();
             break;
         case k5Ball:
-            frc::SmartDashboard::PutBoolean("5-ball auto started", true);
+        case k5BallVision:
             Start5Ball();
             break;
     }
@@ -109,6 +106,9 @@ void Autonomous::PeriodicPathMaster() {
             break;
         case k5Ball:
             Periodic5Ball();
+            break;
+        case k5BallVision:
+            Periodic5BallVision();
             break;
     }
 }
@@ -280,14 +280,14 @@ void Autonomous::Periodic5Ball() {
             nextState = A5::WaitShooter;
             break;
         case A5::WaitShooter:
-            if (WaitForTime(0.5)) {
+            if (WaitForTime(0.5) || a_BallShooter->getSpeed() > SHOOTER_TOLERANCE * SHOOTER_SPEED) {
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot1;
             }
             break;
         case A5::Shoot1:
-            if (WaitForTime(1)) {
+            if (WaitForTime(0.5)) {
                 a_Collector->setIndexerMotorSpeed(0);
                 StartTimer();
                 nextState = A5::Pickup2;
@@ -356,8 +356,96 @@ void Autonomous::Periodic5Ball() {
     a_AutoState5 = nextState;
 }
 
-void Autonomous::IDontLikeExercise() {
+void Autonomous::Periodic5BallVision() {
+    A5V nextState = a_AutoState5Vision;
 
+    switch (nextState) {
+        case A5V::Idle:
+            IDontLikeExercise();
+            break;
+        case A5V::SpoolShooter:
+            SpoolShooter(SHOOTER_SPEED);
+            StartTimer();
+            nextState = A5V::WaitShooter;
+            break;
+        case A5V::WaitShooter:
+            if (WaitForTime(0.5) || a_BallShooter->getSpeed() > SHOOTER_TOLERANCE * SHOOTER_SPEED) {
+                StartTimer();
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A5V::Shoot1;
+            }
+            break;
+        case A5V::Shoot1:
+            if (WaitForTime(0.5)) {
+                a_Collector->setIndexerMotorSpeed(0);
+                StartTimer();
+                nextState = A5V::Pickup2;
+            }
+            break;
+        case A5V::Pickup2:
+            // to avoid deploying collector against the wall
+            if (WaitForTime(0.1)) {
+                CollectorDown();
+            }
+            if (a_SwerveDrive->goToPosition(Vec2(7.94, 7.57), 260, AUTO5_SPEED)) {
+                nextState = A5V::Pickup3;
+            }
+            break;
+        case A5V::Pickup3:
+            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, AUTO5_SPEED)) {
+                CollectorUp();
+                nextState = A5V::GoToShoot23;
+            }
+            break;
+        case A5V::GoToShoot23:
+            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
+                StartTimer();
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A5V::Shoot23;
+            }
+            break;
+        case A5V::Shoot23:
+            if (WaitForTime(1.5)) {
+                a_Collector->setIndexerMotorSpeed(0);
+                StartTimer();
+                nextState = A5V::Pickup4;
+            }
+            break;
+        case A5V::Pickup4:
+            // to avoid deploying collector against the wall
+            if (WaitForTime(0.1)) {
+                CollectorDown();
+            }
+            if (a_SwerveDrive->goToPosition(Vec2(6.812, 1.352), 225, AUTO5_SPEED)) {
+                StartTimer();
+                nextState = A5V::WaitPickup5;
+            }
+            break;
+        case A5V::WaitPickup5:
+            // wait for the human player to put the ball out
+            if (WaitForTime(2)) {
+                CollectorUp();
+                nextState = A5V::GoToShoot45;
+            }
+            break;
+        case A5V::GoToShoot45:
+            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
+                StartTimer();
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A5V::Shoot45;
+            }
+            break;
+        case A5V::Shoot45:
+            if (WaitForTime(1.5)) {
+                nextState = A5V::Idle;
+            }
+            break;
+    }
+
+    a_AutoState5Vision = nextState;
+}
+
+void Autonomous::IDontLikeExercise() {
     a_SwerveDrive->coastStop();
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
@@ -371,7 +459,6 @@ bool Autonomous::WaitForTime(double time) {
     return misc::getSeconds() > waitTimeStart + time;
 }
 
-
 void Autonomous::SpoolShooter(float speed) {
     a_BallShooter->setSpeed(speed);
 }
@@ -384,22 +471,6 @@ void Autonomous::CollectorDown() {
 void Autonomous::CollectorUp() {
     a_Collector->setSolenoid(false);
     a_Collector->setCollectorMotorSpeed(0);
-}
-
-
-bool Autonomous::DriveDist(double dist, double angle) { // true is done, false is not done
-
-    if ((double) fabs(a_SwerveDrive->getAvgDistance()) < dist) {
-        a_SwerveDrive->driveDistance(dist, angle);
-        frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
-        return false;
-
-
-    } else {
-        a_SwerveDrive->coastStop();
-        frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
-        return true;
-    }
 }
 
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
@@ -427,29 +498,6 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
         return true;
     }
 }
-
-/* NOT REALLY NEEDED, WE HAVE DRIVEDIRECTION AND THIS IS NEVER USED
-
-bool Autonomous::IHaveAProposal(float speed, float dir, float dist) { // true is done, false is not done
-
-    if (fabs(a_SwerveDrive->getAvgDistance()) < (dist + drivestart)) {
-
-        if (a_SwerveDrive->getAvgDistance() > (0.80 * (dist + drivestart))) {
-            a_SwerveDrive->goToTheDon(speed / 2, dir, dist);
-            a_BallShooter->setSpeed(SHOOTER_SPEED);
-        } else {
-            a_SwerveDrive->goToTheDon(speed, dir, dist);
-            a_BallShooter->stop();
-        }
-        frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
-        return false;
-
-    } else {
-        a_SwerveDrive->coastStop();
-        frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
-        return true;
-    }
-}*/
 
 bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fieldOriented) { // true is done, false is not done
 
