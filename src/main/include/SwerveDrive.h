@@ -73,6 +73,8 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // stops the robot from moving, just coasts
         void coastStop();
 
+        // stops the robot from moving and brakes
+        // FIXME: this doesn't actually seem to brake
         void brakeStop();
 
         // sets the hold angle used by crab drive update
@@ -138,6 +140,9 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
 
         // pid when using crabUpdate
         frc2::PIDController crabAnglePid;
+
+        // pid for distance when using goToDist
+        frc2::PIDController distPid;
 
         // if we're in crab drive mode
         bool crab;

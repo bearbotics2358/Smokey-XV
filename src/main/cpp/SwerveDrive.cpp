@@ -60,9 +60,11 @@ blModule(blModule),
 brModule(brModule),
 a_gyro(gyro),
 turnAnglePid(0.014, 0.0, 0.0),
-crabAnglePid(1.5, 0.0, 0.01) {
+crabAnglePid(1.5, 0.0, 0.01),
+distPid(0.5, 0.0, 0.0) {
     turnAnglePid.EnableContinuousInput(0.0, 360.0);
     crabAnglePid.EnableContinuousInput(0.0, 360.0);
+    distPid.SetSetpoint(0.0);
 }
 
 void SwerveDrive::crabUpdate(float x, float y, bool fieldOriented) {
@@ -186,22 +188,18 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, bool 
 bool SwerveDrive::goToPosition(Vec2 position, float degrees, float speed) {
     float gyroDegrees = a_gyro.getAngleClamped();
     auto relPosVector = position - a_position;
-
-    if (relPosVector.magnitude() < GO_TO_DIST_DONE && misc::degreesDiff(degrees, gyroDegrees) < GO_TO_ANGLE_DONE) {
-        brakeStop();
-        return true;
-    }
+    float remainingDistance = relPosVector.magnitude();
 
     // create a unit vector pointing towards the point we want to go to
     auto directionVector = relPosVector.as_normalized();
-    // scale this vector by the requested speed
-    directionVector *= speed;
+
+    // scale this vector by the requested speed, and slow down as we get closer to the target
+    directionVector *= speed * std::clamp(distPid.Calculate(remainingDistance), 0.0, 1.0);
 
     // flip sign of x because x is inverted for swerveUpdateInner
-    // TODO: slow down speed as we get closer
     swerveUpdateInner(-directionVector.x(), directionVector.y(), turnCalcZ(degrees, gyroDegrees), gyroDegrees, true);
 
-    return false;
+    return remainingDistance < GO_TO_DIST_DONE && misc::degreesDiff(degrees, gyroDegrees) < GO_TO_ANGLE_DONE;
 }
 
 void SwerveDrive::updatePosition() {
