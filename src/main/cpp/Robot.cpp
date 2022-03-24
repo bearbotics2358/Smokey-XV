@@ -63,6 +63,8 @@ void Robot::RobotPeriodic() {
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
     frc::SmartDashboard::PutNumber("Robot x Position", a_SwerveDrive.getPosition().x());
     frc::SmartDashboard::PutNumber("Robot y Position", a_SwerveDrive.getPosition().y());
+
+    frc::SmartDashboard::PutBoolean("Slow speed enabled", a_slowSpeed);
     frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
 
     frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());
@@ -244,22 +246,9 @@ void Robot::TeleopPeriodic() {
         }
     }
 
-    /* =-=-=-=-=-=-=-=-=-=-= Drive Back Distance =-=-=-=-=-=-=-=-=-=-= */
-    if (joystickOne.GetRawButtonPressed(DriverButton::Button10) && driveBack == false) {
-        driveBack = true;
-        driveBackStartDist = a_SwerveDrive.getAvgDistance();
-    }
-    if (joystickOne.GetRawButtonReleased(DriverButton::Button10)) {
-        a_SwerveDrive.swerveUpdate(0, 0, 0, false);
-        driveBack = false;
-    }
-    // just in case
-    if (driveBack && joystickOne.GetRawButton(DriverButton::Button10)) {
-        if (a_SwerveDrive.getAvgDistance() > (driveBackStartDist + 0.6)) {
-            driveBack = false;
-        } else {
-            a_SwerveDrive.goToTheDon(0.5, 180, driveBackStartDist + 0.6, false);
-        }
+    // turn to the right angle for climbing
+    if (joystickOne.GetRawButtonPressed(DriverButton::Button10)) {
+        a_SwerveDrive.turnToAngle(180.0);
     }
 }
 

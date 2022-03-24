@@ -83,7 +83,4 @@ class Robot : public frc::TimedRobot {
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;
-
-        bool driveBack { false };
-        double driveBackStartDist { 0.0 };
 };
