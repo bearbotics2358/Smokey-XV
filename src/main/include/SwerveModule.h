@@ -43,6 +43,9 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // set wheel speed in meters per second
         float setDriveSpeed(float speed);
 
+        void brakeDrive();
+        void coastDrive();
+
         // sets drive and steer p, i, and d values for pid
         void setDrivePID(double pNew, double iNew, double dNew);
         void setSteerPID(double pNew, double iNew, double dNew);

@@ -261,16 +261,6 @@ void Robot::TestInit() {
 
 void Robot::TestPeriodic() {
     TeleopPeriodic();
-
-    if (a_XboxController.GetRawButton(OperatorButton::A)) {
-        a_SwerveDrive.goToPosition(Vec2(0.0, 0.2), 0, 0.25);
-    }
-    if (a_XboxController.GetRawButton(OperatorButton::B)) {
-        a_SwerveDrive.goToPosition(Vec2(0.1, -0.2), 60, 0.25);
-    }
-    if (a_XboxController.GetRawButton(OperatorButton::X)) {
-        a_SwerveDrive.goToPosition(Vec2(0.0, 0.0), 0, 0.25);
-    }
 }
 
 int main() { return frc::StartRobot<Robot>(); } // Initiate main loop

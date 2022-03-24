@@ -96,15 +96,10 @@ void SwerveDrive::coastStop() {
 }
 
 void SwerveDrive::brakeStop() {
-    flModule.setDriveSpeed(0.0);
-    frModule.setDriveSpeed(0.0);
-    blModule.setDriveSpeed(0.0);
-    brModule.setDriveSpeed(0.0);
-
-    flModule.setSteerPercent(0.0);
-    frModule.setSteerPercent(0.0);
-    blModule.setSteerPercent(0.0);
-    brModule.setSteerPercent(0.0);
+    flModule.brakeDrive();
+    frModule.brakeDrive();
+    blModule.brakeDrive();
+    brModule.brakeDrive();
 }
 
 void SwerveDrive::setHoldAngle(float degrees) {
