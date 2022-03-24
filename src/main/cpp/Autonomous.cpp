@@ -303,6 +303,7 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::GoToShoot23:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
+                a_SwerveDrive->coastStop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot23;
@@ -321,6 +322,7 @@ void Autonomous::Periodic5Ball() {
                 CollectorDown();
             }
             if (a_SwerveDrive->goToPosition(Vec2(6.812, 1.352), 225, AUTO5_SPEED)) {
+                a_SwerveDrive->coastStop();
                 StartTimer();
                 nextState = A5::WaitPickup5;
             }
@@ -334,6 +336,7 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::GoToShoot45:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
+                a_SwerveDrive->coastStop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot45;
