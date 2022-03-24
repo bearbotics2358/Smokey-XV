@@ -247,7 +247,7 @@ void Robot::TeleopPeriodic() {
     }
 
     // turn to the right angle for climbing
-    if (joystickOne.GetRawButtonPressed(DriverButton::Button10)) {
+    if (joystickOne.GetRawButton(DriverButton::Button10)) {
         a_SwerveDrive.turnToAngle(180.0);
     }
 }
