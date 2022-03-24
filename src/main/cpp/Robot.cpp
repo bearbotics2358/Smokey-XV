@@ -201,9 +201,9 @@ void Robot::TeleopPeriodic() {
         multiplier = 0.25;
     }
 
-    float x = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::XAxis);
-    float y = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::YAxis);
-    float z = -1 * multiplier * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
+    float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
+    float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
+    float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
 
     if (fabs(x) < 0.10) {
         x = 0;
@@ -216,6 +216,11 @@ void Robot::TeleopPeriodic() {
     }
 
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
+
+    // scale by multiplier for slow mode, do this after deadzone check
+    x *= multiplier;
+    y *= multiplier;
+    z *= multiplier;
 
     // turn field oriented mode off if button 3 is pressed
     bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
