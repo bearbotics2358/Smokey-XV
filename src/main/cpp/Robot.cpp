@@ -58,7 +58,6 @@ void Robot::RobotInit() {
 void Robot::RobotPeriodic() {
     a_Gyro.Update();
     a_SwerveDrive.updatePosition();
-    // handler.update();
 
     frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
     frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
@@ -68,12 +67,7 @@ void Robot::RobotPeriodic() {
 
     frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());
 
-    // a_canHandler.update();
-    frc::SmartDashboard::PutNumber("Desired Shooter RPM", shooterDesiredSpeed);
     frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
-
-    frc::SmartDashboard::PutNumber("Joystick X", joystickOne.GetRawAxis(DriverJoystick::XAxis));
-    frc::SmartDashboard::PutNumber("Joystick Y", joystickOne.GetRawAxis(DriverJoystick::YAxis));
 
     frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
     frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
@@ -84,7 +78,6 @@ void Robot::RobotPeriodic() {
 void Robot::DisabledInit() {
     a_doEnabledInit = true;
     a_SwerveDrive.resetDrive();
-    shooterDesiredSpeed = 0.0;
 }
 
 void Robot::DisabledPeriodic() {

@@ -4,8 +4,6 @@
 #include <string>
 #include <utility>
 
-#include <frc/smartdashboard/SmartDashboard.h>
-
 #include "Prefs.h"
 
 CanHandler::CanHandler(const std::vector<Arduino>& in):

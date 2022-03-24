@@ -68,7 +68,6 @@ class Robot : public frc::TimedRobot {
         frc::Joystick a_XboxController;
 
         BallShooter a_Shooter;
-        double shooterDesiredSpeed { 0.0 };
 
         Collector a_Collector;
 

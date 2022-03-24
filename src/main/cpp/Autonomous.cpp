@@ -484,13 +484,11 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
 
     if (fabs(a_Gyro->getAngle() - angle) >= 1) {
         a_SwerveDrive->turnToAngle(angle);
-        frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
 
 
     } else {
         a_SwerveDrive->coastStop();
-        frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
 }
@@ -505,13 +503,11 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
         } else {
             a_SwerveDrive->goToTheDon(speed, angle, dist, fieldOriented);
         }
-        frc::SmartDashboard::PutNumber("Encoder average?????", a_SwerveDrive->getAvgDistance());
         return false;
 
     } else {
         a_SwerveDrive->coastStop();
         a_SwerveDrive->unsetHoldAngle();
-        frc::SmartDashboard::PutNumber("We done????? ", a_SwerveDrive->getAvgDistance());
         return true;
     }
 }

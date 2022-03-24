@@ -8,7 +8,6 @@
 #include <frc/AnalogEncoder.h>
 #include <frc/AnalogInput.h>
 #include <frc/controller/PIDController.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 #include <rev/CANSparkMax.h>
 
