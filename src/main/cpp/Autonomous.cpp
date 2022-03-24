@@ -13,7 +13,7 @@ a_Collector(Collector),
 a_AutoState0(kAutoIdle0),
 a_AutoState1(kAutoIdle1),
 a_AutoState2(kAutoIdle2) {
-    autoPathMaster = k2Ball;
+    autoPathMaster = k5Ball;
 }
 
 void Autonomous::Init() {
@@ -280,7 +280,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Shoot1:
-            if (WaitForTime(0.5)) {
+            if (WaitForTime(0.75)) {
                 a_Collector->setIndexerMotorSpeed(0);
                 StartTimer();
                 nextState = A5::Pickup2;
@@ -288,10 +288,10 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::Pickup2:
             // to avoid deploying collector against the wall
-            if (WaitForTime(0.1)) {
+            if (WaitForTime(0.05)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(7.94, 7.57), 260, AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(Vec2(7.94, 7.57), 270, AUTO5_SPEED)) {
                 nextState = A5::Pickup3;
             }
             break;
@@ -321,7 +321,7 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(6.812, 1.352), 225, AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.662, 1.352), 205, AUTO5_SPEED)) {
                 a_SwerveDrive->coastStop();
                 StartTimer();
                 nextState = A5::WaitPickup5;
@@ -412,7 +412,7 @@ void Autonomous::Periodic5BallVision() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(6.812, 1.352), 225, AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.512, 1.352), 205, AUTO5_SPEED)) {
                 StartTimer();
                 nextState = A5V::WaitPickup5;
             }

@@ -59,7 +59,7 @@ frModule(frModule),
 blModule(blModule),
 brModule(brModule),
 a_gyro(gyro),
-turnAnglePid(0.02, 0.0, 0.01),
+turnAnglePid(0.014, 0.0, 0.0),
 crabAnglePid(1.5, 0.0, 0.01),
 distPid(4.0, 0.0, 0.03) {
     turnAnglePid.EnableContinuousInput(0.0, 360.0);
