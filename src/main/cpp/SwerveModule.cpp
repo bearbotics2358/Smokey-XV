@@ -26,8 +26,6 @@ steerPID(0, 0, 0) {
     driveMotor.ConfigAllSettings(config);
 
     steerPID.EnableContinuousInput(0.0, 360.0);
-
-    brakeDrive();
 }
 
 float SwerveModule::getDistance() {
@@ -91,12 +89,8 @@ float SwerveModule::setDriveSpeed(float speed) {
     return speed;
 }
 
-void SwerveModule::brakeDrive() {
-    driveMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-}
-
-void SwerveModule::coastDrive() {
-    driveMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+void SwerveModule::setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode mode) {
+    driveMotor.SetNeutralMode(mode);
 }
 
 void SwerveModule::setDrivePID(double pNew, double iNew, double dNew) {

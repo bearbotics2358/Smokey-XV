@@ -83,7 +83,7 @@ void SwerveDrive::swerveUpdate(float x, float y, float z, bool fieldOriented) {
     swerveUpdateInner(x, y, z, a_gyro.getAngleClamped(), fieldOriented);
 }
 
-void SwerveDrive::coastStop() {
+void SwerveDrive::stop() {
     flModule.setDrivePercent(0.0);
     frModule.setDrivePercent(0.0);
     blModule.setDrivePercent(0.0);
@@ -95,11 +95,18 @@ void SwerveDrive::coastStop() {
     brModule.setSteerPercent(0.0);
 }
 
-void SwerveDrive::brakeStop() {
-    flModule.brakeDrive();
-    frModule.brakeDrive();
-    blModule.brakeDrive();
-    brModule.brakeDrive();
+void SwerveDrive::brakeOnStop() {
+    flModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    frModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    blModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    brModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+}
+
+void SwerveDrive::coastOnStop() {
+    flModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+    frModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+    blModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+    brModule.setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 }
 
 void SwerveDrive::setHoldAngle(float degrees) {
@@ -176,7 +183,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, bool 
 
         crabUpdate(x, y, fieldOriented);
     } else {
-        brakeStop();
+        stop();
     }
 }
 

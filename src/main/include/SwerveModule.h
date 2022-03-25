@@ -43,8 +43,8 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         // set wheel speed in meters per second
         float setDriveSpeed(float speed);
 
-        void brakeDrive();
-        void coastDrive();
+        // set the brake mode of the drive motor
+        void setBrakeMode(ctre::phoenix::motorcontrol::NeutralMode mode);
 
         // sets drive and steer p, i, and d values for pid
         void setDrivePID(double pNew, double iNew, double dNew);

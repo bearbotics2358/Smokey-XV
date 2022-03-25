@@ -299,7 +299,7 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::GoToShoot23:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
-                a_SwerveDrive->coastStop();
+                a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot23;
@@ -318,7 +318,7 @@ void Autonomous::Periodic5Ball() {
                 CollectorDown();
             }
             if (a_SwerveDrive->goToPosition(Vec2(6.662, 1.352), 205, 0.75)) {
-                a_SwerveDrive->coastStop();
+                a_SwerveDrive->stop();
                 StartTimer();
                 nextState = A5::WaitPickup5;
             }
@@ -332,7 +332,7 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::GoToShoot45:
             if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, 0.75)) {
-                a_SwerveDrive->coastStop();
+                a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
                 nextState = A5::Shoot45;
@@ -438,7 +438,7 @@ void Autonomous::Periodic5BallVision() {
 }
 
 void Autonomous::IDontLikeExercise() {
-    a_SwerveDrive->coastStop();
+    a_SwerveDrive->stop();
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
 }
@@ -484,7 +484,7 @@ bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific 
 
 
     } else {
-        a_SwerveDrive->coastStop();
+        a_SwerveDrive->stop();
         return true;
     }
 }
@@ -502,7 +502,7 @@ bool Autonomous::DriveDirection(double dist, double angle, double speed, bool fi
         return false;
 
     } else {
-        a_SwerveDrive->coastStop();
+        a_SwerveDrive->stop();
         a_SwerveDrive->unsetHoldAngle();
         return true;
     }

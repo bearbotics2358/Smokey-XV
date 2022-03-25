@@ -47,6 +47,8 @@ a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
 
     a_BRModule.setDrivePID(0.001, 0, 0);
     a_BRModule.setSteerPID(2.0, 0, 0.01);
+
+    a_SwerveDrive.brakeOnStop();
 }
 
 void Robot::RobotInit() {
