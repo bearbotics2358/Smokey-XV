@@ -17,10 +17,6 @@ a_AutoState2(kAutoIdle2) {
     autoPathMaster = k5Ball;
 }
 
-void Autonomous::Init() {
-    a_Gyro->Zero();
-}
-
 void Autonomous::DecidePath() {
     if (a_Xbox->GetRawAxis(OperatorJoystick::LeftTrigger) > 0.5) {
         if (a_Xbox->GetRawButtonPressed(OperatorButton::Y)) {
@@ -52,6 +48,8 @@ const char *Autonomous::GetCurrentPath() {
             return "right 1 ball auto chosen";
         case k2Ball:
             return "2 ball auto chosen";
+        case k3Ball:
+            return "3 ball auto chosen";
         case k5Ball:
             return "5 ball auto chosen";
         case k5BallVision:
@@ -61,7 +59,7 @@ const char *Autonomous::GetCurrentPath() {
     }
 }
 
-void Autonomous::StartPathMaster() {
+void Autonomous::StartAuto() {
     switch (autoPathMaster) {
         case k0Ball:
             Start0Ball();
@@ -78,14 +76,15 @@ void Autonomous::StartPathMaster() {
         case k2Ball:
             Start2Ball();
             break;
+        case k3Ball:
         case k5Ball:
         case k5BallVision:
-            Start5Ball();
+            Start35Ball();
             break;
     }
 }
 
-void Autonomous::PeriodicPathMaster() {
+void Autonomous::PeriodicAuto() {
     switch (autoPathMaster) {
         case k0Ball:
             Periodic0Ball();
@@ -97,6 +96,9 @@ void Autonomous::PeriodicPathMaster() {
             break;
         case k2Ball:
             Periodic2Ball();
+            break;
+        case k3Ball:
+            Periodic3Ball();
             break;
         case k5Ball:
             Periodic5Ball();
@@ -255,12 +257,67 @@ void Autonomous::Periodic2Ball() {
     a_AutoState2 = nextState;
 }
 
-void Autonomous::Start5Ball() {
-    a_AutoState5 = A5::SpoolShooter;
+void Autonomous::Start35Ball() {
     a_Gyro->Zero(69);
-    a_SwerveDrive->setPosition(AUTO5_START_POS);
+    a_SwerveDrive->setPosition(AUTO35_START_POS);
     // TEMP
     autoStartTime = misc::getSeconds();
+}
+
+void Autonomous::Periodic3Ball() {
+    A3 nextState = a_AutoState3;
+
+    switch (nextState) {
+        case A3::Idle:
+            IDontLikeExercise();
+            break;
+        case A3::SpoolShooter:
+            SpoolShooter(SHOOTER_SPEED);
+            StartTimer();
+            nextState = A3::WaitShooter;
+            break;
+        case A3::WaitShooter:
+            if (WaitForTime(0.5) || a_BallShooter->getSpeed() > SHOOTER_TOLERANCE * SHOOTER_SPEED) {
+                StartTimer();
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A3::Shoot1;
+            }
+            break;
+        case A3::Shoot1:
+            if (WaitForTime(0.5)) {
+                a_Collector->setIndexerMotorSpeed(0);
+                CollectorDown();
+                nextState = A3::Pickup2;
+            }
+            break;
+        case A3::Pickup2:
+            if (a_SwerveDrive->goToPosition(Vec2(7.70, 7.57), 270, 0.25)) {
+                nextState = A3::Pickup3;
+            }
+            break;
+        case A3::Pickup3:
+            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, 0.4)) {
+                CollectorUp();
+                nextState = A3::GoToShoot23;
+            }
+            break;
+        case A3::GoToShoot23:
+            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, 0.4)) {
+                a_SwerveDrive->stop();
+                StartTimer();
+                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+                nextState = A3::Shoot23;
+            }
+            break;
+        case A3::Shoot23:
+            if (WaitForTime(5)) {
+                a_Collector->setIndexerMotorSpeed(0);
+                nextState = A3::Idle;
+            }
+            break;
+    }
+
+    a_AutoState3 = nextState;
 }
 
 void Autonomous::Periodic5Ball() {
@@ -308,7 +365,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, autoScale * AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * AUTO5_SPEED)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
@@ -342,7 +399,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot45:
-            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, autoScale * 0.75)) {
+            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);

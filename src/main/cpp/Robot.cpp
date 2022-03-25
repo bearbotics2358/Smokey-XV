@@ -107,14 +107,14 @@ void Robot::AutonomousInit() {
     }
 
     a_SwerveDrive.unsetHoldAngle();
-    a_Autonomous.Init();
-    a_Autonomous.StartPathMaster();
+    a_Gyro.Zero();
+    a_Autonomous.StartAuto();
 }
 
 void Robot::AutonomousPeriodic() {
     EnabledPeriodic();
 
-    a_Autonomous.PeriodicPathMaster();
+    a_Autonomous.PeriodicAuto();
 }
 
 void Robot::TeleopInit() {
