@@ -161,6 +161,10 @@ class Autonomous {
         // used for waitForTime method
         double waitTimeStart { 0.0 };
 
+        // TEMP
+        double autoStartTime { 0.0 };
+        double autoScale { 0.3 };
+
         // start position of robot during 5 ball auto relative to near left corner of field
         // FIXME: this is a very innacurate guess, more so than the other measurements
         constexpr static Vec2 AUTO5_START_POS { 5.52, 7.69 };

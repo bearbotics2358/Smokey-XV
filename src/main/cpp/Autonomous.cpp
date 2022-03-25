@@ -1,6 +1,7 @@
 #include "Autonomous.h"
 #include "buttons.h"
 #include "misc.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 
 
@@ -258,10 +259,19 @@ void Autonomous::Start5Ball() {
     a_AutoState5 = A5::SpoolShooter;
     a_Gyro->Zero(69);
     a_SwerveDrive->setPosition(AUTO5_START_POS);
+    // TEMP
+    autoStartTime = misc::getSeconds();
 }
 
 void Autonomous::Periodic5Ball() {
     A5 nextState = a_AutoState5;
+
+    // TEMP
+    /*auto tempSeconds = misc::getSeconds();
+    frc::SmartDashboard::PutNumber("auto time remaining", 15 - (tempSeconds - autoStartTime));
+    if (misc::getSeconds() > autoStartTime + 15.0) {
+        nextState = A5::Idle;
+    }*/
 
     switch (nextState) {
         case A5::Idle:
@@ -280,25 +290,25 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Shoot1:
-            if (WaitForTime(0.75)) {
+            if (WaitForTime(0.2)) {
                 a_Collector->setIndexerMotorSpeed(0);
                 CollectorDown();
                 nextState = A5::Pickup2;
             }
             break;
         case A5::Pickup2:
-            if (a_SwerveDrive->goToPosition(Vec2(7.94, 7.57), 270, 0.25)) {
+            if (a_SwerveDrive->goToPosition(Vec2(7.70, 7.57), 270, 0.25)) {
                 nextState = A5::Pickup3;
             }
             break;
         case A5::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, 0.6)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, autoScale * 0.6)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
             break;
         case A5::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, autoScale * AUTO5_SPEED)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
@@ -306,7 +316,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Shoot23:
-            if (WaitForTime(1.2)) {
+            if (WaitForTime(1.4)) {
                 a_Collector->setIndexerMotorSpeed(0);
                 StartTimer();
                 nextState = A5::Pickup4;
@@ -317,10 +327,11 @@ void Autonomous::Periodic5Ball() {
             if (WaitForTime(0.1)) {
                 CollectorDown();
             }
-            if (a_SwerveDrive->goToPosition(Vec2(6.662, 1.352), 205, 0.75)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.9, 1.55), 205, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
+                CollectorUp();
                 StartTimer();
-                nextState = A5::WaitPickup5;
+                nextState = A5::GoToShoot45;
             }
             break;
         case A5::WaitPickup5:
@@ -331,7 +342,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot45:
-            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, 0.75)) {
+            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
@@ -339,7 +350,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Shoot45:
-            if (WaitForTime(3)) {
+            if (WaitForTime(5)) {
                 nextState = A5::Idle;
             }
             break;
@@ -348,94 +359,7 @@ void Autonomous::Periodic5Ball() {
     a_AutoState5 = nextState;
 }
 
-void Autonomous::Periodic5BallVision() {
-    A5V nextState = a_AutoState5Vision;
-
-    switch (nextState) {
-        case A5V::Idle:
-            IDontLikeExercise();
-            break;
-        case A5V::SpoolShooter:
-            SpoolShooter(SHOOTER_SPEED);
-            StartTimer();
-            nextState = A5V::WaitShooter;
-            break;
-        case A5V::WaitShooter:
-            if (WaitForTime(0.5) || a_BallShooter->getSpeed() > SHOOTER_TOLERANCE * SHOOTER_SPEED) {
-                StartTimer();
-                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
-                nextState = A5V::Shoot1;
-            }
-            break;
-        case A5V::Shoot1:
-            if (WaitForTime(0.5)) {
-                a_Collector->setIndexerMotorSpeed(0);
-                StartTimer();
-                nextState = A5V::Pickup2;
-            }
-            break;
-        case A5V::Pickup2:
-            // to avoid deploying collector against the wall
-            if (WaitForTime(0.1)) {
-                CollectorDown();
-            }
-            if (a_SwerveDrive->goToPosition(Vec2(7.94, 7.57), 260, AUTO5_SPEED)) {
-                nextState = A5V::Pickup3;
-            }
-            break;
-        case A5V::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, AUTO5_SPEED)) {
-                CollectorUp();
-                nextState = A5V::GoToShoot23;
-            }
-            break;
-        case A5V::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
-                StartTimer();
-                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
-                nextState = A5V::Shoot23;
-            }
-            break;
-        case A5V::Shoot23:
-            if (WaitForTime(1.5)) {
-                a_Collector->setIndexerMotorSpeed(0);
-                StartTimer();
-                nextState = A5V::Pickup4;
-            }
-            break;
-        case A5V::Pickup4:
-            // to avoid deploying collector against the wall
-            if (WaitForTime(0.1)) {
-                CollectorDown();
-            }
-            if (a_SwerveDrive->goToPosition(Vec2(6.512, 1.352), 205, AUTO5_SPEED)) {
-                StartTimer();
-                nextState = A5V::WaitPickup5;
-            }
-            break;
-        case A5V::WaitPickup5:
-            // wait for the human player to put the ball out
-            if (WaitForTime(2)) {
-                CollectorUp();
-                nextState = A5V::GoToShoot45;
-            }
-            break;
-        case A5V::GoToShoot45:
-            if (a_SwerveDrive->goToPosition(AUTO5_START_POS, 69, AUTO5_SPEED)) {
-                StartTimer();
-                a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
-                nextState = A5V::Shoot45;
-            }
-            break;
-        case A5V::Shoot45:
-            if (WaitForTime(1.5)) {
-                nextState = A5V::Idle;
-            }
-            break;
-    }
-
-    a_AutoState5Vision = nextState;
-}
+void Autonomous::Periodic5BallVision() {}
 
 void Autonomous::IDontLikeExercise() {
     a_SwerveDrive->stop();

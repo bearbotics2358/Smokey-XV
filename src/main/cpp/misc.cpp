@@ -1,7 +1,8 @@
 #include "misc.h"
 #include "Prefs.h"
-#include <chrono>
 #include <math.h>
+#include <stdio.h>
+#include <sys/time.h>
 
 double misc::rpmToTalonVel(double rpm) {
     return (rpm * FALCON_UNITS_PER_REV) / 600.0;
@@ -50,6 +51,8 @@ double misc::degreesDiff(double a, double b) {
 }
 
 double misc::getSeconds() {
-    auto time_point = std::chrono::steady_clock::now();
-    return std::chrono::duration_cast<std::chrono::seconds>(time_point.time_since_epoch()).count();
+    // return time in seconds as a double
+    timeval tv0;
+    gettimeofday(&tv0, nullptr);
+    return 1.0 * tv0.tv_sec + (1.0 * tv0.tv_usec) / 1000000.0;
 }
