@@ -120,10 +120,14 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         void setPosition(Vec2 position);
 
     private:
+#ifdef NEW_SWERVE
+        void swerveUpdateInner(Vec2 direction, float rotation, float gyroDegrees, bool fieldOriented);
+#else
         // called by both crabUpdate and swerveUpdata
         // does the bulk of the swerve drive work
         // x and y are translation, z is rotation
         void swerveUpdateInner(float x, float y, float z, float gyroDegrees, bool fieldOriented);
+#endif
 
         // uses the crab pid to calulate the required z drive to get to the specified angle
         float crabCalcZ(float angle, float gyroDegrees);

@@ -2,6 +2,7 @@
 
 #include "math/ConstMath.h"
 #include "misc.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 
 #ifdef NEW_SWERVE
@@ -202,7 +203,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float maxSpeed) {
     // scale this vector by the requested speed, and slow down as we get closer to the target
     directionVector *= std::clamp((double) std::min(speed, maxSpeed), 0.0, 1.0);
 
-    printf("%d\n", directionVector.magnitude());
+    frc::SmartDashboard::PutNumber("speed", speed);
 
     // flip sign of x because x is inverted for swerveUpdateInner
     swerveUpdateInner(-directionVector.x(), directionVector.y(), turnCalcZ(degrees, gyroDegrees), gyroDegrees, true);

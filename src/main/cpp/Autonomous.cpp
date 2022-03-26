@@ -1,7 +1,6 @@
 #include "Autonomous.h"
 #include "buttons.h"
 #include "misc.h"
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 
 
@@ -362,13 +361,13 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, autoScale * 0.6)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.65, 5.05), 155, autoScale * 0.6)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
             break;
         case A5::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * 0.5)) {
+            if (a_SwerveDrive->goToPosition(AUTO35_START_POS + Vec2(0.2, 0.4), 69, autoScale * 0.5)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
@@ -383,7 +382,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Pickup4:
-            if (a_SwerveDrive->goToPosition(Vec2(6.9, 1.55), 205, autoScale * 0.75)) {
+            if (a_SwerveDrive->goToPosition(Vec2(7.15, 1.8), 205, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 CollectorUp();
                 StartTimer();
@@ -398,7 +397,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot45:
-            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * 0.75)) {
+            if (a_SwerveDrive->goToPosition(AUTO35_START_POS + Vec2(0.2, 1.1), 69, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
@@ -437,13 +436,13 @@ void Autonomous::SpoolShooter(float speed) {
 }
 
 void Autonomous::CollectorDown() {
-    a_Collector->setSolenoid(true);
-    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
+    /*a_Collector->setSolenoid(true);
+    a_Collector->setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);*/
 }
 
 void Autonomous::CollectorUp() {
-    a_Collector->setSolenoid(false);
-    a_Collector->setCollectorMotorSpeed(0);
+    /*a_Collector->setSolenoid(false);
+    a_Collector->setCollectorMotorSpeed(0);*/
 }
 
 bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is running correctly and the indexer has switched on
