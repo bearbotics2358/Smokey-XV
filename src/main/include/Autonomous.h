@@ -99,9 +99,6 @@ enum class A5V {
 };
 
 
-// add more vision versions later
-
-
 class Autonomous {
     public:
         Autonomous(JrimmyGyro *Gyro, frc::Joystick *XboxController, SwerveDrive *SwerveDrive, BallShooter *BallShooter, Collector *Collector);

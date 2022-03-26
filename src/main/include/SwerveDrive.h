@@ -108,7 +108,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
 
         // goes to the specified position in meters and the specified angle in degrees at the specified percent speed
         // returns true when it has reached the position and angle
-        bool goToPosition(Vec2 position, float degrees, float speed);
+        bool goToPosition(Vec2 position, float degrees, float maxSpeed);
 
         // updates the current position of the robot based on the change in the wheel positions
         void updatePosition();
@@ -142,9 +142,6 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
 
         // pid when using crabUpdate
         frc2::PIDController crabAnglePid;
-
-        // pid for distance when using goToDist
-        frc2::PIDController distPid;
 
         // if we're in crab drive mode
         bool crab;
