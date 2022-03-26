@@ -1,6 +1,7 @@
 #include "Autonomous.h"
 #include "buttons.h"
 #include "misc.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 
 
@@ -326,11 +327,11 @@ void Autonomous::Periodic5Ball() {
     A5 nextState = a_AutoState5;
 
     // TEMP
-    /*auto tempSeconds = misc::getSeconds();
+    auto tempSeconds = misc::getSeconds();
     frc::SmartDashboard::PutNumber("auto time remaining", 15 - (tempSeconds - autoStartTime));
     if (misc::getSeconds() > autoStartTime + 15.0) {
         nextState = A5::Idle;
-    }*/
+    }
 
     switch (nextState) {
         case A5::Idle:
@@ -361,7 +362,8 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Pickup3:
-            if (a_SwerveDrive->goToPosition(Vec2(6.65, 5.05), 155, autoScale * 0.6)) {
+            // slow speed good: Vec2(6.65, 5.05)
+            if (a_SwerveDrive->goToPosition(Vec2(6.5, 5.05), 155, autoScale * 0.6)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
@@ -382,7 +384,8 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::Pickup4:
-            if (a_SwerveDrive->goToPosition(Vec2(7.15, 1.8), 205, autoScale * 0.75)) {
+            // slow speed good: Vec2(7.15, 1.8)
+            if (a_SwerveDrive->goToPosition(Vec2(6.7, 2.0), 205, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 CollectorUp();
                 StartTimer();

@@ -179,6 +179,8 @@ void Robot::TeleopPeriodic() {
     }
     if (a_XboxController.GetRawButton(OperatorButton::Y)) {
         a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
+    } else if (a_XboxController.GetRawButton(OperatorButton::X)) {
+        a_Collector.setCollectorMotorSpeed(-COLLECTOR_MOTOR_PERCENT_OUTPUT);
     } else {
         a_Collector.setCollectorMotorSpeed(0);
     }

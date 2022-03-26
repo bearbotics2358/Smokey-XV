@@ -203,7 +203,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float maxSpeed) {
     // scale this vector by the requested speed, and slow down as we get closer to the target
     directionVector *= std::clamp((double) std::min(speed, maxSpeed), 0.0, 1.0);
 
-    frc::SmartDashboard::PutNumber("speed", speed);
+    frc::SmartDashboard::PutNumber("speed", directionVector.magnitude());
 
     // flip sign of x because x is inverted for swerveUpdateInner
     swerveUpdateInner(-directionVector.x(), directionVector.y(), turnCalcZ(degrees, gyroDegrees), gyroDegrees, true);
