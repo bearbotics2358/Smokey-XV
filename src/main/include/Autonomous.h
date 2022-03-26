@@ -172,7 +172,7 @@ class Autonomous {
         // TEMP
         double autoStartTime { 0.0 };
         // TEMP
-        double autoScale { 0.3 };
+        double autoScale { 1.0 };
 
         // start position of robot during 5 ball auto relative to near left corner of field
         // FIXME: this is a very innacurate guess, more so than the other measurements

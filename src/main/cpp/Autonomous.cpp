@@ -387,7 +387,7 @@ void Autonomous::Periodic5Ball() {
                 a_SwerveDrive->stop();
                 CollectorUp();
                 StartTimer();
-                nextState = A5::Idle;
+                nextState = A5::GoToShoot45;
             }
             break;
         case A5::WaitPickup5:

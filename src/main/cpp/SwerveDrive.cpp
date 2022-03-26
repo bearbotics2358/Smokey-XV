@@ -59,7 +59,7 @@ frModule(frModule),
 blModule(blModule),
 brModule(brModule),
 a_gyro(gyro),
-turnAnglePid(0.014, 0.0, 0.005),
+turnAnglePid(0.014, 0.0, 0.0),
 crabAnglePid(1.5, 0.0, 0.01) {
     turnAnglePid.EnableContinuousInput(0.0, 360.0);
     crabAnglePid.EnableContinuousInput(0.0, 360.0);
@@ -197,7 +197,7 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float maxSpeed) {
     // do it as sqrt of remaining distance since kinetic energy is proportional to velocity squared,
     // so with sqrt we will stop at the end
     // tune the constant in front of remainingDistance
-    float speed = sqrt(0.25 * remainingDistance);
+    float speed = sqrt(0.35 * remainingDistance);
 
     // scale this vector by the requested speed, and slow down as we get closer to the target
     directionVector *= std::clamp((double) std::min(speed, maxSpeed), 0.0, 1.0);
