@@ -56,7 +56,7 @@ class SwerveModule // Handles steering and driving of each Swerve Module
         bool adjustAngle(float targetAngle);
 
         // drives in the direction of the vector
-        // the magnitude of the vector is passed into setDrivePercent
+        // the magnitude of the vector is the speed in meters per second
         void driveDirection(Vec2 direction);
 
         // temp

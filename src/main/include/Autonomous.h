@@ -159,9 +159,9 @@ class Autonomous {
         AutoState0 a_AutoState0;
         AutoState1 a_AutoState1;
         AutoState2 a_AutoState2;
-        A3 a_AutoState3 { A3::SpoolShooter };
-        A5 a_AutoState5 { A5::SpoolShooter };
-        A5V a_AutoState5Vision { A5V::SpoolShooter };
+        A3 a_AutoState3 { A3::Idle };
+        A5 a_AutoState5 { A5::Idle };
+        A5V a_AutoState5Vision { A5V::Idle };
 
         AutoType autoPathMaster;
         float drivestart { 0.0 };
@@ -177,6 +177,4 @@ class Autonomous {
         // start position of robot during 5 ball auto relative to near left corner of field
         // FIXME: this is a very innacurate guess, more so than the other measurements
         constexpr static Vec2 AUTO35_START_POS { 5.52, 7.69 };
-        // speed to go during 5 ball auto
-        constexpr static float AUTO5_SPEED { 0.5 };
 };

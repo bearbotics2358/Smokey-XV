@@ -140,9 +140,9 @@ bool SwerveModule::adjustAngle(float targetAngle) {
 
 void SwerveModule::driveDirection(Vec2 direction) {
     if (adjustAngle(direction.angle())) {
-        setDrivePercent(-direction.magnitude());
+        setDriveSpeed(-direction.magnitude());
     } else {
-        setDrivePercent(direction.magnitude());
+        setDriveSpeed(direction.magnitude());
     }
 }
 

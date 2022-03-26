@@ -258,6 +258,9 @@ void Autonomous::Periodic2Ball() {
 }
 
 void Autonomous::Start35Ball() {
+    a_AutoState3 = A3::SpoolShooter;
+    a_AutoState5 = A5::SpoolShooter;
+    a_AutoState5Vision = A5V::SpoolShooter;
     a_Gyro->Zero(69);
     a_SwerveDrive->setPosition(AUTO35_START_POS);
     // TEMP
@@ -365,7 +368,7 @@ void Autonomous::Periodic5Ball() {
             }
             break;
         case A5::GoToShoot23:
-            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * AUTO5_SPEED)) {
+            if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * 0.5)) {
                 a_SwerveDrive->stop();
                 StartTimer();
                 a_Collector->setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
@@ -375,20 +378,16 @@ void Autonomous::Periodic5Ball() {
         case A5::Shoot23:
             if (WaitForTime(1.4)) {
                 a_Collector->setIndexerMotorSpeed(0);
-                StartTimer();
+                CollectorDown();
                 nextState = A5::Pickup4;
             }
             break;
         case A5::Pickup4:
-            // to avoid deploying collector against the wall
-            if (WaitForTime(0.1)) {
-                CollectorDown();
-            }
             if (a_SwerveDrive->goToPosition(Vec2(6.9, 1.55), 205, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 CollectorUp();
                 StartTimer();
-                nextState = A5::GoToShoot45;
+                nextState = A5::Idle;
             }
             break;
         case A5::WaitPickup5:
@@ -422,6 +421,7 @@ void Autonomous::IDontLikeExercise() {
     a_SwerveDrive->stop();
     a_Collector->setCollectorMotorSpeed(0);
     a_Collector->setIndexerMotorSpeed(0);
+    a_BallShooter->stop();
 }
 
 void Autonomous::StartTimer() {
