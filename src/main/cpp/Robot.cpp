@@ -243,7 +243,7 @@ void Robot::TeleopPeriodic() {
             if (joystickOne.GetRawButton(DriverButton::Trigger)) {
                 a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
             } else {
-                a_SwerveDrive.crabUpdate(x, y);
+                a_SwerveDrive.crabUpdate(x, y, fieldOreo);
             }
         } else {
             a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
