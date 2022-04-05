@@ -168,6 +168,9 @@ void Robot::TeleopPeriodic() {
     if (joystickOne.GetRawButton(DriverButton::Button12)) {
         a_Shooter.setSpeed(SHOOTER_SPEED);
     }
+    if (joystickOne.GetRawButton(DriverButton::Button9)) {
+        a_Shooter.setSpeed(LOW_SHOOTER_SPEED);
+    }
 
     /* =-=-=-=-=-=-=-=-=-=- Collector Controls -=-=-=-=-=-=-=-=-=-= */
 
@@ -230,25 +233,19 @@ void Robot::TeleopPeriodic() {
         a_Gyro.Zero();
     }
 
-    if (joystickOne.GetRawButton(DriverButton::Button9)) {
-        // vision led on
-    } else {
-        // vision led off
-    }
 
-    if (joystickOne.GetRawButton(DriverButton::Button9)) /* && has target (todo once written) */ {
-        // track target with vision
-    } else {
-        if (!inDeadzone) {
-            if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-                a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
-            } else {
-                a_SwerveDrive.crabUpdate(x, y, fieldOreo);
-            }
+    
+    
+    if (!inDeadzone) {
+        if (joystickOne.GetRawButton(DriverButton::Trigger)) {
+            a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
         } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
+            a_SwerveDrive.crabUpdate(x, y, fieldOreo);
         }
+    } else {
+            a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
     }
+    
 
     // turn to the right angle for climbing
     if (joystickOne.GetRawButton(DriverButton::Button10)) {
