@@ -190,6 +190,12 @@ void Robot::TeleopPeriodic() {
 
     /* =-=-=-=-=-=-=-=-=-=-= Swerve Controls =-=-=-=-=-=-=-=-=-=-= */
 
+    // calibrate gyro
+    if (joystickOne.GetRawButton(DriverButton::Button5)) {
+        a_Gyro.Cal();
+        a_Gyro.Zero();
+    }
+
     // dpad up for full speed,
     // down for half speed
     if (a_XboxController.GetPOV() == 0) {
@@ -227,15 +233,6 @@ void Robot::TeleopPeriodic() {
     // turn field oriented mode off if button 3 is pressed
     bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
 
-    // calibrate gyro
-    if (joystickOne.GetRawButton(DriverButton::Button5)) {
-        a_Gyro.Cal();
-        a_Gyro.Zero();
-    }
-
-
-    
-    
     if (!inDeadzone) {
         if (joystickOne.GetRawButton(DriverButton::Trigger)) {
             a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
@@ -243,9 +240,8 @@ void Robot::TeleopPeriodic() {
             a_SwerveDrive.crabUpdate(x, y, fieldOreo);
         }
     } else {
-            a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
+        a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
     }
-    
 
     // turn to the right angle for climbing
     if (joystickOne.GetRawButton(DriverButton::Button10)) {
