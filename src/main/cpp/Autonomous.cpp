@@ -385,7 +385,7 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::Pickup4:
             // slow speed good: Vec2(7.15, 1.8)
-            if (a_SwerveDrive->goToPosition(Vec2(7.15, 1.5), 205, autoScale * 0.75)) {
+            if (a_SwerveDrive->goToPosition(Vec2(7.0, 1.5), 205, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 CollectorUp();
                 StartTimer();
