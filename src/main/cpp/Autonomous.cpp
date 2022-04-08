@@ -104,7 +104,8 @@ void Autonomous::PeriodicAuto() {
             Periodic5Ball();
             break;
         case k5BallVision:
-            Periodic5BallVision();
+            // Periodic5BallVision();
+            Periodic5Ball();
             break;
     }
 }
@@ -363,7 +364,7 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::Pickup3:
             // slow speed good: Vec2(6.65, 5.05)
-            if (a_SwerveDrive->goToPosition(Vec2(6.5, 5.05), 155, autoScale * 0.6)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.36, 5.05), 155, autoScale * 0.6)) {
                 CollectorUp();
                 nextState = A5::GoToShoot23;
             }
