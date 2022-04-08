@@ -170,7 +170,7 @@ class Autonomous {
         double waitTimeStart { 0.0 };
 
         // TEMP
-        double autoStartTime { 0.0 };
+        // double autoStartTime { 0.0 };
         // TEMP
         double autoScale { 1.0 };
 

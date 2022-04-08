@@ -3,7 +3,8 @@
 /** Buttons on the Xbox controller. */
 class OperatorButton {
     public:
-        constexpr static int A = 1;
+        // A button is broken
+        // constexpr static int A = 1;
         constexpr static int B = 2;
         constexpr static int X = 3;
         constexpr static int Y = 4;

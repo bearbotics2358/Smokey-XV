@@ -26,7 +26,7 @@ void Autonomous::DecidePath() {
                 autoPathMaster = (AutoType) (autoPathMaster - 1);
             }
         }
-        if (a_Xbox->GetRawButtonPressed(OperatorButton::A)) {
+        if (a_Xbox->GetRawButtonPressed(OperatorButton::X)) {
             if (autoPathMaster == k5BallVision) {
                 autoPathMaster = k0Ball;
             } else {
@@ -264,7 +264,7 @@ void Autonomous::Start35Ball() {
     a_Gyro->Zero(69);
     a_SwerveDrive->setPosition(AUTO35_START_POS);
     // TEMP
-    autoStartTime = misc::getSeconds();
+    // autoStartTime = misc::getSeconds();
 }
 
 void Autonomous::Periodic3Ball() {
@@ -327,11 +327,11 @@ void Autonomous::Periodic5Ball() {
     A5 nextState = a_AutoState5;
 
     // TEMP
-    auto tempSeconds = misc::getSeconds();
+    /*auto tempSeconds = misc::getSeconds();
     frc::SmartDashboard::PutNumber("auto time remaining", 15 - (tempSeconds - autoStartTime));
     if (misc::getSeconds() > autoStartTime + 15.0) {
         nextState = A5::Idle;
-    }
+    }*/
 
     switch (nextState) {
         case A5::Idle:
@@ -385,9 +385,9 @@ void Autonomous::Periodic5Ball() {
             break;
         case A5::Pickup4:
             // slow speed good: Vec2(7.15, 1.8)
-            if (a_SwerveDrive->goToPosition(Vec2(7.0, 1.5), 205, autoScale * 0.75)) {
+            if (a_SwerveDrive->goToPosition(Vec2(6.95, 1.45), 205, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
-                CollectorUp();
+                a_Collector->setSolenoid(false);
                 StartTimer();
                 nextState = A5::GoToShoot45;
             }
@@ -395,11 +395,15 @@ void Autonomous::Periodic5Ball() {
         case A5::WaitPickup5:
             // wait for the human player to put the ball out
             if (WaitForTime(1)) {
-                CollectorUp();
+                a_Collector->setSolenoid(false);
+                StartTimer();
                 nextState = A5::GoToShoot45;
             }
             break;
         case A5::GoToShoot45:
+            if (WaitForTime(0.2)) {
+                CollectorUp();
+            }
             if (a_SwerveDrive->goToPosition(AUTO35_START_POS, 69, autoScale * 0.75)) {
                 a_SwerveDrive->stop();
                 StartTimer();
