@@ -207,6 +207,7 @@ void Autonomous::Periodic1Ball() {
 void Autonomous::Start2Ball() {
     a_AutoState2 = kDriveBackThroughBall2;
     a_Gyro->Zero(133);
+    StartTimer();
 }
 
 void Autonomous::Periodic2Ball() {
@@ -221,15 +222,16 @@ void Autonomous::Periodic2Ball() {
 
         case kDriveBackThroughBall2:
             CollectorDown();
-            if (DriveDirection(1.32, 133, 0.25, true)) {
+            if (DriveDirection(1.32, 133, 0.40, true) || WaitForTime(2.0)) {
                 CollectorUp();
                 SpoolShooter(SHOOTER_SPEED);
+                StartTimer();
                 nextState = kTurn2;
             }
             break;
 
         case kTurn2:
-            if (TurnToAngle(-21)) {
+            if (TurnToAngle(-21) || WaitForTime(4.0)) {
                 nextState = kDriveToWall2;
                 StartTimer();
             }
@@ -237,7 +239,7 @@ void Autonomous::Periodic2Ball() {
 
         case kDriveToWall2:
             // we might be stuck on the wall, so move to the next state after some time
-            if (DriveDirection(2.23, -37, 0.25, true) || WaitForTime(5)) {
+            if (DriveDirection(2.0, -37, 0.25, true) || WaitForTime(4.0)) {
                 nextState = kShoot2;
             }
             break;
@@ -465,7 +467,7 @@ bool Autonomous::IndexAndShoot(float speed) { // returns true if the shooter is 
 
 bool Autonomous::TurnToAngle(float angle) { // rotates bot in place to specific angle
 
-    if (fabs(a_Gyro->getAngle() - angle) >= 1) {
+    if (fabs(a_Gyro->getAngleClamped() - angle) >= 1) {
         a_SwerveDrive->turnToAngle(angle);
         return false;
 
