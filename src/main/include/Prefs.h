@@ -6,9 +6,6 @@
 
 // Declare constants such as CAN IDs here
 
-// uncomment to enable the new swerve
-//#define NEW_SWERVE
-
 /*======== CLIMBER CONSTANTS ========*/
 
 #define CLIMBER_MOTOR_ID 24

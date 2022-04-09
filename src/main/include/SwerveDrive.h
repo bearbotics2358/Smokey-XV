@@ -7,55 +7,13 @@
 #include "SwerveModule.h"
 #include "math/LinAlg.h"
 
-#ifdef NEW_SWERVE
-struct SwerveTransform {
-        SwerveTransform(Vec2 direction, float rotSpeed);
-
-        static SwerveTransform translate(Vec2 direction, float gyroAngle, bool fieldOriented = true);
-        static SwerveTransform translateRotate(Vec2 direction, float rotSpeed, float gyroAngle, bool fieldOriented);
-
-        // direction for robot to move in
-        Vec2 direction;
-
-        // speed of rotation in radians
-        // if this is 0, the robot will try and hold its current angle
-        float rotSpeed;
-};
-
-class SwerveDrive {
-    public:
-        SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule);
-        ~SwerveDrive();
-
-        void update(const SwerveTransform& transform);
-
-        float getAvgDistance() const;
-
-    private:
-        SwerveModule& m_fl;
-        SwerveModule& m_fr;
-        SwerveModule& m_bl;
-        SwerveModule& m_br;
-
-        // angle to hold if rotSpeed is 0
-        float m_holdAngle { 0 };
-
-        // pid controller to use when holding angle
-        frc2::PIDController m_anglePid;
-
-        static constexpr float DRIVE_LENGTH { 29.75 };
-        static constexpr float DRIVE_WIDTH { 29.75 };
-};
-
-#else
-
 class SwerveDrive // Class to handle the kinematics of Swerve Drive
 {
     public:
         enum class UpdateMode {
-            // direction is in meters per second
+            // direction is in meters per second and rotationSpeed is in degrees per second
             Velocity,
-            // direction is percent
+            // direction and rotationSpeed is in percent
             Percent,
         };
 
@@ -129,8 +87,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
     private:
         // called by both crabUpdate and swerveUpdate
         // does the bulk of the swerve drive work
-        // direction units are specified by update mode, and rotationSpeed is in degrees
-        // TODO: implement mode
+        // direction and rotationSpeed units are specified by update mode
         void swerveUpdateInner(Vec2 direction, float rotationSpeed, float gyroDegrees, bool fieldOriented, UpdateMode mode);
 
         // uses the crab pid to calulate the required z drive to get to the specified angle
@@ -172,4 +129,3 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // for goToPosition, when the angle difference from the target angle is within this amount, say that we are done (assuming distance is also close enough)
         constexpr static float GO_TO_ANGLE_DONE = 5.0;
 };
-#endif

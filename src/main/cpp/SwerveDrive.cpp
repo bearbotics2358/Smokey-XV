@@ -5,55 +5,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 
-#ifdef NEW_SWERVE
-SwerveTransform::SwerveTransform(Vec2 direction, float rotSpeed):
-direction(direction),
-rotSpeed(rotSpeed) {}
-
-
-SwerveDrive::SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule):
-m_fl(flModule),
-m_fr(frModule),
-m_bl(blModule),
-m_br(brModule),
-m_anglePid(0.014, 0.0, 0.0) {}
-
-SwerveDrive::~SwerveDrive() {}
-
-void SwerveDrive::update(const SwerveTransform& transform) {
-    constexpr float halfLength = DRIVE_LENGTH / 2;
-    constexpr float halfWidth = DRIVE_WIDTH / 2;
-    constexpr float driveRadius = constSqrt(halfLength * halfLength + halfWidth * halfWidth);
-
-    constexpr Vec2 frPosVec = Vec2(halfWidth, halfLength);
-    constexpr Vec2 flPosVec = Vec2(-halfWidth, halfLength);
-    constexpr Vec2 brPosVec = Vec2(halfWidth, -halfLength);
-    constexpr Vec2 blPosVec = Vec2(-halfWidth, -halfLength);
-
-    constexpr Vec2 frTurn = frPosVec.right_normal().const_as_normalized();
-    constexpr Vec2 flTurn = flPosVec.right_normal().const_as_normalized();
-    constexpr Vec2 brTurn = brPosVec.right_normal().const_as_normalized();
-    constexpr Vec2 blTurn = blPosVec.right_normal().const_as_normalized();
-
-    float angularVelocity = transform.rotSpeed * driveRadius;
-
-    Vec2 frVec = frTurn * angularVelocity + transform.direction;
-    Vec2 flVec = flTurn * angularVelocity + transform.direction;
-    Vec2 brVec = brTurn * angularVelocity + transform.direction;
-    Vec2 blVec = blTurn * angularVelocity + transform.direction;
-
-    m_fr.driveDirection(frVec);
-    m_fl.driveDirection(flVec);
-    m_br.driveDirection(brVec);
-    m_bl.driveDirection(blVec);
-}
-
-float SwerveDrive::getAvgDistance() const {
-    return (fabs(m_fr.getDistance()) + fabs(m_fl.getDistance()) + fabs(m_br.getDistance()) + fabs(m_bl.getDistance())) / 4.0;
-}
-
-#else
-
 SwerveDrive::SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule, JrimmyGyro& gyro):
 m_fl(flModule),
 m_fr(frModule),
@@ -280,17 +231,28 @@ void SwerveDrive::swerveUpdateInner(Vec2 direction, float rotationSpeed, float g
     constexpr Vec2 brTurn = brPosVec.right_normal().const_as_normalized();
     constexpr Vec2 blTurn = blPosVec.right_normal().const_as_normalized();
 
-    float angularVelocity = misc::degToRad(rotationSpeed) * driveRadius;
+    if (mode == UpdateMode::Velocity) {
+        rotationSpeed = misc::degToRad(rotationSpeed);
+    }
+
+    float angularVelocity = rotationSpeed * driveRadius;
 
     Vec2 frVec = frTurn * angularVelocity + direction;
     Vec2 flVec = flTurn * angularVelocity + direction;
     Vec2 brVec = brTurn * angularVelocity + direction;
     Vec2 blVec = blTurn * angularVelocity + direction;
 
-    m_fr.driveDirection(frVec);
-    m_fl.driveDirection(flVec);
-    m_br.driveDirection(brVec);
-    m_bl.driveDirection(blVec);
+    if (mode == UpdateMode::Velocity) {
+        m_fr.driveDirectionVelocity(frVec);
+        m_fl.driveDirectionVelocity(flVec);
+        m_br.driveDirectionVelocity(brVec);
+        m_bl.driveDirectionVelocity(blVec);
+    } else {
+        m_fr.driveDirectionPercent(frVec);
+        m_fl.driveDirectionPercent(flVec);
+        m_br.driveDirectionPercent(brVec);
+        m_bl.driveDirectionPercent(blVec);
+    }
 }
 
 float SwerveDrive::crabCalcZ(float angle, float gyroDegrees) {
@@ -300,5 +262,3 @@ float SwerveDrive::crabCalcZ(float angle, float gyroDegrees) {
 float SwerveDrive::turnCalcZ(float angle, float gyroDegrees) {
     return std::clamp(turnAnglePid.Calculate(gyroDegrees, angle), -0.2, 0.2);
 }
-
-#endif
