@@ -52,14 +52,21 @@ class SwerveDrive {
 class SwerveDrive // Class to handle the kinematics of Swerve Drive
 {
     public:
+        enum class UpdateMode {
+            // direction is in meters per second
+            Velocity,
+            // direction is percent
+            Percent,
+        };
+
         SwerveDrive(SwerveModule& flModule, SwerveModule& frModule, SwerveModule& blModule, SwerveModule& brModule, JrimmyGyro& gyro);
 
         // TODO: change the signs of x, because the positive is left thing is wierd
         // TODO: use meters/second vector for crabUpdate and swerveUpdate, instead of x and y going from 0 to 1
         // for crab drive update and swerve drive update, +y is forward, -y is backward, x is left, and -x is right
         // crab drive is like swerve drive update, except it maintains a constant turn angle
-        void crabUpdate(float x, float y, bool fieldOriented = true);
-        void swerveUpdate(float x, float y, float z, bool fieldOriented);
+        void crabUpdate(Vec2 direction, bool fieldOriented, UpdateMode mode = UpdateMode::Velocity);
+        void swerveUpdate(Vec2 direction, float rotationSpeed, bool fieldOriented, UpdateMode mode = UpdateMode::Velocity);
         /*
             x = x asix on joystick
             y = y axis on joystick
@@ -104,7 +111,7 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         void turnToAngle(float angle);
 
         // drives at a given speed (units uknown), in a given direction in degrees, for a given distance in meters
-        void goToTheDon(float speed, float direction, float distance, bool fieldOriented = true);
+        void goToTheDon(float speed, float direction, float distance, bool fieldOriented);
 
         // goes to the specified position in meters and the specified angle in degrees at the specified percent speed
         // returns true when it has reached the position and angle
@@ -120,14 +127,11 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         void setPosition(Vec2 position);
 
     private:
-#ifdef NEW_SWERVE
-        void swerveUpdateInner(Vec2 direction, float rotation, float gyroDegrees, bool fieldOriented);
-#else
-        // called by both crabUpdate and swerveUpdata
+        // called by both crabUpdate and swerveUpdate
         // does the bulk of the swerve drive work
-        // x and y are translation, z is rotation
-        void swerveUpdateInner(float x, float y, float z, float gyroDegrees, bool fieldOriented);
-#endif
+        // direction units are specified by update mode, and rotationSpeed is in degrees
+        // TODO: implement mode
+        void swerveUpdateInner(Vec2 direction, float rotationSpeed, float gyroDegrees, bool fieldOriented, UpdateMode mode);
 
         // uses the crab pid to calulate the required z drive to get to the specified angle
         float crabCalcZ(float angle, float gyroDegrees);
@@ -135,11 +139,11 @@ class SwerveDrive // Class to handle the kinematics of Swerve Drive
         // uses the turn pid to calculate the required z drive
         float turnCalcZ(float angle, float gyroDegrees);
 
-        SwerveModule& flModule;
-        SwerveModule& frModule;
-        SwerveModule& blModule;
-        SwerveModule& brModule;
-        JrimmyGyro& a_gyro;
+        SwerveModule& m_fl;
+        SwerveModule& m_fr;
+        SwerveModule& m_bl;
+        SwerveModule& m_br;
+        JrimmyGyro& m_gyro;
 
         // pid when using turn to angle
         frc2::PIDController turnAnglePid;
