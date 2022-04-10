@@ -215,6 +215,10 @@ void SwerveDrive::setPosition(Vec2 position) {
 }
 
 void SwerveDrive::swerveUpdateInner(Vec2 direction, float rotationSpeed, float gyroDegrees, bool fieldOriented, UpdateMode mode) {
+    if (fieldOriented) {
+        direction = Mat2::rotation(misc::degToRad(-gyroDegrees)) * direction;
+    }
+
     constexpr float halfLength = DRIVE_LENGTH / 2;
     constexpr float halfWidth = DRIVE_WIDTH / 2;
     constexpr float driveRadius = constSqrt(halfLength * halfLength + halfWidth * halfWidth);
@@ -229,6 +233,7 @@ void SwerveDrive::swerveUpdateInner(Vec2 direction, float rotationSpeed, float g
     constexpr Vec2 brTurn = brPosVec.right_normal().const_as_normalized();
     constexpr Vec2 blTurn = blPosVec.right_normal().const_as_normalized();
 
+    // TODO: rotationSpeed might need to be scaled by a constant in order to feel right
     if (mode == UpdateMode::Velocity) {
         rotationSpeed = misc::degToRad(rotationSpeed);
     }
