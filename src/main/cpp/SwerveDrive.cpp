@@ -128,7 +128,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, bool 
     if (getAvgDistance() <= distance) {
         float radians = direction * M_PI / 180.0;
 
-        float x = speed * sin(radians);
+        float x = speed * -sin(radians);
         float y = speed * cos(radians);
 
         crabUpdate(Vec2(x, y), fieldOriented);
@@ -154,10 +154,8 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float maxSpeed) {
     // scale this vector by the requested speed, and slow down as we get closer to the target
     directionVector *= std::clamp((double) std::min(speed, maxSpeed), 0.0, 1.0);
 
-    directionVector.x() = -directionVector.x();
-
     // flip sign of x because x is inverted for swerveUpdateInner
-    swerveUpdateInner(directionVector, turnCalcZ(degrees, gyroDegrees), gyroDegrees, true, UpdateMode::Velocity);
+    swerveUpdateInner(directionVector, turnCalcZ(degrees, gyroDegrees), gyroDegrees, true, UpdateMode::Percent);
 
     return remainingDistance < GO_TO_DIST_DONE && misc::degreesDiff(degrees, gyroDegrees) < GO_TO_ANGLE_DONE;
 }

@@ -83,4 +83,8 @@ class Robot : public frc::TimedRobot {
 
         TargetTracker a_shooterVision;
         TargetTracker a_ballTracker;
+
+        // the max speed in meters per second of the slow speed mode
+        constexpr static float SLOW_SPEED_MAX_SPEED = 1.0;
+        constexpr static float SLOW_SPEED_MAX_ROT_SPEED = 90.0;
 };

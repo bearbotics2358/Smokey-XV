@@ -209,7 +209,7 @@ void Robot::TeleopPeriodic() {
         multiplier = 0.25;
     }
 
-    float x = -1 * joystickOne.GetRawAxis(DriverJoystick::XAxis);
+    float x = joystickOne.GetRawAxis(DriverJoystick::XAxis);
     float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
     float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
 
@@ -234,13 +234,24 @@ void Robot::TeleopPeriodic() {
     bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
 
     if (!inDeadzone) {
-        if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-            a_SwerveDrive.swerveUpdate(x, y, 0.5 * z, fieldOreo);
+        Vec2 directionVec(x, y);
+        float rotationSpeed;
+        SwerveDrive::UpdateMode mode = SwerveDrive::UpdateMode::Percent;
+        if (a_slowSpeed) {
+            directionVec *= SLOW_SPEED_MAX_SPEED;
+            rotationSpeed = SLOW_SPEED_MAX_ROT_SPEED * z;
+            mode = SwerveDrive::UpdateMode::Velocity;
         } else {
-            a_SwerveDrive.crabUpdate(x, y, fieldOreo);
+            rotationSpeed = 0.5 * z;
+        }
+
+        if (joystickOne.GetRawButton(DriverButton::Trigger)) {
+            a_SwerveDrive.swerveUpdate(directionVec, rotationSpeed, fieldOreo, mode);
+        } else {
+            a_SwerveDrive.crabUpdate(directionVec, fieldOreo, mode);
         }
     } else {
-        a_SwerveDrive.swerveUpdate(0, 0, 0, fieldOreo);
+        a_SwerveDrive.stop();
     }
 
     // turn to the right angle for climbing
