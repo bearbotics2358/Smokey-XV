@@ -11,25 +11,25 @@ m_fr(frModule),
 m_bl(blModule),
 m_br(brModule),
 m_gyro(gyro),
-turnAnglePid(0.014, 0.0, 0.0),
-crabAnglePid(1.5, 0.0, 0.01) {
-    turnAnglePid.EnableContinuousInput(0.0, 360.0);
-    crabAnglePid.EnableContinuousInput(0.0, 360.0);
+m_turnAnglePid(0.014, 0.0, 0.0),
+m_strafeAnglePid(1.5, 0.0, 0.01) {
+    m_turnAnglePid.EnableContinuousInput(0.0, 360.0);
+    m_strafeAnglePid.EnableContinuousInput(0.0, 360.0);
 }
 
-void SwerveDrive::crabUpdate(Vec2 direction, bool fieldOriented, UpdateMode mode) {
+void SwerveDrive::strafeUpdate(Vec2 direction, bool fieldOriented, UpdateMode mode) {
     float gyroDegrees = m_gyro.getAngleClamped();
 
-    if (!crab) {
-        holdAngle = gyroDegrees;
-        crab = true;
+    if (!m_strafe) {
+        m_holdAngle = gyroDegrees;
+        m_strafe = true;
     }
 
-    swerveUpdateInner(direction, crabCalcZ(holdAngle, gyroDegrees), gyroDegrees, fieldOriented, mode);
+    swerveUpdateInner(direction, strafeCalcZ(m_holdAngle, gyroDegrees, mode), gyroDegrees, fieldOriented, mode);
 }
 
 void SwerveDrive::swerveUpdate(Vec2 direction, float rotationSpeed, bool fieldOriented, UpdateMode mode) {
-    crab = false;
+    m_strafe = false;
     swerveUpdateInner(direction, rotationSpeed, m_gyro.getAngleClamped(), fieldOriented, mode);
 }
 
@@ -60,12 +60,12 @@ void SwerveDrive::coastOnStop() {
 }
 
 void SwerveDrive::setHoldAngle(float degrees) {
-    crab = true;
-    holdAngle = degrees;
+    m_strafe = true;
+    m_holdAngle = degrees;
 }
 
 void SwerveDrive::unsetHoldAngle() {
-    crab = false;
+    m_strafe = false;
 }
 
 void SwerveDrive::resetDrive() {
@@ -131,7 +131,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, bool 
         float x = speed * -sin(radians);
         float y = speed * cos(radians);
 
-        crabUpdate(Vec2(x, y), fieldOriented);
+        strafeUpdate(Vec2(x, y), fieldOriented);
     } else {
         stop();
     }
@@ -139,7 +139,7 @@ void SwerveDrive::goToTheDon(float speed, float direction, float distance, bool 
 
 bool SwerveDrive::goToPosition(Vec2 position, float degrees, float maxSpeed) {
     float gyroDegrees = m_gyro.getAngleClamped();
-    auto relPosVector = position - a_position;
+    auto relPosVector = position - m_position;
     float remainingDistance = relPosVector.magnitude();
 
     // create a unit vector pointing towards the point we want to go to
@@ -163,20 +163,20 @@ bool SwerveDrive::goToPosition(Vec2 position, float degrees, float maxSpeed) {
 void SwerveDrive::updatePosition() {
     // get the change in position of each wheel
     float flPos = m_fl.getDistance();
-    float flPosChange = flPos - flLastPos;
-    flLastPos = flPos;
+    float flPosChange = flPos - m_flLastPos;
+    m_flLastPos = flPos;
 
     float frPos = m_fr.getDistance();
-    float frPosChange = frPos - frLastPos;
-    frLastPos = frPos;
+    float frPosChange = frPos - m_frLastPos;
+    m_frLastPos = frPos;
 
     float blPos = m_bl.getDistance();
-    float blPosChange = blPos - blLastPos;
-    blLastPos = blPos;
+    float blPosChange = blPos - m_blLastPos;
+    m_blLastPos = blPos;
 
     float brPos = m_br.getDistance();
-    float brPosChange = brPos - brLastPos;
-    brLastPos = brPos;
+    float brPosChange = brPos - m_brLastPos;
+    m_brLastPos = brPos;
 
     // angle does not need to be clamped for creating the vector
     float gyroDegrees = m_gyro.getAngle();
@@ -203,15 +203,15 @@ void SwerveDrive::updatePosition() {
     // adding all the vectors together will cancel out the turn part, leaving just the movement part * 4, so divide by 4
     // this doesn't check if the vectors are a valid wheel configuration for swerve to work, but the drive commands ensure this should work
     // if it isn't a valid configuration, some wheels will be slipping, so we can't predict the position anyways
-    a_position += (flVec + frVec + blVec + brVec) / 4.0;
+    m_position += (flVec + frVec + blVec + brVec) / 4.0;
 }
 
 Vec2 SwerveDrive::getPosition() const {
-    return a_position;
+    return m_position;
 }
 
 void SwerveDrive::setPosition(Vec2 position) {
-    a_position = position;
+    m_position = position;
 }
 
 void SwerveDrive::swerveUpdateInner(Vec2 direction, float rotationSpeed, float gyroDegrees, bool fieldOriented, UpdateMode mode) {
@@ -233,12 +233,12 @@ void SwerveDrive::swerveUpdateInner(Vec2 direction, float rotationSpeed, float g
         rotationSpeed = misc::degToRad(rotationSpeed);
     }
 
-    float angularVelocity = rotationSpeed * driveRadius;
+    float linearTurnVelocity = rotationSpeed * driveRadius;
 
-    Vec2 frVec = frTurn * angularVelocity + direction;
-    Vec2 flVec = flTurn * angularVelocity + direction;
-    Vec2 brVec = brTurn * angularVelocity + direction;
-    Vec2 blVec = blTurn * angularVelocity + direction;
+    Vec2 frVec = frTurn * linearTurnVelocity + direction;
+    Vec2 flVec = flTurn * linearTurnVelocity + direction;
+    Vec2 brVec = brTurn * linearTurnVelocity + direction;
+    Vec2 blVec = blTurn * linearTurnVelocity + direction;
 
     if (mode == UpdateMode::Velocity) {
         m_fr.driveDirectionVelocity(frVec);
@@ -253,10 +253,15 @@ void SwerveDrive::swerveUpdateInner(Vec2 direction, float rotationSpeed, float g
     }
 }
 
-float SwerveDrive::crabCalcZ(float angle, float gyroDegrees) {
-    return std::clamp(crabAnglePid.Calculate(gyroDegrees, angle) / 270.0, -0.5, 0.5);
+float SwerveDrive::strafeCalcZ(float angle, float gyroDegrees, UpdateMode mode) {
+    switch (mode) {
+        case UpdateMode::Percent:
+            return std::clamp(m_strafeAnglePid.Calculate(gyroDegrees, angle) / 270.0, -0.5, 0.5);
+        case UpdateMode::Velocity:
+            return std::clamp(m_strafeAnglePid.Calculate(gyroDegrees, angle), -360.0, 360.0);
+    }
 }
 
 float SwerveDrive::turnCalcZ(float angle, float gyroDegrees) {
-    return std::clamp(turnAnglePid.Calculate(gyroDegrees, angle), -0.2, 0.2);
+    return std::clamp(m_turnAnglePid.Calculate(gyroDegrees, angle), -0.2, 0.2);
 }

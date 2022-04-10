@@ -25,10 +25,6 @@ m_shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
 m_collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
 m_climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
 m_compressorController() {
-    /*if (!handler.ready()) {
-        // do something if handler failed to connect
-    }*/
-
     m_flModule.setDrivePID(0.001, 0, 0);
     m_flModule.setSteerPID(2.0, 0, 0.01);
 
@@ -207,21 +203,19 @@ void Robot::TeleopPeriodic() {
 
     if (!inDeadzone) {
         Vec2 directionVec(x, y);
-        float rotationSpeed;
+        float rotationSpeed = 0.5 * z;
         SwerveDrive::UpdateMode mode = SwerveDrive::UpdateMode::Percent;
 
         if (m_slowSpeed) {
             directionVec *= SLOW_SPEED_MAX_SPEED;
             rotationSpeed = SLOW_SPEED_MAX_ROT_SPEED * z;
             mode = SwerveDrive::UpdateMode::Velocity;
-        } else {
-            rotationSpeed = 0.5 * z;
         }
 
         if (m_joystick.GetRawButton(DriverButton::Trigger)) {
             m_swerveDrive.swerveUpdate(directionVec, rotationSpeed, fieldOreo, mode);
         } else {
-            m_swerveDrive.crabUpdate(directionVec, fieldOreo, mode);
+            m_swerveDrive.strafeUpdate(directionVec, fieldOreo, mode);
         }
     } else {
         m_swerveDrive.stop();
