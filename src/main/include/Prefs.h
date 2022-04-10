@@ -16,8 +16,6 @@
 // 12:1 gearbox between motor and thunderhex (winch)
 #define CLIMBER_MM_PER_TICK (0.026 / 12.0) // how many mm the climber arm rises every motor tick
 #define CLIMBER_TICKS_PER_MM (3.8347 * 12.0) // how many ticks for every mm the climber arm rises
-// port of the climber limit switch
-#define CLIMBER_SWITCH_PORT 0
 
 /*======== SHOOTER CONSTANTS ========*/
 
@@ -98,7 +96,7 @@
 #define JOYSTICK_PORT 1
 #define JOYSTICK_DEADZONE 0.15
 
-#define XBOX_CONTROLLER 5
+#define XBOX_CONTROLLER_PORT 5
 
 
 /* ============ GEAR RATIOS ======== */

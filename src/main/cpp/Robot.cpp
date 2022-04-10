@@ -12,115 +12,105 @@
 
 /*~~ hi :) ~~ */
 Robot::Robot():
-a_Gyro(frc::I2C::kMXP),
-a_FLModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_SWERVE_ABS_ENC_MIN_VOLTS, FL_SWERVE_ABS_ENC_MAX_VOLTS, FL_SWERVE_ABS_ENC_OFFSET / 360)),
-a_FRModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET / 360)),
-a_BLModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
-a_BRModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
-a_SwerveDrive(a_FLModule, a_FRModule, a_BLModule, a_BRModule, a_Gyro),
-a_Autonomous(&a_Gyro, &a_XboxController, &a_SwerveDrive, &a_Shooter, &a_Collector),
-joystickOne(JOYSTICK_PORT),
-a_XboxController(XBOX_CONTROLLER),
-a_Shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
-a_Collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
-a_LimitSwitch(CLIMBER_SWITCH_PORT),
-a_Climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
-a_CompressorController(),
-// NEEDED A PORT, THIS IS PROBABLY WRONG, PLEASE FIX IT LATER
-//  handler("169.254.179.144", "1185", "data"),
-//  handler("raspberrypi.local", 1883, "PI/CV/SHOOT/DATA"),
-//  a_canHandler(CanHandler::layout2022()),
-a_shooterVision(SHOOTER_CAMERA_NAME, TargetTracker::Mode::target(0)),
-a_ballTracker(SHOOTER_CAMERA_NAME, TargetTracker::Mode::ball(0)) {
+m_gyro(frc::I2C::kMXP),
+m_flModule(FL_DRIVE_ID, FL_STEER_ID, AbsoluteEncoder(FL_SWERVE_ABS_ENC_PORT, FL_SWERVE_ABS_ENC_MIN_VOLTS, FL_SWERVE_ABS_ENC_MAX_VOLTS, FL_SWERVE_ABS_ENC_OFFSET / 360)),
+m_frModule(FR_DRIVE_ID, FR_STEER_ID, AbsoluteEncoder(FR_SWERVE_ABS_ENC_PORT, FR_SWERVE_ABS_ENC_MIN_VOLTS, FR_SWERVE_ABS_ENC_MAX_VOLTS, FR_SWERVE_ABS_ENC_OFFSET / 360)),
+m_blModule(BL_DRIVE_ID, BL_STEER_ID, AbsoluteEncoder(BL_SWERVE_ABS_ENC_PORT, BL_SWERVE_ABS_ENC_MIN_VOLTS, BL_SWERVE_ABS_ENC_MAX_VOLTS, BL_SWERVE_ABS_ENC_OFFSET / 360)),
+m_brModule(BR_DRIVE_ID, BR_STEER_ID, AbsoluteEncoder(BR_SWERVE_ABS_ENC_PORT, BR_SWERVE_ABS_ENC_MIN_VOLTS, BR_SWERVE_ABS_ENC_MAX_VOLTS, BR_SWERVE_ABS_ENC_OFFSET / 360)),
+m_swerveDrive(m_flModule, m_frModule, m_blModule, m_brModule, m_gyro),
+m_autonomous(&m_gyro, &m_xboxController, &m_swerveDrive, &m_shooter, &m_collector),
+m_joystick(JOYSTICK_PORT),
+m_xboxController(XBOX_CONTROLLER_PORT),
+m_shooter(LEFT_SHOOTER_ID, RIGHT_SHOOTER_ID),
+m_collector(COLLECTOR_MOTOR_ID, INDEXER_MOTOR_ID, COLLECTOR_PUSH_SOLENOID_MODULE, COLLECTOR_PULL_SOLENOID_MODULE),
+m_climber(CLIMBER_MOTOR_ID, CLIMBER_PUSH_SOLENOID_MODULE, CLIMBER_PULL_SOLENOID_MODULE),
+m_compressorController() {
     /*if (!handler.ready()) {
         // do something if handler failed to connect
     }*/
 
-    a_FLModule.setDrivePID(0.001, 0, 0);
-    a_FLModule.setSteerPID(2.0, 0, 0.01);
+    m_flModule.setDrivePID(0.001, 0, 0);
+    m_flModule.setSteerPID(2.0, 0, 0.01);
 
-    a_FRModule.setDrivePID(0.001, 0, 0);
-    a_FRModule.setSteerPID(2.0, 0, 0.01);
+    m_frModule.setDrivePID(0.001, 0, 0);
+    m_frModule.setSteerPID(2.0, 0, 0.01);
 
-    a_BLModule.setDrivePID(0.001, 0, 0);
-    a_BLModule.setSteerPID(2.0, 0, 0.01);
+    m_blModule.setDrivePID(0.001, 0, 0);
+    m_blModule.setSteerPID(2.0, 0, 0.01);
 
-    a_BRModule.setDrivePID(0.001, 0, 0);
-    a_BRModule.setSteerPID(2.0, 0, 0.01);
+    m_brModule.setDrivePID(0.001, 0, 0);
+    m_brModule.setSteerPID(2.0, 0, 0.01);
 
-    a_SwerveDrive.brakeOnStop();
+    m_swerveDrive.brakeOnStop();
 }
 
 void Robot::RobotInit() {
     frc::SmartDashboard::init();
-    a_Gyro.Init();
-    a_Gyro.Zero();
+    m_gyro.Init();
+    m_gyro.Zero();
 }
 
 void Robot::RobotPeriodic() {
-    a_Gyro.Update();
-    a_SwerveDrive.updatePosition();
+    m_gyro.Update();
+    m_swerveDrive.updatePosition();
 
-    frc::SmartDashboard::PutNumber("Distance Driven: ", a_SwerveDrive.getAvgDistance());
-    frc::SmartDashboard::PutNumber("Gyro Angle: ", a_Gyro.getAngle());
-    frc::SmartDashboard::PutNumber("Robot x Position", a_SwerveDrive.getPosition().x());
-    frc::SmartDashboard::PutNumber("Robot y Position", a_SwerveDrive.getPosition().y());
+    frc::SmartDashboard::PutNumber("Distance Driven: ", m_swerveDrive.getAvgDistance());
+    frc::SmartDashboard::PutNumber("Gyro Angle: ", m_gyro.getAngle());
+    frc::SmartDashboard::PutNumber("Robot x Position", m_swerveDrive.getPosition().x());
+    frc::SmartDashboard::PutNumber("Robot y Position", m_swerveDrive.getPosition().y());
 
-    frc::SmartDashboard::PutBoolean("Slow speed enabled", a_slowSpeed);
-    frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", a_Collector.getValue());
+    frc::SmartDashboard::PutBoolean("Slow speed enabled", m_slowSpeed);
+    frc::SmartDashboard::PutBoolean("Collector Solenoid Toggle: ", m_collector.getValue());
 
-    frc::SmartDashboard::PutNumber("Tank Pressure", a_CompressorController.getTankPressure());
+    frc::SmartDashboard::PutNumber("Tank Pressure", m_compressorController.getTankPressure());
 
-    frc::SmartDashboard::PutNumber("Current Shooter RPM", a_Shooter.getSpeed());
+    frc::SmartDashboard::PutNumber("Current Shooter RPM", m_shooter.getSpeed());
 
-    frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", a_Climber.getHeight());
-    frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", a_Climber.getSpeed());
-    frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", a_Climber.getTicks());
-    frc::SmartDashboard::PutNumber("Climber Limit Switch Pressed", a_LimitSwitch.limitSwitchPressed());
+    frc::SmartDashboard::PutNumber("Climber Arm Height (mm)", m_climber.getHeight());
+    frc::SmartDashboard::PutNumber("Climber Arm Speed (mm/s)", m_climber.getSpeed());
+    frc::SmartDashboard::PutNumber("Climber Arm Ticks Raised", m_climber.getTicks());
 }
 
 void Robot::DisabledInit() {
-    a_doEnabledInit = true;
-    a_SwerveDrive.resetDrive();
+    m_doEnabledInit = true;
+    m_swerveDrive.resetDrive();
 }
 
 void Robot::DisabledPeriodic() {
-    a_Autonomous.DecidePath();
-    frc::SmartDashboard::PutString("Selected Autonomous", a_Autonomous.GetCurrentPath());
+    m_autonomous.DecidePath();
+    frc::SmartDashboard::PutString("Selected Autonomous", m_autonomous.GetCurrentPath());
 }
 
 void Robot::EnabledInit() {
-    a_Collector.resetSolenoid();
-    a_Climber.resetClimber();
+    m_collector.resetSolenoid();
+    m_climber.resetClimber();
 }
 
 void Robot::EnabledPeriodic() {
-    a_shooterVision.update();
-    a_ballTracker.update();
-    a_CompressorController.update();
+    m_compressorController.update();
 }
 
 void Robot::AutonomousInit() {
-    if (a_doEnabledInit) {
+    if (m_doEnabledInit) {
         EnabledInit();
-        a_doEnabledInit = false;
+        m_doEnabledInit = false;
     }
 
-    a_SwerveDrive.unsetHoldAngle();
-    a_Gyro.Zero();
-    a_Autonomous.StartAuto();
+    m_swerveDrive.unsetHoldAngle();
+    m_gyro.Zero();
+    m_autonomous.StartAuto();
 }
 
 void Robot::AutonomousPeriodic() {
     EnabledPeriodic();
 
-    a_Autonomous.PeriodicAuto();
+    m_autonomous.PeriodicAuto();
 }
 
 void Robot::TeleopInit() {
-    if (a_doEnabledInit) {
+    if (m_doEnabledInit) {
         EnabledInit();
-        a_doEnabledInit = false;
+        m_doEnabledInit = false;
     }
 }
 
@@ -130,88 +120,75 @@ void Robot::TeleopPeriodic() {
 
     /* =-=-=-=-=-=-=-=-=-=-= Climber Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (joystickOne.GetRawButton(DriverButton::Button8)) { // arms up
-        a_Climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT);
-    } else if (joystickOne.GetRawButton(DriverButton::Button7)) { // arms down
-        a_Climber.setArmSpeed(-CLIMBER_MOTOR_PERCENT_OUTPUT);
+    if (m_joystick.GetRawButton(DriverButton::Button8)) { // arms up
+        m_climber.setArmSpeed(CLIMBER_MOTOR_PERCENT_OUTPUT);
+    } else if (m_joystick.GetRawButton(DriverButton::Button7)) { // arms down
+        m_climber.setArmSpeed(-CLIMBER_MOTOR_PERCENT_OUTPUT);
     } else {
-        a_Climber.setArmSpeed(0);
+        m_climber.setArmSpeed(0);
     }
-    if (joystickOne.GetRawButtonPressed(DriverButton::Button6)) {
-        a_Climber.setSolenoid(true); // arms out
+    if (m_joystick.GetRawButtonPressed(DriverButton::Button6)) {
+        m_climber.setSolenoid(true); // arms out
     }
-    if (joystickOne.GetRawButtonPressed(DriverButton::Button4)) {
-        a_Climber.setSolenoid(false); // arms in
+    if (m_joystick.GetRawButtonPressed(DriverButton::Button4)) {
+        m_climber.setSolenoid(false); // arms in
     }
-
-
-    /* Limit Switch Automatic Climb
-
-    if (a_LimitSwitch.limitSwitchPressed() == true){
-        a_Climber.setSolenoid(frc::DoubleSolenoid::Value::kReverse);
-    }
-
-    */
-
 
 
     /* =-=-=-=-=-=-=-=-=-=-= Shooter Controls =-=-=-=-=-=-=-=-=-=-= */
 
-    if (joystickOne.GetRawButton(DriverButton::ThumbButton)) {
-        a_Collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
+    if (m_joystick.GetRawButton(DriverButton::ThumbButton)) {
+        m_collector.setIndexerMotorSpeed(INDEXER_MOTOR_PERCENT_OUTPUT);
     } else {
-        a_Collector.setIndexerMotorSpeed(0);
+        m_collector.setIndexerMotorSpeed(0);
     }
-    if (joystickOne.GetRawButton(DriverButton::Button11)) {
-        a_Shooter.stop();
+    if (m_joystick.GetRawButton(DriverButton::Button11)) {
+        m_shooter.stop();
     }
-    if (joystickOne.GetRawButton(DriverButton::Button12)) {
-        a_Shooter.setSpeed(SHOOTER_SPEED);
+    if (m_joystick.GetRawButton(DriverButton::Button12)) {
+        m_shooter.setSpeed(SHOOTER_SPEED);
     }
-    if (joystickOne.GetRawButton(DriverButton::Button9)) {
-        a_Shooter.setSpeed(LOW_SHOOTER_SPEED);
+    if (m_joystick.GetRawButton(DriverButton::Button9)) {
+        m_shooter.setSpeed(LOW_SHOOTER_SPEED);
     }
+
 
     /* =-=-=-=-=-=-=-=-=-=- Collector Controls -=-=-=-=-=-=-=-=-=-= */
 
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::LeftBumper)) {
-        a_Collector.setSolenoid(false); // collecter in
+    if (m_xboxController.GetRawButtonPressed(OperatorButton::LeftBumper)) {
+        m_collector.setSolenoid(false); // collecter in
     }
-    if (a_XboxController.GetRawButtonPressed(OperatorButton::RightBumper)) {
-        a_Collector.setSolenoid(true); // collecter out
+    if (m_xboxController.GetRawButtonPressed(OperatorButton::RightBumper)) {
+        m_collector.setSolenoid(true); // collecter out
     }
-    if (a_XboxController.GetRawButton(OperatorButton::Y)) {
-        a_Collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
-    } else if (a_XboxController.GetRawButton(OperatorButton::X)) {
-        a_Collector.setCollectorMotorSpeed(-COLLECTOR_MOTOR_PERCENT_OUTPUT);
+    if (m_xboxController.GetRawButton(OperatorButton::Y)) {
+        m_collector.setCollectorMotorSpeed(COLLECTOR_MOTOR_PERCENT_OUTPUT);
+    } else if (m_xboxController.GetRawButton(OperatorButton::X)) {
+        m_collector.setCollectorMotorSpeed(-COLLECTOR_MOTOR_PERCENT_OUTPUT);
     } else {
-        a_Collector.setCollectorMotorSpeed(0);
+        m_collector.setCollectorMotorSpeed(0);
     }
+
 
     /* =-=-=-=-=-=-=-=-=-=-= Swerve Controls =-=-=-=-=-=-=-=-=-=-= */
 
     // calibrate gyro
-    if (joystickOne.GetRawButton(DriverButton::Button5)) {
-        a_Gyro.Cal();
-        a_Gyro.Zero();
+    if (m_joystick.GetRawButton(DriverButton::Button5)) {
+        m_gyro.Cal();
+        m_gyro.Zero();
     }
 
     // dpad up for full speed,
     // down for half speed
-    if (a_XboxController.GetPOV() == 0) {
-        a_slowSpeed = false;
-    } else if (a_XboxController.GetPOV() == 180) {
-        a_slowSpeed = true;
+    if (m_xboxController.GetPOV() == 0) {
+        m_slowSpeed = false;
+    } else if (m_xboxController.GetPOV() == 180) {
+        m_slowSpeed = true;
     }
 
-    float multiplier = 1.0;
-    if (a_slowSpeed) {
-        multiplier = 0.25;
-    }
-
-    float x = joystickOne.GetRawAxis(DriverJoystick::XAxis);
-    float y = -1 * joystickOne.GetRawAxis(DriverJoystick::YAxis);
-    float z = -1 * joystickOne.GetRawAxis(DriverJoystick::ZAxis);
+    float x = m_joystick.GetRawAxis(DriverJoystick::XAxis);
+    float y = -1 * m_joystick.GetRawAxis(DriverJoystick::YAxis);
+    float z = -1 * m_joystick.GetRawAxis(DriverJoystick::ZAxis);
 
     if (fabs(x) < 0.10) {
         x = 0;
@@ -225,19 +202,15 @@ void Robot::TeleopPeriodic() {
 
     bool inDeadzone = (sqrt(x * x + y * y) < JOYSTICK_DEADZONE) && (fabs(z) < JOYSTICK_DEADZONE); // Checks joystick deadzones
 
-    // scale by multiplier for slow mode, do this after deadzone check
-    x *= multiplier;
-    y *= multiplier;
-    z *= multiplier;
-
     // turn field oriented mode off if button 3 is pressed
-    bool fieldOreo = !joystickOne.GetRawButton(DriverButton::Button3);
+    bool fieldOreo = !m_joystick.GetRawButton(DriverButton::Button3);
 
     if (!inDeadzone) {
         Vec2 directionVec(x, y);
         float rotationSpeed;
         SwerveDrive::UpdateMode mode = SwerveDrive::UpdateMode::Percent;
-        if (a_slowSpeed) {
+
+        if (m_slowSpeed) {
             directionVec *= SLOW_SPEED_MAX_SPEED;
             rotationSpeed = SLOW_SPEED_MAX_ROT_SPEED * z;
             mode = SwerveDrive::UpdateMode::Velocity;
@@ -245,27 +218,26 @@ void Robot::TeleopPeriodic() {
             rotationSpeed = 0.5 * z;
         }
 
-        if (joystickOne.GetRawButton(DriverButton::Trigger)) {
-            a_SwerveDrive.swerveUpdate(directionVec, rotationSpeed, fieldOreo, mode);
+        if (m_joystick.GetRawButton(DriverButton::Trigger)) {
+            m_swerveDrive.swerveUpdate(directionVec, rotationSpeed, fieldOreo, mode);
         } else {
-            a_SwerveDrive.crabUpdate(directionVec, fieldOreo, mode);
+            m_swerveDrive.crabUpdate(directionVec, fieldOreo, mode);
         }
     } else {
-        a_SwerveDrive.stop();
+        m_swerveDrive.stop();
     }
 
     // turn to the right angle for climbing
-    if (joystickOne.GetRawButton(DriverButton::Button10)) {
-        a_SwerveDrive.turnToAngle(180.0);
+    if (m_joystick.GetRawButton(DriverButton::Button10)) {
+        m_swerveDrive.turnToAngle(180.0);
     }
 }
 
 void Robot::TestInit() {
     TeleopInit();
-    a_SwerveDrive.setPosition(Vec2(0.0, 0.0));
-    a_Shooter.stop();
+    m_swerveDrive.setPosition(Vec2(0.0, 0.0));
+    m_shooter.stop();
 }
-
 
 void Robot::TestPeriodic() {
     TeleopPeriodic();

@@ -49,40 +49,31 @@ class Robot : public frc::TimedRobot {
 
     private:
         // keeps track of when to call enabled init
-        bool a_doEnabledInit { true };
+        bool m_doEnabledInit { true };
 
-        JrimmyGyro a_Gyro;
+        JrimmyGyro m_gyro;
 
-        SwerveModule a_FLModule;
-        SwerveModule a_FRModule;
-        SwerveModule a_BLModule;
-        SwerveModule a_BRModule;
-        SwerveDrive a_SwerveDrive;
+        SwerveModule m_flModule;
+        SwerveModule m_frModule;
+        SwerveModule m_blModule;
+        SwerveModule m_brModule;
+        SwerveDrive m_swerveDrive;
 
-        // speed multiplier for driver controls for the swerve
-        bool a_slowSpeed { false };
+        // if slow speed is enabled
+        bool m_slowSpeed { false };
 
-        Autonomous a_Autonomous;
+        Autonomous m_autonomous;
 
-        frc::Joystick joystickOne; // 3D flightstick (Logitech Attack 3?)
-        frc::Joystick a_XboxController;
+        frc::Joystick m_joystick; // 3D flightstick (Logitech Attack 3?)
+        frc::Joystick m_xboxController;
 
-        BallShooter a_Shooter;
+        BallShooter m_shooter;
 
-        Collector a_Collector;
+        Collector m_collector;
 
-        // climber limit switch
-        LimitSwitch a_LimitSwitch;
-        Climber a_Climber;
+        Climber m_climber;
 
-        CompressorController a_CompressorController;
-
-        // CanHandler a_canHandler;
-
-        // stuff that autonomous needs
-
-        TargetTracker a_shooterVision;
-        TargetTracker a_ballTracker;
+        CompressorController m_compressorController;
 
         // the max speed in meters per second of the slow speed mode
         constexpr static float SLOW_SPEED_MAX_SPEED = 1.0;
